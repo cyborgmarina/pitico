@@ -35,19 +35,21 @@ export async function getBalance(wallet) {
     const slpAddress = SLP.Address.toSLPAddress(cashAddress)
 
     // first get BCH balance
-    const balance = await SLP.Address.details(cashAddress)
-
-    console.log(`Balance: ${JSON.stringify(balance, null, 4)}:`)
+    let balance = await SLP.Address.details(cashAddress)
 
     // get token balances
     try {
       const tokens = await SLP.Utils.balancesForAddress(slpAddress)
 
-      console.log(JSON.stringify(tokens, null, 2))
+      balance.tokens = tokens;
     } catch (error) {
       if (error.message === "Address not found") console.log(`No tokens found.`)
       else console.log(`Error: `, error)
     }
+
+    console.log(`Balance: ${JSON.stringify(balance, null, 4)}:`)
+
+    return balance;
   } catch (err) {
     console.error(`Error in getBalance: `, err)
     console.log(`Error message: ${err.message}`)
