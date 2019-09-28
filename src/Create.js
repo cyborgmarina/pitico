@@ -4,7 +4,6 @@ import { Input, Button, notification, Spin } from "antd";
 import { createToken } from "./badger/createToken";
 const Create = () => {
   const ContextValue = React.useContext(BadgerContext);
-  console.log("ContextValue", ContextValue);
   const { wallet } = ContextValue;
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState({
@@ -46,7 +45,7 @@ const Create = () => {
   };
   return (
     <Spin spinning={loading}>
-      <div style={{ padding: "12px 30% 64px 30%" }}>
+      <div style={{ padding: "12px 40% 64px 40%" }}>
         <h2>Create</h2>
         <div>
           <Input
