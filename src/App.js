@@ -29,23 +29,42 @@ const App = () => {
               defaultSelectedKeys={["1"]}
               style={{ textAlign: "left" }}
             >
+              <Menu.Item key="0">
+                <Link to="/portfolio">
+                  {" "}
+		  <Icon type="appstore"/>
+                  <span>Portfolio</span>
+                </Link>
+	      </Menu.Item>
               <Menu.Item key="1">
                 <Link to="/new-token">
                   {" "}
-                  <Icon type="file-add" />
-                  <span>Create new token</span>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="2">
-                <Link to="/mint-tokens">
-                  <Icon type="apartment" />
-                  <span>Mint tokens </span>
+                  <Icon type="bulb" />
+                  <span>Create</span>
                 </Link>
               </Menu.Item>
               <Menu.Item key="3">
+                <Link to="/transfer">
+                  <Icon type="interaction" />
+                  <span>Transfer</span>
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="4">
+                <Link to="/mint-tokens">
+                  <Icon type="printer" />
+                  <span>Mint </span>
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="5">
                 <Link to="/pay-dividends">
                   <Icon type="dollar" />
-                  <span>Pay dividends </span>
+                  <span>Pay Dividends </span>
+                </Link>
+              </Menu.Item>
+              <Menu.Item key="6">
+                <Link to="/pass-the-baton">
+                  <Icon type="crown" />
+                  <span>Pass The Baton</span>
                 </Link>
               </Menu.Item>
             </Menu>
