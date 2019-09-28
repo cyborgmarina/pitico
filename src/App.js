@@ -57,14 +57,14 @@ const App = () => {
             <Header
               style={{ background: "#f0f2f5", padding: 0, fontSize: "24px" }}
             >
-              Pitico Cash
+              pitico.cash
             </Header>
             <Content style={{ margin: "0 16px" }}>
               <div style={{ padding: 24, background: "#f0f2f5", minHeight: 360 }}>
                 <Route exact path="/" component={Portfolio} />
                 <Route path="/create" component={Create} />
-                <Route path="/mint" component={Mint} />
-                <Route path="/pay-dividends" component={PayDividends} />
+                <Route path="/configure" component={Portfolio}/>
+
               </div>
             </Content>
           </Layout>

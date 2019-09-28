@@ -1,8 +1,9 @@
 @import '~antd/dist/antd.css';
-
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
 
 .App {
   text-align: center;
+  font-family: 'Roboto Mono', monospace;
 }
 
 .App-logo {
