@@ -1,44 +1,50 @@
 import React from 'react'
-import { Row, Col } from 'antd';
+import { Row, Col, Icon, Avatar } from 'antd';
 import { Card } from 'antd';
+import { WalletContext } from './badger/context';
+import { Meta } from 'antd/lib/list/Item';
 
-export default () => (
-    <div>
-	<Row gutter={16}>
-	    <Col className="gutter-row" span={6}>
-		<div className="gutter-box">
-		    <Card size="small" title="PLCHD" bordered={false} style={{ width: 200 }}>
-			<p><strong>10</strong> Placeholders</p>
-		    </Card>
-		</div>
-	    </Col>
-	    <Col className="gutter-row" span={6}>
+export default () => {
+	const ContextValue = React.useContext(WalletContext);
+	const { wallet, tokens, loading } = ContextValue;
 
-		<div className="gutter-box">
-		    <Card size="small" title="PLCHD" bordered={false} style={{ width: 200 }}>
-			<p><strong>10</strong> Placeholders</p>
-		    </Card>
-		</div>
-
-	    </Col>
-	    <Col className="gutter-row" span={6}>
-		<div className="gutter-box">
-		    <Card size="small" title="PLCHD" bordered={false} style={{ width: 200 }}>
-			<p><strong>10</strong> Placeholders</p>
-			<p><strong>* Baton Holder</strong></p>
-		    </Card>
-		</div>
-	    </Col>
-	    <Col className="gutter-row" span={6}>
-		<div className="gutter-box">
-		    <Card size="small" title="PLCHD" bordered={false} style={{ width: 200 }}>
-			<p><strong>500</strong> Placeholders</p>
-		    </Card>
-		</div>
-	    </Col>
-	</Row>
-    </div>
-)
-
-
-
+	return (
+		<Row type="flex" gutter={8}>
+			{loading ? (
+				Array.from({ length: 8 }).map((v, i) => (
+					<Col>
+						<Card
+						loading
+						key={i}
+						style={{ width: 300, marginTop: '8px' }}
+						>
+						<Meta
+							avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+							title="Token symbol"
+							description="Token description"
+						/>
+					</Card>
+					</Col>
+				))
+			) : tokens.map(token => (
+				<Col>
+					<Card
+					key={token.tokenId}
+					style={{ width: 300, marginTop: '8px' }}
+					actions={[
+						<span><Icon type="printer" key="printer"/> Mint</span>,
+						<span><Icon type="interaction" key="interaction"/> Transfer</span>,
+						<span><Icon type="ellipsis" key="ellipsis"/></span>,
+						]}
+					>
+					<Meta
+						avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+						title="Token symbol"
+						description="Token description"
+					/>
+				</Card>
+				</Col>
+			))}
+		</Row>
+	)
+};
