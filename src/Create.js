@@ -1,9 +1,9 @@
 import React from "react";
-import { BadgerContext } from "./badger/context";
+import { WalletContext } from "./badger/context";
 import { Input, Button, notification, Spin } from "antd";
 import { createToken } from "./badger/createToken";
 const Create = () => {
-  const ContextValue = React.useContext(BadgerContext);
+  const ContextValue = React.useContext(WalletContext);
   const { wallet } = ContextValue;
   const [loading, setLoading] = React.useState(false);
   const [data, setData] = React.useState({

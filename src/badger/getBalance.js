@@ -14,8 +14,11 @@ if (NETWORK === `mainnet`)
   SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v2/` })
 else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v2/` })
 
-export async function getBalance(wallet) {
+export async function getBalance(wallet, logs = true) {
+  const log = logs ? console.log.bind(console) : () => null;
+
   try {
+
     const mnemonic = wallet.mnemonic
 
     // root seed buffer
@@ -43,16 +46,15 @@ export async function getBalance(wallet) {
 
       balance.tokens = tokens;
     } catch (error) {
-      if (error.message === "Address not found") console.log(`No tokens found.`)
-      else console.log(`Error: `, error)
+      if (error.message === "Address not found") log(`No tokens found.`)
+      else log(`Error: `, error)
     }
 
-    console.log(`Balance: ${JSON.stringify(balance, null, 4)}:`)
+    log(`Balance: ${JSON.stringify(balance, null, 4)}:`)
 
     return balance;
   } catch (err) {
-    console.error(`Error in getBalance: `, err)
-    console.log(`Error message: ${err.message}`)
+    log(`Error in getBalance: `, err.message)
     throw err
   }
 }

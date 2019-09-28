@@ -22,7 +22,6 @@ export const getWallet = () => {
         wallet = createWallet();
         window.localStorage.setItem('wallet', JSON.stringify(wallet));
     }
-    console.info('wallet', wallet);
     return wallet;
 };
 

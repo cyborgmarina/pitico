@@ -3,6 +3,7 @@
 */
 
 import SLPSDK from "slp-sdk";
+import { sendBch } from "./sendBch";
 let Utils = require('slpjs').Utils;
 
 // Set NETWORK to either testnet or mainnet
@@ -25,28 +26,19 @@ export async function balancesForToken(tokenId) {
   }
 }
 
-export const sendCash = async (wallet, { value, tokenId }) => {
+export const sendDividends = async (wallet, { value, tokenId }) => {
     const balances = await balancesForToken(tokenId);
 
     const total = balances.reduce((p, c) => c.tokenBalance + p , 0);
-    const promises = balances
-        .map(balance => new Promise((resolve, reject) => {
-            debugger
-            const txParams = {
-                to: Utils.toCashAddress(balance.slpAddress),
-                // from: window.web4bch.bch.defaultAccount,
-                from: wallet.cashAddress,
-                value: value * (balance.tokenBalance/total)
-              }
-              window.web4bch.bch.sendTransaction(txParams, (err, res) => {
-                if (err) {
-                    console.info('transaction error', err);
-                    reject(err);
-                } else {
-                    resolve();
-                }
-              });
-        }));
 
-    return promises;
+    for (let i = 0; i < balances.length; i++) {
+      const balance = balances[i];
+      
+      try {
+        await sendBch(wallet, {value: value * (balance.tokenBalance/total), address: Utils.toCashAddress(balance.slpAddress)});
+      } catch(error) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        i--;
+      }
+    }
 };
