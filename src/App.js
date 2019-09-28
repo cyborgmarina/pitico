@@ -6,6 +6,7 @@ import Mint from "./Mint";
 import Home from "./Home";
 import Create from "./Create";
 import PayDividends from "./PayDividends";
+import Portfolio from "./Portfolio";
 import "./App.css";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
@@ -30,56 +31,56 @@ const App = () => {
               style={{ textAlign: "left" }}
             >
               <Menu.Item key="0">
-                <Link to="/portfolio">
+                <Link to="/">
                   {" "}
-		  <Icon type="appstore"/>
+		  <Icon style={{ fontSize: '16px'}} type="appstore"/>
                   <span>Portfolio</span>
                 </Link>
 	      </Menu.Item>
               <Menu.Item key="1">
-                <Link to="/new-token">
+                <Link to="/create">
                   {" "}
-                  <Icon type="bulb" />
+                  <Icon style={{ fontSize: '16px'}} type="bulb" />
                   <span>Create</span>
                 </Link>
               </Menu.Item>
               <Menu.Item key="3">
                 <Link to="/transfer">
-                  <Icon type="interaction" />
+                  <Icon style={{ fontSize: '16px'}} type="interaction" />
                   <span>Transfer</span>
                 </Link>
               </Menu.Item>
               <Menu.Item key="4">
-                <Link to="/mint-tokens">
-                  <Icon type="printer" />
+                <Link to="/mint">
+                  <Icon style={{ fontSize: '16px'}} type="printer" />
                   <span>Mint </span>
                 </Link>
               </Menu.Item>
               <Menu.Item key="5">
                 <Link to="/pay-dividends">
-                  <Icon type="dollar" />
+                  <Icon style={{ fontSize: '16px'}} type="dollar" />
                   <span>Pay Dividends </span>
                 </Link>
               </Menu.Item>
               <Menu.Item key="6">
                 <Link to="/pass-the-baton">
-                  <Icon type="crown" />
+                  <Icon style={{ fontSize: '16px'}} type="crown" />
                   <span>Pass The Baton</span>
                 </Link>
               </Menu.Item>
             </Menu>
           </Sider>
-          <Layout>
+	  <Layout style={{ background: "#f0f2f5" }}>
             <Header
-              style={{ background: "#fff", padding: 0, fontSize: "24px" }}
+              style={{ background: "#f0f2f5", padding: 0, fontSize: "24px" }}
             >
               Pitico Cash
             </Header>
             <Content style={{ margin: "0 16px" }}>
-              <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
-                <Route exact path="/" component={Home} />
-                <Route path="/new-token" component={Create} />
-                <Route path="/mint-tokens" component={Mint} />
+              <div style={{ padding: 24, background: "#f0f2f5", minHeight: 360 }}>
+                <Route exact path="/" component={Portfolio} />
+                <Route path="/create" component={Create} />
+                <Route path="/mint" component={Mint} />
                 <Route path="/pay-dividends" component={PayDividends} />
               </div>
             </Content>
