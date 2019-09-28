@@ -1,12 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import "antd/dist/antd.css";
 import "./index.css";
-import { Layout, Menu, Breadcrumb, Icon } from "antd";
+import { Layout, Menu, Icon } from "antd";
 import Example from "./Component";
 import "./App.css";
 
-const { Header, Content, Footer, Sider } = Layout;
-const { SubMenu } = Menu;
+const { Header, Content, Sider } = Layout;
 
 const App = () => {
   const [collapsed, setCollapesed] = React.useState(false);
@@ -32,19 +31,14 @@ const App = () => {
           </Menu>
         </Sider>
         <Layout>
-          <Header style={{ background: "#fff", padding: 0 }} />
+          <Header style={{ background: "#fff", padding: 0 , fontSize:"24px"}} >
+            Pitico Cash
+            </Header>
           <Content style={{ margin: "0 16px" }}>
-            <Breadcrumb style={{ margin: "16px 0" }}>
-              <Breadcrumb.Item>User</Breadcrumb.Item>
-              <Breadcrumb.Item>Bill</Breadcrumb.Item>
-            </Breadcrumb>
             <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
             <Example/>
             </div>
           </Content>
-          <Footer style={{ textAlign: "center" }}>
-            Ant Design ©2018 Created by Ant UED
-          </Footer>
         </Layout>
       </Layout>
     </div>
