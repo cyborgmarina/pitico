@@ -6,7 +6,7 @@
 import SLPSDK from 'slp-sdk';
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `mainnet`
+const NETWORK = process.env.NETWORK
 
 // Instantiate SLP based on the network.
 let SLP
@@ -14,17 +14,9 @@ if (NETWORK === `mainnet`)
   SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v2/` })
 else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v2/` })
 
-// Open the wallet generated with create-wallet.
-let walletInfo = {
-    "mnemonic": "wood nose now few liberty bachelor carry visa shrimp visa increase memory",
-    "cashAddress": "bitcoincash:qzpu23gyrlpahnkv5yejzptyfqp8v4cf0s5tkpepfr",
-    "slpAddress": "simpleledger:qzpu23gyrlpahnkv5yejzptyfqp8v4cf0scsa6vpha",
-    "legacyAddress": "1D1jqfNDiKWnyPAUTbbJbRxPKskZtWjqCT"
-  }
-
-export async function getBalance() {
+export async function getBalance(wallet) {
   try {
-    const mnemonic = walletInfo.mnemonic
+    const mnemonic = wallet.mnemonic
 
     // root seed buffer
     const rootSeed = SLP.Mnemonic.toSeed(mnemonic)
@@ -45,9 +37,7 @@ export async function getBalance() {
     // first get BCH balance
     const balance = await SLP.Address.details(cashAddress)
 
-    console.log(`BCH Balance information for ${slpAddress}:`)
-    console.log(balance)
-    console.log(`SLP Token information:`)
+    console.log(`Balance: ${JSON.stringify(balance, null, 4)}:`)
 
     // get token balances
     try {

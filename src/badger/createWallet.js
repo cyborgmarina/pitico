@@ -6,13 +6,25 @@
 import SLPSDK from "slp-sdk";
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = `mainnet`;
+const NETWORK = process.env.NETWORK
 
 // Instantiate SLP based on the network.
 let SLP;
 if (NETWORK === `mainnet`)
   SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v2/` });
 else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v2/` });
+
+export const getWallet = () => {
+    let wallet;
+    try {
+        wallet = JSON.parse(window.localStorage.getItem('wallet') || undefined);
+    } catch (error) {
+        wallet = createWallet();
+        window.localStorage.setItem('wallet', JSON.stringify(wallet));
+    }
+    console.info('wallet', wallet);
+    return wallet;
+};
 
 export const createWallet = () => {
   const lang = "english";
