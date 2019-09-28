@@ -55,6 +55,7 @@
     "resolve-url-loader": "3.1.0",
     "sass-loader": "7.2.0",
     "semver": "6.3.0",
+    "slp-sdk": "^4.11.0",
     "style-loader": "1.0.0",
     "styled-components": "^4.4.0",
     "terser-webpack-plugin": "1.4.1",
