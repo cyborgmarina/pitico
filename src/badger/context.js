@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import { useBadger } from "./useBadger";
 import { getBalance } from "./getBalance";
@@ -6,16 +5,7 @@ import { getWallet } from "./createWallet";
 import { createToken } from "./createToken";
 import { sendToken } from "./sendToken";
 import { mintToken } from "./mintToken";
-=======
-import React, { useEffect, useState } from 'react';
-import { useBadger } from './useBadger';
-import { getBalance } from './getBalance';
-import { getWallet } from './createWallet';
-import { createToken } from './createToken';
-import { sendToken } from './sendToken';
-import { mintToken } from './mintToken';
-import { sendCash } from './sendCash';
->>>>>>> tmp
+import { sendCash } from "./sendCash";
 export const BadgerContext = React.createContext();
 
 export const BadgerProvider = ({ children }) => {
