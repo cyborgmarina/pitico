@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "antd/dist/antd.css";
 import "./index.css";
 import { Layout, Menu, Breadcrumb, Icon } from "antd";
+import Example from "./Component";
 import "./App.css";
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -38,7 +39,7 @@ const App = () => {
               <Breadcrumb.Item>Bill</Breadcrumb.Item>
             </Breadcrumb>
             <div style={{ padding: 24, background: "#fff", minHeight: 360 }}>
-              Bill is a cat.
+            <Example/>
             </div>
           </Content>
           <Footer style={{ textAlign: "center" }}>
