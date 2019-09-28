@@ -16,7 +16,7 @@ export const BadgerProvider = ({ children }) => {
     const w = getWallet();
     setWallet(w);
     getBalance(w).then(balance => {
-      if (balance.tokens) {
+      if (balance.tokens && balance.tokens.length>0) {
         // sendToken(w, { address: 'slptest:qzmxdkn43xafya0cfmxh3hqnumtfwwyntge0f6uc82', tokenId: balance.tokens[0].tokenId, qty: 1 });
         // mintToken(w, { tokenId: balance.tokens[0].tokenId, qty: 1 });
         setTokens(balance.tokens);
