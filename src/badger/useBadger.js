@@ -5,8 +5,9 @@ export const useBadger = () => {
 
   useEffect(() => {
     if (typeof web4bch !== 'undefined') {
-      const web4bch = new window.Web4Bch(new window.web4bch.providers.HttpProvider());
-      // const web4bch = new window.Web4Bch(window.web4bch.currentProvider);
+    //   const web4bch = new window.Web4Bch(new window.web4bch.providers.HttpProvider());
+      const web4bch = new window.Web4Bch(window.web4bch.currentProvider);
+      window.web4bch = web4bch;
 
       if(web4bch.currentProvider.isConnected()) {
         console.info('web4bch connected');
