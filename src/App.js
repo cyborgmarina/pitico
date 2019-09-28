@@ -40,7 +40,7 @@ const App = () => {
               <Menu.Item key="1">
                 <Link to="/create">
                   {" "}
-                  <Icon style={{ fontSize: '18px'}} type="build" theme="filled" />
+                  <Icon style={{ fontSize: '16px'}} type="plus-square" theme="filled" />
                   <span>Create</span>
                 </Link>
               </Menu.Item>
