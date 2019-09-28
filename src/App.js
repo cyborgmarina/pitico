@@ -33,39 +33,22 @@ const App = () => {
               <Menu.Item key="0">
                 <Link to="/">
                   {" "}
-		  <Icon style={{ fontSize: '16px'}} type="appstore"/>
+		  <Icon style={{ fontSize: '16px'}} type="appstore" theme="filled"/>
                   <span>Portfolio</span>
                 </Link>
 	      </Menu.Item>
               <Menu.Item key="1">
                 <Link to="/create">
                   {" "}
-                  <Icon style={{ fontSize: '16px'}} type="bulb" />
+                  <Icon style={{ fontSize: '18px'}} type="build" theme="filled" />
                   <span>Create</span>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="3">
-                <Link to="/transfer">
-                  <Icon style={{ fontSize: '16px'}} type="interaction" />
-                  <span>Transfer</span>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="4">
-                <Link to="/mint">
-                  <Icon style={{ fontSize: '16px'}} type="printer" />
-                  <span>Mint </span>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="5">
-                <Link to="/pay-dividends">
-                  <Icon style={{ fontSize: '16px'}} type="dollar" />
-                  <span>Pay Dividends </span>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="6">
-                <Link to="/pass-the-baton">
-                  <Icon style={{ fontSize: '16px'}} type="crown" />
-                  <span>Pass The Baton</span>
+              <Menu.Item key="2">
+                <Link to="/configure">                  
+                {" "}
+                  <Icon style={{ fontSize: '16px'}} type="tool" theme="filled" />
+                  <span>Configure</span>
                 </Link>
               </Menu.Item>
             </Menu>
