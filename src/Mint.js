@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import styled from 'styled-components';
+import styled from "styled-components";
 import { ButtonQR } from "badger-components-react";
 import { WalletContext } from "./badger/context";
 import { mintToken } from "./badger/mintToken";
-import { Card, Icon, Avatar, Table, Form, Input, Button } from "antd";
+import { Card, Icon, Avatar, Table, Form, Input, Button, Alert } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
+import Text from "antd/lib/typography/Text";
 const { Meta } = Card;
 
 const StyledButtonWrapper = styled.div`
@@ -52,71 +53,87 @@ const Mint = () => {
           <Row justify="center" type="flex">
             <Col span={24}>
               <StyledButtonWrapper>
-                  {balances.balance ? (
-                    <>
-                      <Paragraph>
-                        <ButtonQR
-                          toAddress={wallet.cashAddress}
-                          sizeQR={125}
-                          step={"fresh"}
-                          amountSatoshis={0}
-                        />
-                      </Paragraph>
-                      <Paragraph style={{ overflowWrap: 'break-word' }}copyable>{wallet.cashAddress}</Paragraph>
-                      <Paragraph>
-                        You currently have 0 BCH. 
-                      </Paragraph>
-                      <Paragraph>
-                        Deposit some BCH in order to pay for the transaction that will mint the token
-                      </Paragraph>
-                    </>
-                  ) : null}
-                </StyledButtonWrapper>
+                {!balances.balance ? (
+                  <>
+                    <Paragraph>
+                      <ButtonQR
+                        toAddress={wallet.cashAddress}
+                        sizeQR={125}
+                        step={"fresh"}
+                        amountSatoshis={0}
+                      />
+                    </Paragraph>
+                    <Paragraph style={{ overflowWrap: "break-word" }} copyable>
+                      {wallet.cashAddress}
+                    </Paragraph>
+                    <Paragraph>You currently have 0 BCH.</Paragraph>
+                    <Paragraph>
+                      Deposit some BCH in order to pay for the transaction that
+                      will mint the token
+                    </Paragraph>
+                  </>
+                ) : null}
+              </StyledButtonWrapper>
             </Col>
           </Row>
-          <Form style={{ width: 'auto' }}>
-            <Form.Item
-              validateStatus={  
-                !formData.dirty && Number(formData.quantity) <= 0 ? "error" : ""
-              }
-              help={
-                !formData.dirty && Number(formData.quantity) <= 0
-                  ? "Should be greater than 0"
-                  : ""
-              }
-            >
-              <Input
-                prefix={<Icon type="block" />}
-                placeholder="quantity"
-                name="quantity"
-                onChange={e => handleChange(e)}
-                required
-                type="number"
-              />
-            </Form.Item>
-            <Form.Item
-              validateStatus={
-                !formData.dirty && Number(formData.baton) <= 0 ? "error" : ""
-              }
-              help={
-                !formData.dirty && Number(formData.baton) <= 0
-                  ? "Should be greater than 0"
-                  : 'The slp address which has the baton has the ability to mint more tokens.'
-              }
-            >
-              <Input
-                prefix={<Icon type="wallet" />}
-                placeholder="baton"
-                name="baton"
-                onChange={e => handleChange(e)}
-                required
-                value={formData.baton}
-              />
-            </Form.Item>
-            <div style={{ paddingTop: "12px" }}>
-              <Button onClick={() => submit()}>Mint Token</Button>
-            </div>
-          </Form>
+          <Row justify="center" type="flex">
+            <Col span={24}>
+              <Form style={{ width: "auto" }}>
+                <Form.Item
+                  validateStatus={
+                    !formData.dirty && Number(formData.quantity) <= 0 ? "error" : ""
+                  }
+                  help={
+                    !formData.dirty && Number(formData.quantity) <= 0
+                      ? "Should be greater than 0"
+                      : ""
+                  }
+                >
+                  <Input
+                    prefix={<Icon type="block" />}
+                    placeholder="quantity"
+                    name="quantity"
+                    onChange={e => handleChange(e)}
+                    required
+                    type="number"
+                  />
+                </Form.Item>
+                <Form.Item
+                  validateStatus={
+                    !formData.dirty && Number(formData.baton) <= 0 ? "error" : ""
+                  }
+                  help={
+                    !formData.dirty && Number(formData.baton) <= 0
+                      ? "Should be a valid slp address"
+                      : ""
+                  }
+                >
+                  <Input
+                    prefix={<Icon type="wallet" />}
+                    placeholder="baton"
+                    name="baton"
+                    onChange={e => handleChange(e)}
+                    required
+                    value={formData.baton}
+                  />
+                  <Alert
+                    message={
+                      <Text>
+                          <Icon type="info-circle" /> &nbsp;
+                          The slp address which has the baton has the ability to mint more tokens.
+                      </Text>
+                    }
+                    type="warning"
+                    closable
+                    style={{ marginTop: 4 }}
+                  />
+                </Form.Item>
+                <div style={{ paddingTop: "12px" }}>
+                  <Button onClick={() => submit()}>Mint Token</Button>
+                </div>
+              </Form>
+            </Col>
+          </Row>
         </Card>
       </Col>
     </Row>

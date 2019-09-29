@@ -21,7 +21,7 @@ const App = () => {
   const [address, setAddress] = React.useState("slpAddress");
   const ContextValue = React.useContext(WalletContext);
   const { wallet } = ContextValue;
-  console.log("wallet", wallet);
+
   React.useEffect(() => {
     const url = window.location.href.toString();
     if (url.includes("/", url.length - 1)) {
@@ -43,8 +43,12 @@ const App = () => {
     setAddress(e.target.value);
   };
 
-  const StyledWrapper = styled.div`
-
+const StyledWrapper = styled.div`
+  ${ButtonQR} {
+    button {
+      display: none;
+    }
+  }
 `;
 
   return (
