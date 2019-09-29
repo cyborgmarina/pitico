@@ -2,16 +2,21 @@ import React, { useState } from 'react'
 import { Row, Col, Card, Icon, Alert, Typography, Form, Input, Button } from 'antd';
 const { Paragraph } = Typography;
 
+
 export default () => {
 	const [visible, setVisible] = useState(true);
 	const handleClose = () => setVisible(false);
-	const [loading, setLoading] = React.useState(false);
+	const [isConfigUpdated, setIsConfigUpdated] = React.useState(false);
 	const [data, setData] = React.useState({
 		dirty: true,
 		restAPI: "",
 	});
 
-	const handleConfigure = () => {};
+	const handleConfigure = () => {
+		window.localStorage.setItem('restAPI', data.restAPI);
+		setIsConfigUpdated(true);
+
+	};
 	const handleChange = e => {
 		const { value, name } = e.target;
 
@@ -50,6 +55,8 @@ export default () => {
 			<Button onClick={() => handleConfigure()}>
 			Update Config
 			</Button>
+			{isConfigUpdated && <Paragraph>Your configuration has been updated. Now connecting to {data.restAPI} </Paragraph>}
+
 			</div>
 			</Form>
 			</Card>

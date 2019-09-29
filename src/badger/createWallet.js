@@ -4,15 +4,12 @@
 */
 
 import SLPSDK from "slp-sdk";
-
+import getSlpInstance from './getSlpInstance';
 // Set NETWORK to either testnet or mainnet
-const NETWORK = process.env.NETWORK
+const NETWORK = process.env.NETWORK;
 
 // Instantiate SLP based on the network.
-let SLP;
-if (NETWORK === `mainnet`)
-  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v2/` });
-else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v2/` });
+const SLP = getSlpInstance(NETWORK);
 
 export const getWallet = () => {
     let wallet;
