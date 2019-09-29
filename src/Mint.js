@@ -1,62 +1,143 @@
-import React from "react";
+import React, { useState } from "react";
+import styled from "styled-components";
+import { ButtonQR } from "badger-components-react";
 import { WalletContext } from "./badger/context";
 import { mintToken } from "./badger/mintToken";
-import { Card, Icon, Avatar, Table } from 'antd';
-import { Row, Col } from 'antd';
-
+import { Card, Icon, Avatar, Table, Form, Input, Button, Alert } from "antd";
+import { Row, Col } from "antd";
+import Paragraph from "antd/lib/typography/Paragraph";
+import Text from "antd/lib/typography/Text";
 const { Meta } = Card;
+
+const StyledButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  ${ButtonQR} {
+    button {
+      display: none;
+    }
+  }
+`;
 
 const Mint = () => {
   const ContextValue = React.useContext(WalletContext);
-  const { wallet, tokens } = ContextValue;
-  const columns = [
-    {
-      title: "Id",
-      dataIndex: "tokenId",
-      key: "tokenId",
-      render: text => <a>{text}</a>
-    },
-    {
-      title: "Action",
-      key: "action",
-      render: text => (
-        <span>
-          <a onClick={() => {
-              mintToken(wallet, { tokenId: text.tokenId, qty: 1 })
-          }}>
-            Mint
-          </a>
-        </span>
-      )
-    }
-  ];
+  const { wallet, tokens, balances } = ContextValue;
+  const [formData, setFormData] = useState({
+    dirty: true,
+    quantity: 0,
+    baton: wallet.slpAddress
+  });
+
+  const submit = () => null;
+
+  const handleChange = e => {
+    const { value, name } = e.target;
+
+    setFormData(p => ({ ...p, [name]: value }));
+  };
 
   return (
-    <>
-      <Table columns={columns} dataSource={tokens} />
-      <Row type="flex" gutter={8}>
-        {tokens.map(token => (
-          <Col>
-            <Card
-            key={token.tokenId}
-            style={{ width: 300 }}
-            actions={[
-              <span><Icon type="printer" key="printer"/> Mint</span>,
-              <span><Icon type="interaction" key="interaction"/> Transfer</span>,
-              <span><Icon type="ellipsis" key="ellipsis"/></span>,
-            ]}
-          >
-            <Meta
-              avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-              title="Token symbol"
-              description="Token description"
-            />
-          </Card>
-        </Col>
-        ))}
-      </Row>
-    </>
-  )
+    <Row justify="center" type="flex">
+      <Col span={24}>
+        <Card
+          title={
+            <h2>
+              <Icon type="printer" theme="filled" /> Mint
+            </h2>
+          }
+          bordered={false}
+        >
+          <Row justify="center" type="flex">
+            <Col span={24}>
+              <StyledButtonWrapper>
+                {!balances.balance ? (
+                  <>
+                    <Paragraph>
+                      <ButtonQR
+                        toAddress={wallet.cashAddress}
+                        sizeQR={125}
+                        step={"fresh"}
+                        amountSatoshis={0}
+                      />
+                    </Paragraph>
+                    <Paragraph style={{ overflowWrap: "break-word" }} copyable>
+                      {wallet.cashAddress}
+                    </Paragraph>
+                    <Paragraph>You currently have 0 BCH.</Paragraph>
+                    <Paragraph>
+                      Deposit some BCH in order to pay for the transaction that
+                      will mint the token
+                    </Paragraph>
+                  </>
+                ) : null}
+              </StyledButtonWrapper>
+            </Col>
+          </Row>
+          <Row justify="center" type="flex">
+            <Col span={24}>
+              <Form style={{ width: "auto" }}>
+                <Form.Item
+                  validateStatus={
+                    !formData.dirty && Number(formData.quantity) <= 0 ? "error" : ""
+                  }
+                  help={
+                    !formData.dirty && Number(formData.quantity) <= 0
+                      ? "Should be greater than 0"
+                      : ""
+                  }
+                >
+                  <Input
+                    prefix={<Icon type="block" />}
+                    placeholder="quantity"
+                    name="quantity"
+                    onChange={e => handleChange(e)}
+                    required
+                    type="number"
+                  />
+                </Form.Item>
+                <Form.Item
+                  validateStatus={
+                    !formData.dirty && Number(formData.baton) <= 0 ? "error" : ""
+                  }
+                  help={
+                    !formData.dirty && Number(formData.baton) <= 0
+                      ? "Should be a valid slp address"
+                      : ""
+                  }
+                >
+                  <Input
+                    prefix={<Icon type="wallet" />}
+                    placeholder="baton"
+                    name="baton"
+                    onChange={e => handleChange(e)}
+                    required
+                    value={formData.baton}
+                  />
+                  <Alert
+                    message={
+                      <Text>
+                          <Icon type="info-circle" /> &nbsp;
+                          The slp address which has the baton has the ability to mint more tokens.
+                      </Text>
+                    }
+                    type="warning"
+                    closable
+                    style={{ marginTop: 4 }}
+                  />
+                </Form.Item>
+                <div style={{ paddingTop: "12px" }}>
+                  <Button onClick={() => submit()}>Mint Token</Button>
+                </div>
+              </Form>
+            </Col>
+          </Row>
+        </Card>
+      </Col>
+    </Row>
+  );
 };
 
 export default Mint;

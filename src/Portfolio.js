@@ -5,6 +5,7 @@ import { WalletContext } from "./badger/context";
 import { Meta } from "antd/lib/list/Item";
 import Img from "react-image";
 import Jdenticon from "react-jdenticon";
+import Mint from "./Mint";
 import MoreCardOptions from './MoreCardOptions';
 
 export default () => {
@@ -59,16 +60,10 @@ export default () => {
                   setAction(null);
                 }}
                 actions={[
-                  <span
-                    onClick={() => setAction(action !== "mint" ? "mint" : null)}
-                  >
+                  <span onClick={() => setAction(action !== "mint" ? "mint" : null)}>
                     <Icon type="printer" key="printer" /> Mint
                   </span>,
-                  <span
-                    onClick={() =>
-                      setAction(action !== "transfer" ? "transfer" : null)
-                    }
-                  >
+                  <span onClick={() => setAction(action !== "transfer" ? "transfer" : null)}>
                     <Icon type="interaction" key="interaction" /> Transfer
                   </span>,
                   <span
@@ -79,6 +74,13 @@ export default () => {
                     <MoreCardOptions hoverContent="teste"><span><Icon style={{ fontSize: "18px" }}type="ellipsis" key="ellipsis"/></span></MoreCardOptions>
                   </span>
                 ]}
+                renderExpanded={() => (
+                    <>
+                        {
+                            selectedToken && action === 'mint' ? <Mint /> : null
+                        }
+                    </>
+                )}
               >
                 <Meta
                   avatar={

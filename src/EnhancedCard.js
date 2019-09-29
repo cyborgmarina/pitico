@@ -48,13 +48,48 @@ export const StyledModal = styled(Modal)`
     ${StyledEnhancedCard} {
         ${props => props.visible ? `
             width: 600px !important;
+            max-width: 100vw !important;
             height: 600px !important;
-            z-index: 2;
         `: ''}
+    }
+
+    @media only screen and (max-width: 800px) {
+        & {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0;
+            margin-top: 0 !important;
+
+            .ant-modal-close {
+                right: -50px !important;
+                top: 10px !important;
+            }
+
+            .ant-modal-body {
+                padding: 0 !important;
+            }
+
+            ${StyledEnhancedCard} {
+                margin-top: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+            }
+        }
     }
 `;
 
-export const EnhancedCard = ({ expand, onClick, onClose, children, ...otherProps }) => {
+export const StyledExpandedWrapper = styled.div`
+    .ant-card-head, .ant-card-body {
+        padding: 0;
+    }
+
+    .ant-card-body {
+        overflow: auto;
+        max-height: 400px;
+    }
+`;
+
+export const EnhancedCard = ({ expand, renderExpanded = () => null, onClick, onClose, children, ...otherProps }) => {
     return (
         <StyledWrapper>
             <GlobalStyle />
@@ -64,6 +99,9 @@ export const EnhancedCard = ({ expand, onClick, onClose, children, ...otherProps
             <StyledModal visible={expand} centered footer={null} onCancel={onClose}>
                 <StyledEnhancedCard {...otherProps}>
                     {children}
+                    <StyledExpandedWrapper>
+                        {renderExpanded()}
+                    </StyledExpandedWrapper>
                 </StyledEnhancedCard>
             </StyledModal>
         </StyledWrapper>
