@@ -6,6 +6,7 @@ import { Meta } from "antd/lib/list/Item";
 import Img from "react-image";
 import Jdenticon from "react-jdenticon";
 import Mint from "./Mint";
+import MoreCardOptions from './MoreCardOptions';
 
 export default () => {
   const ContextValue = React.useContext(WalletContext);
@@ -65,10 +66,21 @@ export default () => {
                   <span onClick={() => setAction(action !== "transfer" ? "transfer" : null)}>
                     <Icon type="interaction" key="interaction" /> Transfer
                   </span>,
-                  <span onClick={() => setAction(action !== "other" ? "other" : null)}>
-                    <Icon type="ellipsis" key="ellipsis" />
+                  <span
+                    onClick={() =>
+                      setAction(action !== "other" ? "other" : null)
+                    }
+                  >
+                    <MoreCardOptions hoverContent="teste"><span><Icon style={{ fontSize: "18px" }}type="ellipsis" key="ellipsis"/></span></MoreCardOptions>
                   </span>
                 ]}
+                renderExpanded={() => (
+                    <>
+                        {
+                            selectedToken && action === 'mint' ? <Mint /> : null
+                        }
+                    </>
+                )}
               >
                 <Meta
                   avatar={
@@ -85,9 +97,6 @@ export default () => {
                   }
                   description={token.info && token.info.name}
                 />
-				{
-					selectedToken && action === 'mint' ? <Mint /> : null
-				}
               </EnhancedCard>
             </Col>
           ))

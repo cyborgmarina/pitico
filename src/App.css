@@ -40,3 +40,7 @@
   background: #171f22;
   color: "#fff";
 } */
+
+.ant-card-actions > li:not(:last-child) {
+  border-right: 0;
+}
