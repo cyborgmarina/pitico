@@ -9,7 +9,7 @@ export default () => {
 	const [isConfigUpdated, setIsConfigUpdated] = React.useState(false);
 	const [data, setData] = React.useState({
 		dirty: true,
-		restAPI: "",
+		restAPI: window.localStorage.getItem("restAPI"),
 	});
 
 	const handleConfigure = () => {
@@ -32,6 +32,7 @@ export default () => {
 		<Card title={<h2><Icon type="tool" theme="filled" /> Configure</h2>} bordered={false}>
 		{visible ? (
 			<Alert
+			style={{ marginBottom: "10px" }}
 			message={<span><Paragraph><Icon type="warning" /> Be careful.</Paragraph><Paragraph>This is for experienced users.</Paragraph></span>}
 			type="warning"
 			closable
@@ -48,7 +49,7 @@ export default () => {
 			}
 			>
 			<Input
-			placeholder="Rest API"
+			placeholder={data.restAPI}
 			name="restAPI"
 			onChange={e => handleChange(e)}
 			required
