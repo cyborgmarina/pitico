@@ -49,6 +49,7 @@ export default () => {
 						avatar={<Jdenticon size="48" value={token.tokenId} />}
 						title={token.info && token.info.symbol}
 						description={token.info && token.info.name}
+						style={{color:"#fff"}}
 					/>
 				</EnhancedCard>
 				</Col>

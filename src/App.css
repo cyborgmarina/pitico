@@ -1,9 +1,10 @@
-@import '~antd/dist/antd.css';
-@import url('https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap');
+@import "~antd/dist/antd.less";
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap&.css");
 
 .App {
   text-align: center;
-  font-family: 'Roboto Mono', monospace;
+  font-family: "Roboto Mono", monospace;
+  background-color: #171717;
 }
 
 .App-logo {
@@ -26,7 +27,11 @@
 }
 
 .ant-input:placeholder-shown {
-    border-radius: 0px;
-    padding: 20px;
-    margin-top: 10px;
+  border-radius: 0px;
+  padding: 20px;
+  margin-top: 10px;
+}
+.ant-card {
+  background: #171f22;
+  color: "#fff";
 }

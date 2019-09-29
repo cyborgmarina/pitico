@@ -1,5 +1,5 @@
 import React from "react";
-import "antd/dist/antd.css";
+import "antd/dist/antd.less";
 import "./index.css";
 import { Layout, Menu, Icon } from "antd";
 import Portfolio from "./Portfolio";
@@ -51,14 +51,14 @@ const App = () => {
               </Menu.Item>
             </Menu>
           </Sider>
-	  <Layout style={{ background: "#f0f2f5" }}>
+	  <Layout style={{ backgroundColor:"#171717" }}>
             <Header
-              style={{ background: "#f0f2f5", padding: 0, fontSize: "24px" }}
+              style={{ background: "#171717", padding: 0, fontSize: "24px", color:"#fff" }}
             >
               pitico.cash
             </Header>
-            <Content style={{ margin: "0 16px" }}>
-              <div style={{ padding: 24, background: "#f0f2f5", minHeight: 360 }}>
+            <Content style={{ margin: "0 16px", backgroundColor:"#171717" }}>
+              <div style={{ padding: 24, background: "#f0f2f5", minHeight: 360, backgroundColor:"#171717" }}>
                 <Route exact path="/" component={Portfolio} />
                 <Route path="/create" component={Create} />
                 <Route path="/configure" component={Configure}/>
