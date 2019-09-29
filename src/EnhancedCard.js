@@ -17,8 +17,9 @@ const GlobalStyle = createGlobalStyle`
         background-color: transparent;
     }
 
-    .ant-modal-close-x {
-        display: none !important;
+    .ant-modal-close {
+        top: 40px !important;
+        right: -100px !important;
     }
 `;
 

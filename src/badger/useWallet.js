@@ -58,10 +58,6 @@ export const useWallet = () => {
         };
     }, []);
 
-    useEffect(() => {
-
-    }, [tokens])
-
     return {
         wallet,
         balances,
