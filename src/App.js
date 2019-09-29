@@ -1,21 +1,27 @@
 import React from "react";
 import "antd/dist/antd.less";
 import "./index.css";
-import { Layout, Menu, Icon, Row, Col } from "antd";
+import { Layout, Menu, Icon, Typography, Radio } from "antd";
 import Logo from "./Logo";
 import Portfolio from "./Portfolio";
+import { ButtonQR } from "badger-components-react";
 import Create from "./Create";
 import Configure from "./Configure";
 import NotFound from "./NotFound";
 import "./App.css";
+import { WalletContext } from "./badger/context";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 const { Header, Content, Sider } = Layout;
+const { Paragraph } = Typography;
 
 const App = () => {
   const [collapsed, setCollapesed] = React.useState(false);
   const [key, setKey] = React.useState(1);
-
+  const [address, setAddress] = React.useState("slpAddress");
+  const ContextValue = React.useContext(WalletContext);
+  const { wallet } = ContextValue;
+  console.log("wallet", wallet);
   React.useEffect(() => {
     const url = window.location.href.toString();
     if (url.includes("/", url.length - 1)) {
@@ -32,6 +38,10 @@ const App = () => {
   const handleChange = e => {
     console.log("e", e);
     setKey(e.key);
+  };
+
+  const handleChangeAddress = e => {
+    setAddress(e.target.value);
   };
 
   return (
@@ -85,21 +95,51 @@ const App = () => {
                 </Link>
               </Menu.Item>
             </Menu>
+            {wallet ? (
+              <div style={{ paddingTop: "120px" }}>
+                <Radio.Group
+                  defaultValue="slpAddress"
+                  onChange={(e) => handleChangeAddress(e)}
+                  value={address}
+                  size="small"
+                  buttonStyle="solid"
+                >
+                  <Radio.Button value="slpAddress">Slp</Radio.Button>
+                  <Radio.Button value="cashAddress">Cash</Radio.Button>
+                </Radio.Group>
+                <Paragraph>
+                  <ButtonQR
+                    toAddress={wallet[address]}
+                    sizeQR={125}
+                    step={"fresh"}
+                    amountSatoshis={0}
+                  />
+                </Paragraph>
+                <Paragraph style={{ overflowWrap: "break-word" }} copyable>
+                  {wallet[address]}
+                </Paragraph>
+              </div>
+            ) : null}
           </Sider>
           <Layout style={{ backgroundColor: "#171717" }}>
             <Header
               style={{
                 background: "#171717",
-                padding: 0,
-                height: "128px",
                 fontSize: "24px",
                 color: "#fff"
               }}
             >
-              <Logo/>
- 
-                  <span style={{}}>pitico.cash</span>
-       
+              <div
+                style={{
+                  display: "inline",
+                  paddingRight: "4px",
+                  paddingTop: "32px"
+                }}
+              >
+                <Logo />
+              </div>
+
+              <span style={{ display: "inline" }}>pitico.cash</span>
             </Header>
             <Content style={{ margin: "0 16px", backgroundColor: "#171717" }}>
               <div
