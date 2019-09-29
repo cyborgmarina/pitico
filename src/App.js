@@ -1,5 +1,5 @@
 import React from "react";
-import "antd/dist/antd.css";
+import "antd/dist/antd.less";
 import "./index.css";
 import { Layout, Menu, Icon } from "antd";
 import Mint from "./Mint";
