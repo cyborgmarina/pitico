@@ -93,6 +93,8 @@ module.exports = function(webpackEnv) {
         loader: require.resolve("less-loader"),
         options: {
           modifyVars: {
+            "@layout-sider-background": "#23232E",
+            "@layout-trigger-background": "#30303D",
             '@light': '#fff',
             '@dark': '#000',
             '@heading-color': 'fade(@light, 85)',
@@ -100,7 +102,7 @@ module.exports = function(webpackEnv) {
             '@text-color-secondary': 'fade(@light, 45)',
             '@disabled-color': 'fade(@light, 25)',
             '@primary-5': '#40a9ff',
-            '@primary-color': '#1890ff',
+            '@primary-color': '#30303D',
             '@outline-color': '@primary-color',
             '@icon-color': 'fade(@light, 65)',
             '@icon-color-hover': 'fade(@light, 85)',
@@ -121,10 +123,10 @@ module.exports = function(webpackEnv) {
             '@select-border-color': '#3b3b4d',
             '@item-active-bg': '#272733',
             '@border-color-split': '#17171f',
-            '@menu-dark-bg': '#001529',
+            '@menu-dark-bg': '#23232E',
             '@body-background': '#30303d',
             '@component-background': '#23232e',
-            '@layout-body-background': '@body-background',
+            '@layout-body-background': '#171717',
             '@tooltip-bg': '#191922',
             '@tooltip-arrow-color': '#191922',
             '@popover-bg': '#2d2d3b',
@@ -185,7 +187,7 @@ module.exports = function(webpackEnv) {
 
             //自定义需要找设计师
             '@gray-8': '@text-color',
-            '@background-color-base': '#555',
+            '@background-color-base': '#171717',
             '@skeleton-color': 'rgba(0,0,0,0.8)',
 
             // pro
