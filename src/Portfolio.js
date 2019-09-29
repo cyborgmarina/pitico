@@ -5,6 +5,7 @@ import { WalletContext } from "./badger/context";
 import { Meta } from "antd/lib/list/Item";
 import Img from "react-image";
 import Jdenticon from "react-jdenticon";
+import Mint from "./Mint";
 
 export default () => {
   const ContextValue = React.useContext(WalletContext);
@@ -13,7 +14,6 @@ export default () => {
   const [selectedToken, setSelectedToken] = useState(null);
   const [action, setAction] = useState(null);
   const SLP_TOKEN_ICONS_URL = "https://tokens.bch.sx/64";
-  console.log(wallet);
 
   return (
     <Row type="flex" gutter={8} style={{ position: "relative" }}>
@@ -59,23 +59,13 @@ export default () => {
                   setAction(null);
                 }}
                 actions={[
-                  <span
-                    onClick={() => setAction(action !== "mint" ? "mint" : null)}
-                  >
+                  <span onClick={() => setAction(action !== "mint" ? "mint" : null)}>
                     <Icon type="printer" key="printer" /> Mint
                   </span>,
-                  <span
-                    onClick={() =>
-                      setAction(action !== "transfer" ? "transfer" : null)
-                    }
-                  >
+                  <span onClick={() => setAction(action !== "transfer" ? "transfer" : null)}>
                     <Icon type="interaction" key="interaction" /> Transfer
                   </span>,
-                  <span
-                    onClick={() =>
-                      setAction(action !== "other" ? "other" : null)
-                    }
-                  >
+                  <span onClick={() => setAction(action !== "other" ? "other" : null)}>
                     <Icon type="ellipsis" key="ellipsis" />
                   </span>
                 ]}
@@ -95,6 +85,9 @@ export default () => {
                   }
                   description={token.info && token.info.name}
                 />
+				{
+					selectedToken && action === 'mint' ? <Mint /> : null
+				}
               </EnhancedCard>
             </Col>
           ))
