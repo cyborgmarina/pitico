@@ -3,13 +3,15 @@ import { Row, Col, Icon, Avatar, Card } from 'antd';
 import { EnhancedCard } from './EnhancedCard';
 import { WalletContext } from './badger/context';
 import { Meta } from 'antd/lib/list/Item';
+import Img from 'react-image';
 import Jdenticon from 'react-jdenticon';
 
 export default () => {
 	const ContextValue = React.useContext(WalletContext);
 	const { wallet, tokens, loading } = ContextValue;
-
 	const [selectedToken, setSelectedToken] = useState(null);
+	const SLP_TOKEN_ICONS_URL = "https://tokens.bch.sx/64";
+	console.log(wallet);
 
 	return (
 		<Row type="flex" gutter={8} style={{ position:'relative' }}>
@@ -46,11 +48,11 @@ export default () => {
 						]}
 					>
 					<Meta
-						avatar={<Jdenticon size="48" value={token.tokenId} />}
+						avatar={<Img
+									src={`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`} 
+									unloader={<Jdenticon size="64" value={token.tokenId}/>}/>}
 						title={token.info && token.info.symbol}
-						description={token.info && token.info.name}
-						style={{color:"#fff"}}
-					/>
+						description={token.info && token.info.name} />
 				</EnhancedCard>
 				</Col>
 			))}
