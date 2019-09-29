@@ -8,13 +8,17 @@ const GlobalStyle = createGlobalStyle`
         background-color: transparent;
     }
 
+    .ant-modal-content {
+        background-color: transparent !important;
+    }
+
     .ant-modal-body {
         padding: 0;
         background-color: transparent;
     }
 
     .ant-modal-close-x {
-        display: none;
+        display: none !important;
     }
 `;
 
