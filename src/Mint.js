@@ -3,11 +3,14 @@ import styled from "styled-components";
 import { ButtonQR } from "badger-components-react";
 import { WalletContext } from "./badger/context";
 import { mintToken } from "./badger/mintToken";
-import { Card, Icon, Avatar, Table, Form, Input, Button, Alert } from "antd";
+import { Card, Icon, Avatar, Table, Form, Input, Button, Alert, Select, Spin, notification } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import Text from "antd/lib/typography/Text";
+
+const InputGroup = Input.Group;
 const { Meta } = Card;
+const { Option } = Select;
 
 const StyledButtonWrapper = styled.div`
   display: flex;
@@ -22,7 +25,7 @@ const StyledButtonWrapper = styled.div`
   }
 `;
 
-const Mint = () => {
+const Mint = ({ token, onClose }) => {
   const ContextValue = React.useContext(WalletContext);
   const { wallet, tokens, balances } = ContextValue;
   const [formData, setFormData] = useState({
@@ -30,8 +33,66 @@ const Mint = () => {
     quantity: 0,
     baton: wallet.slpAddress
   });
+  const [loading, setLoading] = useState(false);
 
-  const submit = () => null;
+  async function submit() {
+    setFormData({
+      ...formData,
+      dirty: false
+    });
+
+    if (
+      !formData.baton ||
+      !formData.quantity ||
+      Number(formData.quantity) <= 0
+    ) {
+      return;
+    }
+
+    setLoading(true);
+    const {quantity, baton } = formData;
+
+    try {
+      const link = await mintToken(wallet, {
+        tokenId: token.tokenId,
+        quantity,
+        baton,
+      });
+
+      notification.success({
+        message: "Success",
+        description:
+        (
+          <a href={link} target="_blank">
+            <Paragraph>
+              Transaction successful. It might take a little bit to show up on your portfolio. 
+              You can verify this transaction here: {link}
+            </Paragraph>
+          </a>
+        )
+      });
+      
+      onClose();
+      setLoading(false);
+    } catch (e) {
+      let message;
+
+      if(/don't have the minting baton/.test(e.message)) {
+        message = e.message;
+      } else if(/Invalid BCH address/.test(e.message)) {
+        message = 'Invalid BCH address';
+      } else {
+        message = "Unknown Error, try again later";
+      }
+
+      notification.error({
+        message: "Error",
+        description: message
+      });
+      console.error(e.message);
+      setLoading(false);
+    }
+  };
 
   const handleChange = e => {
     const { value, name } = e.target;
@@ -40,9 +101,10 @@ const Mint = () => {
   };
 
   return (
-    <Row justify="center" type="flex">
+    <Row type="flex">
       <Col span={24}>
-        <Card
+        <Spin spinning={loading}>
+          <Card
           title={
             <h2>
               <Icon type="printer" theme="filled" /> Mint
@@ -51,10 +113,11 @@ const Mint = () => {
           bordered={false}
         >
           <Row justify="center" type="flex">
-            <Col span={24}>
+            <Col>
               <StyledButtonWrapper>
                 {!balances.balance ? (
                   <>
+                    <br />
                     <Paragraph>
                       <ButtonQR
                         toAddress={wallet.cashAddress}
@@ -76,7 +139,7 @@ const Mint = () => {
               </StyledButtonWrapper>
             </Col>
           </Row>
-          <Row justify="center" type="flex">
+          <Row type="flex">
             <Col span={24}>
               <Form style={{ width: "auto" }}>
                 <Form.Item
@@ -110,24 +173,29 @@ const Mint = () => {
                 >
                   <Input
                     prefix={<Icon type="wallet" />}
-                    placeholder="baton"
+                    placeholder="baton (slp address)"
                     name="baton"
                     onChange={e => handleChange(e)}
                     required
                     value={formData.baton}
-                  />
-                  <Alert
-                    message={
-                      <Text>
-                          <Icon type="info-circle" /> &nbsp;
-                          The slp address which has the baton has the ability to mint more tokens.
-                      </Text>
-                    }
-                    type="warning"
-                    closable
-                    style={{ marginTop: 4 }}
+                    addonAfter={(
+                      <Select name="baton" defaultValue="My Address" onChange={value => handleChange({ target: { value, name: 'baton' } })}>
+                        <Option value={wallet.slpAddress}>My Address</Option>
+                        <Option value="">Other Address</Option>
+                      </Select>
+                    )}
                   />
                 </Form.Item>
+                <Alert
+                  message={
+                    <Text>
+                        <Icon type="info-circle" /> &nbsp;
+                        The slp address which has the baton has the ability to mint more tokens.
+                    </Text>
+                  }
+                  type="warning"
+                  style={{ marginTop: 4 }}
+                />
                 <div style={{ paddingTop: "12px" }}>
                   <Button onClick={() => submit()}>Mint Token</Button>
                 </div>
@@ -135,6 +203,7 @@ const Mint = () => {
             </Col>
           </Row>
         </Card>
+        </Spin>
       </Col>
     </Row>
   );

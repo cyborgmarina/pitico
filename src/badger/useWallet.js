@@ -3,7 +3,9 @@ import { getWallet } from "./createWallet";
 import { getBalance } from './getBalance';
 import { getTokenInfo } from './getTokenInfo';
 
-const tokensMap = {};
+const tokensCache = {};
+
+const sortTokens = tokens => tokens.sort((a, b) => a.tokenId > b.tokenId ? 1 : -1);
 
 const updateTokensInfo = async (tokens =[], setTokens) => {
     for (let i = 0; i < tokens.length; i++) {
@@ -16,8 +18,8 @@ const updateTokensInfo = async (tokens =[], setTokens) => {
                     ...token,
                     info,
                 };
-                tokensMap[token.tokenId] = tokens[i];
-                setTokens([ ...tokens]);
+                tokensCache[token.tokenId] = tokens[i];
+                setTokens(sortTokens([ ...tokens]));
             } catch(err) {
                 i--;
             }
@@ -30,9 +32,12 @@ const update = async ({ wallet, tokens, setBalances, setTokens, setLoading }) =>
         const balance = await getBalance(wallet, false)
         setBalances(balance);
         setLoading(false);
-        const tokens = balance.tokens.map(token => tokensMap[token.tokenId] || token);
-        setTokens(tokens);
-        updateTokensInfo(tokens, setTokens);
+        const tokens = balance.tokens.map(token => tokensCache[token.tokenId] ? {
+            ...token,
+            info: tokensCache[token.tokenId].info,
+        } : token);
+        setTokens(sortTokens(tokens));
+        await updateTokensInfo(tokens, setTokens);
     } catch(error) {
         console.log('update error', error.message);
     }
@@ -63,7 +68,7 @@ export const useWallet = () => {
         balances,
         tokens,
         loading,
-        update
+        update: () => update({ wallet, tokens, setBalances, setTokens, setLoading }),
+        updateTokensInfo: () => updateTokensInfo(tokens, setTokens),
     };
 };
-
