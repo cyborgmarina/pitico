@@ -35,12 +35,12 @@ input.ant-input {
   border-radius: 0;
 }
 
-/* input.ant-input {
+input.ant-input {
   border-radius: 0;
   padding: 20px;
-  margin-top: 10px;
 }
 
+/*
 .ant-input-affix-wrapper .ant-input-prefix, .ant-input-affix-wrapper .ant-input-suffix {
   transform: none;
 } */
