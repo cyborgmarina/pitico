@@ -51,6 +51,7 @@
     "react-app-polyfill": "^1.0.3",
     "react-dev-utils": "^9.0.4",
     "react-dom": "^16.10.0",
+    "react-image": "^2.2.0",
     "react-jdenticon": "0.0.8",
     "react-router": "^5.1.1",
     "react-router-dom": "^5.1.1",

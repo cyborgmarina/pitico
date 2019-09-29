@@ -3,6 +3,7 @@ import { Row, Col, Icon, Avatar, Card } from 'antd';
 import { EnhancedCard } from './EnhancedCard';
 import { WalletContext } from './badger/context';
 import { Meta } from 'antd/lib/list/Item';
+import MoreCardOptions from './MoreCardOptions';
 import Img from 'react-image';
 import Jdenticon from 'react-jdenticon';
 
@@ -11,7 +12,8 @@ export default () => {
 	const { wallet, tokens, loading } = ContextValue;
 	const [selectedToken, setSelectedToken] = useState(null);
 	const SLP_TOKEN_ICONS_URL = "https://tokens.bch.sx/64";
-	console.log(wallet);
+	// TODO: function to verify if user is a token holder
+	const _mockIsBatonHolder = tokenId => true;
 
 	return (
 		<Row type="flex" gutter={8} style={{ position:'relative' }}>
@@ -41,11 +43,16 @@ export default () => {
 						key={token.tokenId}
 						style={{ width: 300, marginTop: '8px', textAlign: 'left' }}
 						onClose={() => setSelectedToken(null)}
-						actions={[
-							<span><Icon type="printer" key="printer"/> Mint</span>,
-							<span><Icon type="interaction" key="interaction"/> Transfer</span>,
-							<span><Icon type="ellipsis" key="ellipsis"/></span>,
-						]}
+						actions={
+							(
+							_mockIsBatonHolder()
+							&&
+							[
+							<span><Icon  type="printer"  key="printer"/> Mint</span>,
+							<span><Icon  type="interaction" key="interaction"/> Transfer</span>,
+							<MoreCardOptions hoverContent="teste"><span><Icon style={{ fontSize: "18px" }}type="ellipsis" key="ellipsis"/></span></MoreCardOptions>,
+						]) || <span><Icon type="interaction" key="interaction"/> Transfer</span>
+					}
 					>
 					<Meta
 						avatar={<Img
