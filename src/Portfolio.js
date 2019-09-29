@@ -6,6 +6,7 @@ import { Meta } from "antd/lib/list/Item";
 import Img from "react-image";
 import Jdenticon from "react-jdenticon";
 import Mint from "./Mint";
+import Transfer from "./Transfer";
 import MoreCardOptions from './MoreCardOptions';
 import Paragraph from "antd/lib/typography/Paragraph";
 
@@ -107,6 +108,9 @@ export default () => {
                         }
                         {
                             selectedToken && action === 'mint' ? <Mint token={selectedToken} onClose={onClose}/> : null
+                        }
+                        {
+                            selectedToken && action === 'transfer' ? <Transfer token={selectedToken} onClose={onClose}/> : null
                         }
                     </>
                 )}

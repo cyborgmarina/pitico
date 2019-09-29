@@ -31,6 +31,7 @@ const update = async ({ wallet, tokens, setBalances, setTokens, setLoading }) =>
     try {
         const balance = await getBalance(wallet, false)
         setBalances(balance);
+
         setLoading(false);
         const tokens = balance.tokens.map(token => tokensCache[token.tokenId] ? {
             ...token,

@@ -7,31 +7,20 @@ import { Card, Icon, Avatar, Table, Form, Input, Button, Alert, Select, Spin, no
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import Text from "antd/lib/typography/Text";
+import { sendToken } from "./badger/sendToken";
 
 const InputGroup = Input.Group;
 const { Meta } = Card;
 const { Option } = Select;
 
-const StyledButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
 
-  ${ButtonQR} {
-    button {
-      display: none;
-    }
-  }
-`;
-
-const Mint = ({ token, onClose }) => {
+const Transfer = ({ token, onClose }) => {
   const ContextValue = React.useContext(WalletContext);
   const { wallet, tokens, balances } = ContextValue;
   const [formData, setFormData] = useState({
     dirty: true,
     quantity: 0,
-    baton: wallet.slpAddress
+    address: ''
   });
   const [loading, setLoading] = useState(false);
 
@@ -42,7 +31,7 @@ const Mint = ({ token, onClose }) => {
     });
 
     if (
-      !formData.baton ||
+      !formData.address ||
       !formData.quantity ||
       Number(formData.quantity) <= 0
     ) {
@@ -50,13 +39,13 @@ const Mint = ({ token, onClose }) => {
     }
 
     setLoading(true);
-    const {quantity, baton } = formData;
+    const {quantity, address } = formData;
 
     try {
-      const link = await mintToken(wallet, {
+      const link = await sendToken(wallet, {
         tokenId: token.tokenId,
         quantity,
-        baton,
+        address,
       });
 
       notification.success({
@@ -72,7 +61,7 @@ const Mint = ({ token, onClose }) => {
         ),
         duration: 0
       });
-      
+
       onClose();
       setLoading(false);
     } catch (e) {
@@ -80,7 +69,7 @@ const Mint = ({ token, onClose }) => {
 
       if(/don't have the minting baton/.test(e.message)) {
         message = e.message;
-      } else if(/Invalid BCH address/.test(e.message)) {
+      } else if(/has no matching Script/.test(e.message)) {
         message = 'Invalid BCH address';
       } else {
         message = "Unknown Error, try again later";
@@ -108,38 +97,11 @@ const Mint = ({ token, onClose }) => {
           <Card
           title={
             <h2>
-              <Icon type="printer" theme="filled" /> Mint
+              <Icon type="interaction" theme="filled" /> Transfer
             </h2>
           }
           bordered={false}
         >
-          <Row justify="center" type="flex">
-            <Col>
-              <StyledButtonWrapper>
-                {!balances.balance && !balances.unconfirmedBalance ? (
-                  <>
-                    <br />
-                    <Paragraph>
-                      <ButtonQR
-                        toAddress={wallet.cashAddress}
-                        sizeQR={125}
-                        step={"fresh"}
-                        amountSatoshis={0}
-                      />
-                    </Paragraph>
-                    <Paragraph style={{ overflowWrap: "break-word" }} copyable>
-                      {wallet.cashAddress}
-                    </Paragraph>
-                    <Paragraph>You currently have 0 BCH.</Paragraph>
-                    <Paragraph>
-                      Deposit some BCH in order to pay for the transaction that
-                      will mint the token
-                    </Paragraph>
-                  </>
-                ) : null}
-              </StyledButtonWrapper>
-            </Col>
-          </Row>
           <Row type="flex">
             <Col span={24}>
               <Form style={{ width: "auto" }}>
@@ -163,42 +125,23 @@ const Mint = ({ token, onClose }) => {
                   />
                 </Form.Item>
                 <Form.Item
-                  validateStatus={
-                    !formData.dirty && Number(formData.baton) <= 0 ? "error" : ""
-                  }
-                  help={
-                    !formData.dirty && Number(formData.baton) <= 0
-                      ? "Should be a valid slp address"
-                      : ""
-                  }
-                >
-                  <Input
-                    prefix={<Icon type="wallet" />}
-                    placeholder="baton (slp address)"
-                    name="baton"
-                    onChange={e => handleChange(e)}
-                    required
-                    value={formData.baton}
-                    addonAfter={(
-                      <Select name="baton" defaultValue="My Address" onChange={value => handleChange({ target: { value, name: 'baton' } })}>
-                        <Option value={wallet.slpAddress}>My Address</Option>
-                        <Option value="">Other Address</Option>
-                      </Select>
-                    )}
-                  />
-                </Form.Item>
-                <Alert
-                  message={
-                    <Text>
-                        <Icon type="info-circle" /> &nbsp;
-                        The slp address which has the baton has the ability to mint more tokens.
-                    </Text>
-                  }
-                  type="warning"
-                  style={{ marginTop: 4 }}
+                validateStatus={!formData.dirty && !formData.address ? "error" : ""}
+                help={
+                  !formData.dirty && !formData.address
+                    ? "Should be a valid slp address"
+                    : ""
+                }
+              >
+                <Input
+                  prefix={<Icon type="wallet" />}
+                  placeholder="address"
+                  name="address"
+                  onChange={e => handleChange(e)}
+                  required
                 />
+              </Form.Item>
                 <div style={{ paddingTop: "12px" }}>
-                  <Button onClick={() => submit()}>Mint</Button>
+                  <Button onClick={() => submit()}>Transfer</Button>
                 </div>
               </Form>
             </Col>
@@ -210,4 +153,4 @@ const Mint = ({ token, onClose }) => {
   );
 };
 
-export default Mint;
+export default Transfer;
