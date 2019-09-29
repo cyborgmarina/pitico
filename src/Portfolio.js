@@ -3,6 +3,7 @@ import { Row, Col, Icon, Avatar, Card } from 'antd';
 import { EnhancedCard } from './EnhancedCard';
 import { WalletContext } from './badger/context';
 import { Meta } from 'antd/lib/list/Item';
+import Jdenticon from 'react-jdenticon';
 
 export default () => {
 	const ContextValue = React.useContext(WalletContext);
@@ -43,7 +44,7 @@ export default () => {
 						]}
 					>
 					<Meta
-						avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+						avatar={<Jdenticon size="48" value={token.tokenId} />}
 						title="Token symbol"
 						description="Token description"
 					/>
