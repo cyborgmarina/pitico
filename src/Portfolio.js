@@ -1,50 +1,56 @@
-import React from 'react'
-import { Row, Col, Icon, Avatar } from 'antd';
-import { Card } from 'antd';
+import React, { useState } from 'react'
+import { Row, Col, Icon, Avatar, Card } from 'antd';
+import { EnhancedCard } from './EnhancedCard';
 import { WalletContext } from './badger/context';
 import { Meta } from 'antd/lib/list/Item';
-import "./App.css";
+import Jdenticon from 'react-jdenticon';
 
 export default () => {
 	const ContextValue = React.useContext(WalletContext);
 	const { wallet, tokens, loading } = ContextValue;
 
+	const [selectedToken, setSelectedToken] = useState(null);
+
 	return (
-		<Row type="flex" gutter={8} style={{color:"#fff"}} className="App">
+		<Row type="flex" gutter={8} style={{ position:'relative' }}>
 			{loading ? (
-				Array.from({ length: 8 }).map((v, i) => (
+				Array.from({ length: 4 }).map((v, i) => (
 					<Col>
 						<Card
-						loading
-						key={i}
-						style={{ width: 300, marginTop: '8px' }}
+							loading
+							key={i}
+							style={{ width: 300, marginTop: '8px' }}
+							bordered={false}
 						>
-						<Meta
-							avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-							title="Token symbol"
-							description="Token description"
-						/>
-					</Card>
+							<Meta
+								avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+								title="Token symbol"
+								description="Token description"
+							/>
+						</Card>
 					</Col>
 				))
 			) : tokens.map(token => (
-				<Col style={{color:"#fff"}}>
-					<Card
-					key={token.tokenId}
-					style={{ width: 300, marginTop: '8px' }}
-					actions={[
-						<span><Icon type="printer" key="printer"/> Mint</span>,
-						<span><Icon type="interaction" key="interaction"/> Transfer</span>,
-						<span><Icon type="ellipsis" key="ellipsis"/></span>,
+				<Col>
+					<EnhancedCard
+						expand={selectedToken && token.tokenId === selectedToken.tokenId}
+						onClick={() => setSelectedToken(!selectedToken || token.tokenId !== selectedToken.tokenId ? token : null)}
+						key={token.tokenId}
+						style={{ width: 300, marginTop: '8px', textAlign: 'left' }}
+						onClose={() => setSelectedToken(null)}
+						actions={[
+							<span><Icon type="printer" key="printer"/> Mint</span>,
+							<span><Icon type="interaction" key="interaction"/> Transfer</span>,
+							<span><Icon type="ellipsis" key="ellipsis"/></span>,
 						]}
 					>
 					<Meta
-						avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+						avatar={<Jdenticon size="48" value={token.tokenId} />}
 						title="Token symbol"
 						description="Token description"
 						style={{color:"#fff"}}
 					/>
-				</Card>
+				</EnhancedCard>
 				</Col>
 			))}
 		</Row>

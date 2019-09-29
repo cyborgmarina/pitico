@@ -12,7 +12,6 @@ const Create = () => {
     qty: ""
   });
 
-  //   createToken(w, { tokenName: "hahaha", tokenSymbol: "hahaha", qty: 1000 });
   async function handleCreateToken() {
     setLoading(true);
     const { propstokenName, tokenSymbol, qty } = data;
