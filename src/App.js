@@ -1,7 +1,7 @@
 import React from "react";
 import "antd/dist/antd.less";
 import "./index.css";
-import { Layout, Menu, Icon, Typography, Radio } from "antd";
+import { Layout, Menu, Icon, Typography, Radio, List, Skeleton } from "antd";
 import Portfolio from "./Portfolio";
 import { ButtonQR } from "badger-components-react";
 import Create from "./Create";
@@ -11,6 +11,8 @@ import "./App.css";
 import { WalletContext } from "./badger/context";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import styled from 'styled-components';
+import { QRCode } from "./QRCode";
+import Text from "antd/lib/typography/Text";
 
 const { Header, Content, Sider } = Layout;
 const { Paragraph } = Typography;
@@ -20,7 +22,7 @@ const App = () => {
   const [key, setKey] = React.useState(1);
   const [address, setAddress] = React.useState("slpAddress");
   const ContextValue = React.useContext(WalletContext);
-  const { wallet } = ContextValue;
+  const { wallet, balances, loading } = ContextValue;
 
   React.useEffect(() => {
     const url = window.location.href.toString();
@@ -50,7 +52,7 @@ const StyledWrapper = styled.div`
     }
   }
 `;
-
+console.info(balances);
   return (
     <Router>
       <div className="App">
@@ -104,6 +106,9 @@ const StyledWrapper = styled.div`
             </Menu>
             {wallet ? (
               <div style={{ paddingTop: "120px" }}>
+                <StyledWrapper>
+                  <QRCode address={wallet.cashAddress} />
+                </StyledWrapper>
                 <Radio.Group
                   defaultValue="slpAddress"
                   onChange={(e) => handleChangeAddress(e)}
@@ -114,16 +119,24 @@ const StyledWrapper = styled.div`
                   <Radio.Button style={{ borderRadius: 0 }} value="slpAddress">SLP</Radio.Button>
                   <Radio.Button style={{ borderRadius: 0 }} value="cashAddress">BCH</Radio.Button>
                 </Radio.Group>
-                <StyledWrapper>
-                  <Paragraph>
-                    <ButtonQR
-                      toAddress={wallet[address]}
-                      sizeQR={125}
-                      steps={null}
-                      amountSatoshis={0}
-                    />
-                  </Paragraph>
-                </StyledWrapper>
+                {!loading ? (
+                  <List
+                    style={{ marginTop: 16 }}
+                    loading={loading}
+                    itemLayout="horizontal"
+                    dataSource={[
+                      { title: 'BCH', description: balances.balance },
+                    ]}
+                    renderItem={item => (
+                      <List.Item>
+                        <List.Item.Meta
+                          title={<a href="https://ant.design">{item.title}</a>}
+                          description={item.description}
+                        />
+                      </List.Item>
+                    )}
+                  />
+                ) : null}
               </div>
             ) : null}
           </Sider>

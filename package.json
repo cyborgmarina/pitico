@@ -47,6 +47,7 @@
     "postcss-normalize": "7.0.1",
     "postcss-preset-env": "6.7.0",
     "postcss-safe-parser": "4.0.1",
+    "qrcode.react": "^0.9.3",
     "react": "^16.10.0",
     "react-app-polyfill": "^1.0.3",
     "react-copy-to-clipboard": "^5.0.1",
