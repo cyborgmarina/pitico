@@ -2,17 +2,12 @@
   Check the BCH and SLP token balances for the wallet created with the
   create-wallet example app.
 */
-//const SLPSDK = require("../../lib/SLP").default
 import SLPSDK from 'slp-sdk';
+import getSlpInstance from './getSlpInstance';
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = process.env.NETWORK
-
-// Instantiate SLP based on the network.
-let SLP
-if (NETWORK === `mainnet`)
-  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v2/` })
-else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v2/` })
+const NETWORK = process.env.NETWORK;
+const SLP = getSlpInstance(NETWORK);
 
 export async function getBalance(wallet, logs = true) {
   const log = logs ? console.log.bind(console) : () => null;

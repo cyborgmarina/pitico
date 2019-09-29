@@ -1,22 +1,15 @@
-/*
-  Create a new SLP token. Requires a wallet created with the create-wallet
-  example. Also requires that wallet to have a small BCH balance.
-*/
-
 import SLPSDK from "slp-sdk";
+import getSlpInstance from './getSlpInstance';
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = process.env.NETWORK
+const NETWORK = process.env.NETWORK;
+
+// Instantiate SLP based on the network.
+const SLP = getSlpInstance(NETWORK);
 
 // Used for debugging and investigating JS objects.
 const util = require("util")
 util.inspect.defaultOptions = { depth: 1 }
-
-// Instantiate SLP based on the network.
-let SLP
-if (NETWORK === `mainnet`)
-  SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v2/` })
-else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v2/` })
 
 export async function createToken(walletInfo, { tokenName, tokenSymbol, qty }) {
   try {
