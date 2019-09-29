@@ -9,7 +9,7 @@ import { useWallet } from "./useWallet";
 export const WalletContext = React.createContext();
 
 export const WalletProvider = ({ children }) => {
-  const { wallet, balances, tokens } = useWallet();
+  const { wallet, balances, tokens, loading } = useWallet();
 
   useEffect(() => {
   //     const w = getWallet();
@@ -28,7 +28,7 @@ export const WalletProvider = ({ children }) => {
   }, []);
 
   return (
-    <WalletContext.Provider value={{ wallet, balances, tokens }}>
+    <WalletContext.Provider value={{ wallet, balances, tokens, loading }}>
       {children}
     </WalletContext.Provider>
   );

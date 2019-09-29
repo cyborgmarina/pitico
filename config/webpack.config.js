@@ -93,14 +93,14 @@ module.exports = function(webpackEnv) {
         loader: require.resolve("less-loader"),
         options: {
           modifyVars: {
-            "@primary-color": "#171717",
-            "@menu-dark-bg": "#171717",
+            "@primary-color": "#1E364D",
+            "@menu-dark-bg": "#171F22",
+            // "@layout-body-background": "#171717",
+            //  "@menu-dark-color": "red",
+            "@background-color-base": "#171717",
             "@layout-body-background": "#171717",
-            "@menu-dark-color": "#7F8FA4",
-            "@layout-sider-background": "#171717",
-            "@layout-trigger-background": "#171717",
-            "@label-required-color": "#717171",
-            "@label-color": "#717171"
+            "@layout-sider-background": "#171F22",
+            "@layout-trigger-background": "#1E364D"
           },
           javascriptEnabled: true
         }
