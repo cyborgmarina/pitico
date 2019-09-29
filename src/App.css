@@ -26,6 +26,11 @@
   color: #09d3ac;
 }
 
+.ant-radio-group-solid
+  .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+  background: white;
+}
+
 /* .ant-input:placeholder-shown {
   border-radius: 0px;
   padding: 20px;
