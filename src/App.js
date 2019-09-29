@@ -2,11 +2,9 @@ import React from "react";
 import "antd/dist/antd.css";
 import "./index.css";
 import { Layout, Menu, Icon } from "antd";
-import Mint from "./Mint";
-import Home from "./Home";
-import Create from "./Create";
-import PayDividends from "./PayDividends";
 import Portfolio from "./Portfolio";
+import Create from "./Create";
+import Configure from "./Configure";
 import "./App.css";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
@@ -63,7 +61,7 @@ const App = () => {
               <div style={{ padding: 24, background: "#f0f2f5", minHeight: 360 }}>
                 <Route exact path="/" component={Portfolio} />
                 <Route path="/create" component={Create} />
-                <Route path="/configure" component={Portfolio}/>
+                <Route path="/configure" component={Configure}/>
 
               </div>
             </Content>
