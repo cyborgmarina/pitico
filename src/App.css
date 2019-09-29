@@ -31,16 +31,26 @@
   background: white;
 }
 
-/* .ant-input:placeholder-shown {
-  border-radius: 0px;
+input.ant-input {
+  border-radius: 0;
   padding: 20px;
   margin-top: 10px;
-} */
-/* .ant-card {
-  background: #171f22;
-  color: "#fff";
-} */
+}
+
+.ant-btn {
+  border-radius: 0;
+}
 
 .ant-card-actions > li:not(:last-child) {
   border-right: 0;
+}
+
+.ant-alert-warning {
+  background-color: #30303D;
+  border: 1px solid #17171f;
+  border-radius: 0;
+}
+
+.ant-alert-message {
+  color: #fff;
 }
