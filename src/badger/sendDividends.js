@@ -7,7 +7,7 @@ import { sendBch } from "./sendBch";
 let Utils = require('slpjs').Utils;
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = process.NETWORK
+const NETWORK = process.env.NETWORK
 
 // Instantiate SLP based on the network.
 let SLP

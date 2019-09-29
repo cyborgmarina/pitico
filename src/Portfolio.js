@@ -18,7 +18,7 @@ export default () => {
 			{loading ? (
 				Array.from({ length: 4 }).map((v, i) => (
 					<Col>
-						<Card
+						<EnhancedCard
 							loading
 							key={i}
 							style={{ width: 300, marginTop: '8px' }}
@@ -29,12 +29,13 @@ export default () => {
 								title="Token symbol"
 								description="Token description"
 							/>
-						</Card>
+						</EnhancedCard>
 					</Col>
 				))
 			) : tokens.map(token => (
 				<Col>
 					<EnhancedCard
+						loading={!token.info}
 						expand={selectedToken && token.tokenId === selectedToken.tokenId}
 						onClick={() => setSelectedToken(!selectedToken || token.tokenId !== selectedToken.tokenId ? token : null)}
 						key={token.tokenId}
@@ -50,10 +51,8 @@ export default () => {
 						avatar={<Img
 									src={`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`} 
 									unloader={<Jdenticon size="64" value={token.tokenId}/>}/>}
-						title="Token symbol"
-						description="Token description"
-						style={{color:"#fff"}}
-					/>
+						title={token.info && token.info.symbol}
+						description={token.info && token.info.name} />
 				</EnhancedCard>
 				</Col>
 			))}

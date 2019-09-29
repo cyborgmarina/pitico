@@ -8,13 +8,17 @@ const GlobalStyle = createGlobalStyle`
         background-color: transparent;
     }
 
+    .ant-modal-content {
+        background-color: transparent !important;
+    }
+
     .ant-modal-body {
         padding: 0;
         background-color: transparent;
     }
 
     .ant-modal-close-x {
-        display: none;
+        display: none !important;
     }
 `;
 
@@ -28,7 +32,7 @@ const StyledEnhancedCard = styled(Card)`
     transition: all 300ms ease-in-out;
     display: flex;
     flex-direction: column;
-    height: 140px;
+    height: 150px;
 
     .ant-card-body {
         height: 100%;
