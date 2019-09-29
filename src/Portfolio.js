@@ -52,6 +52,7 @@ export default () => {
 									unloader={<Jdenticon size="64" value={token.tokenId}/>}/>}
 						title="Token symbol"
 						description="Token description"
+						style={{color:"#fff"}}
 					/>
 				</EnhancedCard>
 				</Col>
