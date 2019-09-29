@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { withRouter } from "react-router-dom";
 import { ButtonQR } from "badger-components-react";
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 import { WalletContext } from "./badger/context";
 import {
   Input,
@@ -110,13 +111,15 @@ const Create = ({ history }) => {
             <StyledButtonWrapper>
               {!loadingContext && !balances.balance ? (
                 <>
-                  <ButtonQR
-                    toAddress={wallet.cashAddress}
-                    sizeQR={125}
-                    step={"fresh"}
-                  />
-                  <br />
-                  <Paragraph> </Paragraph>
+                  <Paragraph>
+                    <ButtonQR
+                      toAddress={wallet.cashAddress}
+                      sizeQR={125}
+                      step={"fresh"}
+                      amountSatoshis={0}
+                    />
+                  </Paragraph>
+                  <Paragraph style={{ overflowWrap: 'break-word' }}copyable>{wallet.cashAddress}</Paragraph>
                   <Paragraph>
                     You currently have 0 BCH. 
                   </Paragraph>
