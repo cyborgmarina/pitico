@@ -2,7 +2,6 @@ import React from "react";
 import "antd/dist/antd.less";
 import "./index.css";
 import { Layout, Menu, Icon, Typography, Radio } from "antd";
-import Logo from "./Logo";
 import Portfolio from "./Portfolio";
 import { ButtonQR } from "badger-components-react";
 import Create from "./Create";
@@ -11,6 +10,7 @@ import NotFound from "./NotFound";
 import "./App.css";
 import { WalletContext } from "./badger/context";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import styled from 'styled-components';
 
 const { Header, Content, Sider } = Layout;
 const { Paragraph } = Typography;
@@ -36,13 +36,16 @@ const App = () => {
   }, []);
 
   const handleChange = e => {
-    console.log("e", e);
     setKey(e.key);
   };
 
   const handleChangeAddress = e => {
     setAddress(e.target.value);
   };
+
+  const StyledWrapper = styled.div`
+
+`;
 
   return (
     <Router>
@@ -104,20 +107,19 @@ const App = () => {
                   size="small"
                   buttonStyle="solid"
                 >
-                  <Radio.Button value="slpAddress">Slp</Radio.Button>
-                  <Radio.Button value="cashAddress">Cash</Radio.Button>
+                  <Radio.Button style={{ borderRadius: 0 }} value="slpAddress">SLP</Radio.Button>
+                  <Radio.Button style={{ borderRadius: 0 }} value="cashAddress">BCH</Radio.Button>
                 </Radio.Group>
-                <Paragraph>
-                  <ButtonQR
-                    toAddress={wallet[address]}
-                    sizeQR={125}
-                    step={"fresh"}
-                    amountSatoshis={0}
-                  />
-                </Paragraph>
-                <Paragraph style={{ overflowWrap: "break-word" }} copyable>
-                  {wallet[address]}
-                </Paragraph>
+                <StyledWrapper>
+                  <Paragraph>
+                    <ButtonQR
+                      toAddress={wallet[address]}
+                      sizeQR={125}
+                      steps={null}
+                      amountSatoshis={0}
+                    />
+                  </Paragraph>
+                </StyledWrapper>
               </div>
             ) : null}
           </Sider>
@@ -136,7 +138,6 @@ const App = () => {
                   paddingTop: "32px"
                 }}
               >
-                <Logo />
               </div>
 
               <span style={{ display: "inline" }}>pitico.cash</span>
