@@ -61,11 +61,15 @@ export async function createToken(walletInfo, { tokenName, tokenSymbol, qty }) {
       `The genesis TxID above is used to uniquely identify your new class of SLP token. Save it and keep it handy.`
     )
     console.log(`View this transaction on the block explorer:`)
-    if (NETWORK === `mainnet`)
-      console.log(`https://explorer.bitcoin.com/bch/tx/${genesisTxId}`)
-    else console.log(`https://explorer.bitcoin.com/tbch/tx/${genesisTxId}`)
+    let link;
+    if (NETWORK === `mainnet`) {
+      link = `https://explorer.bitcoin.com/bch/tx/${genesisTxId}`;
+    } else {
+      link = `https://explorer.bitcoin.com/tbch/tx/${genesisTxId}`;
+    }
+    console.log(link)
 
-    return genesisTxId;
+    return link;
   } catch (err) {
     console.error(`Error in createToken: `, err)
     console.log(`Error message: ${err.message}`)

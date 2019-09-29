@@ -16,7 +16,7 @@ util.inspect.defaultOptions = { depth: 1 }
 // Instantiate SLP based on the network.
 const SLP = getSlpInstance(NETWORK);
 
-export async function sendToken(walletInfo, { tokenId, address, qty }) {
+export async function sendToken(walletInfo, { tokenId, address, quantity }) {
   try {
     const mnemonic = walletInfo.mnemonic
 
@@ -48,7 +48,7 @@ export async function sendToken(walletInfo, { tokenId, address, qty }) {
       tokenReceiverAddress,
       bchChangeReceiverAddress,
       tokenId,
-      amount: qty
+      amount: quantity
     }
 
     //console.log(`createConfig: ${util.inspect(createConfig)}`)
@@ -60,9 +60,15 @@ export async function sendToken(walletInfo, { tokenId, address, qty }) {
     console.log(`sendTxId: ${util.inspect(sendTxId)}`)
 
     console.log(`\nView this transaction on the block explorer:`)
-    if (NETWORK === `mainnet`)
-      console.log(`https://explorer.bitcoin.com/bch/tx/${sendTxId}`)
-    else console.log(`https://explorer.bitcoin.com/tbch/tx/${sendTxId}`)
+    let link;
+    if (NETWORK === `mainnet`) {
+      link = `https://explorer.bitcoin.com/bch/tx/${sendTxId}`;
+    } else {
+      link = `https://explorer.bitcoin.com/tbch/tx/${sendTxId}`;
+    }
+    console.log(link)
+
+    return link;
   } catch (err) {
     console.error(`Error in sendToken: `, err)
     console.log(`Error message: ${err.message}`)

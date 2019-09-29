@@ -58,7 +58,7 @@ const Create = ({ history }) => {
     const { tokenName, tokenSymbol, amount } = data;
     console.log("data", data);
     try {
-      await createToken(wallet, {
+      const link = await createToken(wallet, {
         tokenName,
         tokenSymbol,
         qty: amount
@@ -66,7 +66,16 @@ const Create = ({ history }) => {
 
       notification.success({
         message: "Success",
-        description: "Create Token Success"
+        description:
+        (
+          <a href={link} target="_blank">
+            <Paragraph>
+              Transaction successful. It might take a little bit to show up on your portfolio. 
+              You can verify this transaction here: {link}
+            </Paragraph>
+          </a>
+        ),
+        duration: 0
       });
 
       history.push("/");
@@ -109,7 +118,7 @@ const Create = ({ history }) => {
             bordered={false}
           >
             <StyledButtonWrapper>
-              {!loadingContext && !balances.balance ? (
+              {!loadingContext && !balances.balance && !balances.unconfirmedBalance ? (
                 <>
                   <Paragraph>
                     <ButtonQR
