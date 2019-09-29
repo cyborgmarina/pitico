@@ -15,6 +15,9 @@ export default () => {
 	const handleConfigure = () => {
 		window.localStorage.setItem('restAPI', data.restAPI);
 		setIsConfigUpdated(true);
+		setTimeout(() => {
+			window.location.reload();
+		}, 3000)
 
 	};
 	const handleChange = e => {
@@ -51,11 +54,11 @@ export default () => {
 			required
 			/>
 			</Form.Item>
-			<div style={{ paddingTop: "12px" }}>
+			<div style={{ paddingTop: "12px", marginBottom: '10px' }}>
 			<Button onClick={() => handleConfigure()}>
 			Update Config
 			</Button>
-			{isConfigUpdated && <Paragraph>Your configuration has been updated. Now connecting to {data.restAPI} </Paragraph>}
+			{isConfigUpdated && <Paragraph>Your configuration has been updated. Now connecting to {data.restAPI}...</Paragraph>}
 
 			</div>
 			</Form>
