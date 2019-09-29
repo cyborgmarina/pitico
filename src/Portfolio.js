@@ -39,6 +39,7 @@ export default () => {
 						onClick={() => setSelectedToken(!selectedToken || token.tokenId !== selectedToken.tokenId ? token : null)}
 						key={token.tokenId}
 						style={{ width: 300, marginTop: '8px', textAlign: 'left' }}
+						onClose={() => setSelectedToken(null)}
 						actions={[
 							<span><Icon type="printer" key="printer"/> Mint</span>,
 							<span><Icon type="interaction" key="interaction"/> Transfer</span>,

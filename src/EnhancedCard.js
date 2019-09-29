@@ -1,6 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { Card } from 'antd';
+import { Card, Modal } from 'antd';
+import { createGlobalStyle } from 'styled-components'
+
+const GlobalStyle = createGlobalStyle`
+    .ant-modal-mask {
+        background-color: transparent;
+    }
+
+    .ant-modal-body {
+        padding: 0;
+        background-color: transparent;
+    }
+
+    .ant-modal-close-x {
+        display: none;
+    }
+`;
+
+const StyledWrapper = styled.div`
+
+`;
 
 const StyledEnhancedCard = styled(Card)`
     cursor: pointer;
@@ -9,7 +29,7 @@ const StyledEnhancedCard = styled(Card)`
     display: flex;
     flex-direction: column;
     height: 140px;
-    
+
     .ant-card-body {
         height: 100%;
     }
@@ -17,26 +37,30 @@ const StyledEnhancedCard = styled(Card)`
     &:hover {
         box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.35);
     }
+`;
 
-    ${props => props.expand ? `
-        & {
-            position: absolute;
-            left: 0;
-            top: 0;
+export const StyledModal = styled(Modal)`
+    ${StyledEnhancedCard} {
+        ${props => props.visible ? `
             width: 600px !important;
             height: 600px !important;
             z-index: 2;
-        }
-    `: ''}
+        `: ''}
+    }
 `;
 
-export const EnhancedCard = ({ expand, children, ...otherProps }) => {
-    // const [expand, setExpand] = useState(false);
-
-
+export const EnhancedCard = ({ expand, onClick, onClose, children, ...otherProps }) => {
     return (
-        <StyledEnhancedCard expand={expand} {...otherProps}>
-            {children}
-        </StyledEnhancedCard>
+        <StyledWrapper>
+            <GlobalStyle />
+            <StyledEnhancedCard onClick={onClick} {...otherProps}>
+                {children}
+            </StyledEnhancedCard>
+            <StyledModal visible={expand} centered footer={null} onCancel={onClose}>
+                <StyledEnhancedCard {...otherProps}>
+                    {children}
+                </StyledEnhancedCard>
+            </StyledModal>
+        </StyledWrapper>
     );
 };
