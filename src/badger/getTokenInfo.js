@@ -2,8 +2,7 @@ import SLPSDK from "slp-sdk";
 import util from "util";
 import getSlpInstance from './getSlpInstance'
 
-let NETWORK = process.env.NETWORK
-NETWORK="mainnet";
+const NETWORK = process.env.NETWORK
 
 util.inspect.defaultOptions = { depth: 1 }
 

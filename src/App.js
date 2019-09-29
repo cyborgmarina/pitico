@@ -52,7 +52,7 @@ const StyledWrapper = styled.div`
     }
   }
 `;
-console.info(balances);
+
   return (
     <Router>
       <div className="App">
@@ -61,6 +61,7 @@ console.info(balances);
             collapsible
             collapsed={collapsed}
             onCollapse={() => setCollapesed(!collapsed)}
+            style={{ overflow: 'hidden' }}
           >
             <div className="logo" />
             <Menu
@@ -125,7 +126,7 @@ console.info(balances);
                     loading={loading}
                     itemLayout="horizontal"
                     dataSource={[
-                      { title: 'BCH', description: balances.balance },
+                      { title: 'BCH', description: balances.balance || '0' },
                     ]}
                     renderItem={item => (
                       <List.Item>

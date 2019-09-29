@@ -14,6 +14,7 @@ const updateTokensInfo = async (tokens =[], setTokens) => {
         if (!token.info) {
             try {
                 const info = await getTokenInfo(token.tokenId);
+                console.info(info)
                 tokens[i] = {
                     ...token,
                     info,
