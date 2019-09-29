@@ -17,7 +17,7 @@ if (NETWORK === `mainnet`)
   SLP = new SLPSDK({ restURL: `https://rest.bitcoin.com/v2/` })
 else SLP = new SLPSDK({ restURL: `https://trest.bitcoin.com/v2/` })
 
-export async function mintToken(walletInfo, { tokenId, qty }) {
+export async function mintToken(walletInfo, { tokenId, quantity, baton }) {
   try {
     const mnemonic = walletInfo.mnemonic
 
@@ -40,7 +40,7 @@ export async function mintToken(walletInfo, { tokenId, qty }) {
     const fundingAddress = slpAddress
     const fundingWif = SLP.HDNode.toWIF(change) // <-- compressed WIF format
     const tokenReceiverAddress = slpAddress
-    const batonReceiverAddress = slpAddress
+    const batonReceiverAddress = baton || slpAddress;
     const bchChangeReceiverAddress = cashAddress
 
     // Create a config object for minting
@@ -51,7 +51,7 @@ export async function mintToken(walletInfo, { tokenId, qty }) {
       batonReceiverAddress,
       bchChangeReceiverAddress,
       tokenId,
-      additionalTokenQty: qty
+      additionalTokenQty: quantity
     }
 
     // Generate, sign, and broadcast a hex-encoded transaction for creating
@@ -61,9 +61,15 @@ export async function mintToken(walletInfo, { tokenId, qty }) {
     console.log(`mintTxId: ${util.inspect(mintTxId)}`)
 
     console.log(`\nView this transaction on the block explorer:`)
-    if (NETWORK === `mainnet`)
-      console.log(`https://explorer.bitcoin.com/bch/tx/${mintTxId}`)
-    else console.log(`https://explorer.bitcoin.com/tbch/tx/${mintTxId}`)
+    let link;
+    if (NETWORK === `mainnet`) {
+      link = `https://explorer.bitcoin.com/bch/tx/${mintTxId}`;
+    } else {
+      link = `https://explorer.bitcoin.com/tbch/tx/${mintTxId}`;
+    }
+    console.log(link)
+
+    return link;
   } catch (err) {
     console.error(`Error in mintToken: `, err)
     console.log(`Error message: ${err.message}`)

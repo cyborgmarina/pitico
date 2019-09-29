@@ -18,8 +18,8 @@ const GlobalStyle = createGlobalStyle`
     }
 
     .ant-modal-close {
-        top: 40px !important;
-        right: -100px !important;
+        top: 20px !important;
+        right: 20px !important;
     }
 `;
 
@@ -47,32 +47,23 @@ const StyledEnhancedCard = styled(Card)`
 export const StyledModal = styled(Modal)`
     ${StyledEnhancedCard} {
         ${props => props.visible ? `
-            width: 600px !important;
-            max-width: 100vw !important;
-            height: 600px !important;
+            // max-width: 100vw !important;
+            .ant-card-body > * {
+                overflow: auto;
+                max-height: 90%;
+            }
         `: ''}
     }
 
     @media only screen and (max-width: 800px) {
         & {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0;
-            margin-top: 0 !important;
-
-            .ant-modal-close {
-                right: -50px !important;
-                top: 10px !important;
-            }
-
             .ant-modal-body {
                 padding: 0 !important;
             }
 
             ${StyledEnhancedCard} {
                 margin-top: 0 !important;
-                width: 100vw !important;
-                height: 100vh !important;
+                height: auto !important;
             }
         }
     }
@@ -82,22 +73,17 @@ export const StyledExpandedWrapper = styled.div`
     .ant-card-head, .ant-card-body {
         padding: 0;
     }
-
-    .ant-card-body {
-        overflow: auto;
-        max-height: 400px;
-    }
 `;
 
-export const EnhancedCard = ({ expand, renderExpanded = () => null, onClick, onClose, children, ...otherProps }) => {
+export const EnhancedCard = ({ expand, renderExpanded = () => null, onClick, onClose, children, style, ...otherProps }) => {
     return (
         <StyledWrapper>
             <GlobalStyle />
-            <StyledEnhancedCard onClick={onClick} {...otherProps}>
+            <StyledEnhancedCard style={style} onClick={onClick} {...otherProps}>
                 {children}
             </StyledEnhancedCard>
-            <StyledModal visible={expand} centered footer={null} onCancel={onClose}>
-                <StyledEnhancedCard {...otherProps}>
+            <StyledModal width={600} height={600} visible={expand} centered footer={null} onCancel={onClose}>
+                <StyledEnhancedCard style={{ ...style, width: '100%', height: 600 }} {...otherProps}>
                     {children}
                     <StyledExpandedWrapper>
                         {renderExpanded()}

@@ -55,11 +55,11 @@ const Create = ({ history }) => {
     }
 
     setLoading(true);
-    const { propstokenName, tokenSymbol, amount } = data;
+    const { tokenName, tokenSymbol, amount } = data;
     console.log("data", data);
     try {
       await createToken(wallet, {
-        propstokenName,
+        tokenName,
         tokenSymbol,
         qty: amount
       });

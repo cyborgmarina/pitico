@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Icon, Avatar, Card, Empty } from "antd";
+import { Row, Col, Icon, Avatar, Card, Empty, Alert } from "antd";
 import { EnhancedCard } from "./EnhancedCard";
 import { WalletContext } from "./badger/context";
 import { Meta } from "antd/lib/list/Item";
@@ -7,6 +7,7 @@ import Img from "react-image";
 import Jdenticon from "react-jdenticon";
 import Mint from "./Mint";
 import MoreCardOptions from './MoreCardOptions';
+import Paragraph from "antd/lib/typography/Paragraph";
 
 export default () => {
   const ContextValue = React.useContext(WalletContext);
@@ -16,15 +17,20 @@ export default () => {
   const [action, setAction] = useState(null);
   const SLP_TOKEN_ICONS_URL = "https://tokens.bch.sx/64";
 
+  const onClose = () => {
+    setSelectedToken(null);
+    setAction(null);
+  };
+
   return (
     <Row type="flex" gutter={8} style={{ position: "relative" }}>
       {loading
         ? Array.from({ length: 4 }).map((v, i) => (
-            <Col>
+            <Col style={{  marginTop: "8px" }}>
               <EnhancedCard
                 loading
                 key={i}
-                style={{ width: 300, marginTop: "8px" }}
+                style={{ width: 300 }}
                 bordered={false}
               >
                 <Meta
@@ -40,7 +46,7 @@ export default () => {
         : null}
       {tokens.length
         ? tokens.map(token => (
-            <Col>
+          <Col style={{  marginTop: "8px" }}>
               <EnhancedCard
                 loading={!token.info}
                 expand={
@@ -55,10 +61,7 @@ export default () => {
                 }
                 key={token.tokenId}
                 style={{ width: 300, marginTop: "8px", textAlign: "left" }}
-                onClose={() => {
-                  setSelectedToken(null);
-                  setAction(null);
-                }}
+                onClose={onClose}
                 actions={[
                   <span onClick={() => setAction(action !== "mint" ? "mint" : null)}>
                     <Icon type="printer" key="printer" /> Mint
@@ -77,7 +80,33 @@ export default () => {
                 renderExpanded={() => (
                     <>
                         {
-                            selectedToken && action === 'mint' ? <Mint /> : null
+                          selectedToken && token.tokenId === selectedToken.tokenId ? (
+                            <Alert
+                              message={
+                                <div>
+                                    <Paragraph>
+                                      <Icon type="info-circle" /> &nbsp; Token properties
+                                    </Paragraph>
+                                    {
+                                      action ? (
+                                        <Paragraph small copyable ellipsis style={{ whiteSpace: 'nowrap', maxWidth: '100%' }}>
+                                          Token Id: {token.tokenId}
+                                        </Paragraph>
+                                      ) : Object.entries(token.info || {}).map(entry => (
+                                        <Paragraph small copyable={{ text: entry[1] }} ellipsis style={{ whiteSpace: 'nowrap', maxWidth: '100%' }}>
+                                          {entry[0]}: {entry[1]}
+                                        </Paragraph>
+                                      ))
+                                    }
+                                </div>
+                              }
+                              type="warning"
+                              style={{ marginTop: 4 }}
+                            />
+                          ) : null
+                        }
+                        {
+                            selectedToken && action === 'mint' ? <Mint token={selectedToken} onClose={onClose}/> : null
                         }
                     </>
                 )}
@@ -95,7 +124,11 @@ export default () => {
                       <span>{token.info && token.info.symbol}</span>
                     </>
                   }
-                  description={token.info && token.info.name}
+                  description={(
+                    <div>
+                      <div>{token.info && token.info.name}</div>
+                    </div>
+                  )}
                 />
               </EnhancedCard>
             </Col>
