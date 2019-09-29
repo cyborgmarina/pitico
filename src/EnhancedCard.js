@@ -28,7 +28,7 @@ const StyledEnhancedCard = styled(Card)`
     transition: all 300ms ease-in-out;
     display: flex;
     flex-direction: column;
-    height: 140px;
+    height: 150px;
 
     .ant-card-body {
         height: 100%;
