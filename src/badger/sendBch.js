@@ -1,7 +1,7 @@
 import BITBOX from "slp-sdk";
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = process.env.NETWORK
+const NETWORK = process.env.REACT_APP_NETWORK
 
 // Instantiate bitbox.
 
