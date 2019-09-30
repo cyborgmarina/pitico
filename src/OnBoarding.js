@@ -50,7 +50,7 @@ export const OnBoarding = ({ history }) => {
 
   return (
     <Row gutter={8} type="flex">
-      <Col span={8} offset={4}>
+      <Col lg={8} span={24} lg-offset={4} style={{ marginTop: 8 }}>
         <Card
           title={
             <h2>
@@ -65,7 +65,7 @@ export const OnBoarding = ({ history }) => {
           </div>
         </Card>
       </Col>
-      <Col span={8}>
+      <Col lg={8} span={24} style={{ marginTop: 8 }}>
         <Card
           title={
             <h2>
