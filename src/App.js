@@ -108,7 +108,7 @@ const StyledWrapper = styled.div`
             {wallet ? (
               <div style={{ paddingTop: "120px" }}>
                 <StyledWrapper>
-                  <QRCode address={wallet.cashAddress} />
+                  <QRCode address={address === 'slpAddress' ? wallet.slpAddress : wallet.cashAddress} />
                 </StyledWrapper>
                 <Radio.Group
                   defaultValue="slpAddress"

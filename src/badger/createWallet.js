@@ -16,22 +16,22 @@ export const getWallet = () => {
     try {
         wallet = JSON.parse(window.localStorage.getItem('wallet') || undefined);
     } catch (error) {
-        wallet = createWallet();
-        window.localStorage.setItem('wallet', JSON.stringify(wallet));
+        // wallet = createWallet();
+        // window.localStorage.setItem('wallet', JSON.stringify(wallet));
     }
     return wallet;
 };
 
-export const createWallet = () => {
+export const createWallet = (importMnemonic) => {
   const lang = "english";
   let outStr = "";
   const outObj = {};
 
   // create 128 bit BIP39 mnemonic
-  const mnemonic = SLP.Mnemonic.generate(128, SLP.Mnemonic.wordLists()[lang]);
+  const mnemonic = importMnemonic ? importMnemonic : SLP.Mnemonic.generate(128, SLP.Mnemonic.wordLists()[lang]);
   outStr += "BIP44 $BCH Wallet\n";
   outStr += `\n128 bit ${lang} BIP32 Mnemonic:\n${mnemonic}\n\n`;
-  outObj.mnemonic = mnemonic;
+  outObj.mnemonic = mnemonic.toString();
 
   // root seed buffer
   const rootSeed = SLP.Mnemonic.toSeed(mnemonic);
@@ -65,5 +65,7 @@ export const createWallet = () => {
   // Get the legacy address.
 
   outStr += `\n\n\n`;
+
+  window.localStorage.setItem('wallet', JSON.stringify(outObj));
   return outObj;
 };

@@ -9,6 +9,7 @@ import Mint from "./Mint";
 import Transfer from "./Transfer";
 import MoreCardOptions from './MoreCardOptions';
 import Paragraph from "antd/lib/typography/Paragraph";
+import { OnBoarding } from "./OnBoarding";
 
 export default () => {
   const ContextValue = React.useContext(WalletContext);
@@ -138,7 +139,10 @@ export default () => {
             </Col>
           ))
         : null}
-      {!loading && !tokens.length ? <Empty description="No tokens found" /> : null}
+      <Col span={24} style={{  marginTop: "8px" }}>
+        {!loading && !tokens.length && wallet ? <Empty description="No tokens found" /> : null}
+        {!loading && !tokens.length && !wallet ? <OnBoarding /> : null}
+      </Col>
     </Row>
   );
 };

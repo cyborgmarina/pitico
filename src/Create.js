@@ -17,16 +17,9 @@ import {
   Typography
 } from "antd";
 import { createToken } from "./badger/createToken";
+import { QRCode } from "./QRCode";
 
 const { Paragraph, Text } = Typography;
-
-const StyledButtonWrapper = styled.div`
-  ${ButtonQR} {
-    button {
-      display: none;
-    }
-  }
-`;
 
 const Create = ({ history }) => {
   const ContextValue = React.useContext(WalletContext);
@@ -117,18 +110,12 @@ const Create = ({ history }) => {
             }
             bordered={false}
           >
-            <StyledButtonWrapper>
+            <div>
               {!loadingContext && !balances.balance && !balances.unconfirmedBalance ? (
                 <>
                   <Paragraph>
-                    <ButtonQR
-                      toAddress={wallet.cashAddress}
-                      sizeQR={125}
-                      step={"fresh"}
-                      amountSatoshis={0}
-                    />
+                    <QRCode address={wallet.cashAddress} />
                   </Paragraph>
-                  <Paragraph style={{ overflowWrap: 'break-word' }}copyable>{wallet.cashAddress}</Paragraph>
                   <Paragraph>
                     You currently have 0 BCH. 
                   </Paragraph>
@@ -137,7 +124,7 @@ const Create = ({ history }) => {
                   </Paragraph>
                 </>
               ) : null}
-            </StyledButtonWrapper>
+            </div>
             <Form>
               <Form.Item
                 validateStatus={!data.dirty && !data.tokenName ? "error" : ""}
