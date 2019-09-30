@@ -61,7 +61,7 @@ export const OnBoarding = ({ history }) => {
           bordered={false}
         >
           <div style={{ }}>
-            <Button onClick={createWallet}>Create</Button>
+            <Button onClick={() => createWallet()}>Create</Button>
           </div>
         </Card>
       </Col>
