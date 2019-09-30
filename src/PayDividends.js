@@ -86,9 +86,9 @@ const PayDividends = ({ token, onClose }) => {
         ),
         duration: 0
       });
-      
-      onClose();
+
       setLoading(false);
+      onClose();
     } catch (e) {
       let message;
 
