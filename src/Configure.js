@@ -15,6 +15,7 @@ export default () => {
 	const handleConfigure = () => {
 		window.localStorage.setItem('restAPI', data.restAPI);
 		setIsConfigUpdated(true);
+		window.localStorage.setItem('wallet', null);
 		setTimeout(() => {
 			window.location.reload();
 		}, 3000)

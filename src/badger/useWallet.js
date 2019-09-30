@@ -32,7 +32,7 @@ const update = async ({ wallet, tokens, setBalances, setTokens, setLoading, show
         if (!wallet) {
             return;
         }
-        setLoading(showLoading);
+        setLoading(!!showLoading);
 
         const balance = await getBalance(wallet, false)
         setBalances(balance);

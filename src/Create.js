@@ -97,7 +97,7 @@ const Create = ({ history }) => {
 
     setData(p => ({ ...p, [name]: value }));
   };
-
+console.info(loadingContext)
   return (
     <Row justify="center" type="flex">
       <Col span={8}>
@@ -114,7 +114,7 @@ const Create = ({ history }) => {
               {!loadingContext && !balances.balance && !balances.unconfirmedBalance ? (
                 <>
                   <Paragraph>
-                    <QRCode address={wallet.cashAddress} />
+                    <QRCode address={wallet && wallet.cashAddress} />
                   </Paragraph>
                   <Paragraph>
                     You currently have 0 BCH. 
