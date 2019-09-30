@@ -191,7 +191,7 @@ const Mint = ({ token, onClose }) => {
                   message={
                     <Text>
                         <Icon type="info-circle" /> &nbsp;
-                        The slp address which has the baton has the ability to mint more tokens.
+                        <strong>The SLP Address which has the baton has the ability to mint more tokens.</strong>
                     </Text>
                   }
                   type="warning"
