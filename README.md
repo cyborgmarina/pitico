@@ -1,6 +1,7 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# pitico.cash
+> tokens for *everyone*.
 
-## Available Scripts
+## Full client-side webapp to create and manage your tokens in a user-friendly way.
 
 In the project directory, you can run:
 
