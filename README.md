@@ -1,7 +1,22 @@
 # pitico.cash
 > tokens for *everyone*.
 
-## Full client-side webapp to create and manage your tokens in a user-friendly way.
+## Full client-side webapp to create and manage your SLP tokens in a user-friendly way.
+
+**This project is in EARLY STAGES. Be careful!**
+
+- Create
+- Mint
+- Transfer
+- Import existing wallets
+- Change the REST APIs to one you trust (default: rest.bitcoin.com)
+- Can be run locally as well, just an npm start away.
+- Pay Dividends (Highly experimental!)
+
+![Alt text](/screenshots/ss01.png)
+![Alt text](/screenshots/ss02.png)
+![Alt text](/screenshots/ss03.png)
+![Alt text](/screenshots/ss04.jpg)
 
 In the project directory, you can run:
 
