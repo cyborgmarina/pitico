@@ -39,6 +39,10 @@ const StyledEnhancedCard = styled(Card)`
         height: 100%;
     }
 
+    .ant-card-actions {
+        white-space: nowrap;
+    }
+
     &:hover {
         box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.35);
     }

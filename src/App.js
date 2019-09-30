@@ -58,10 +58,8 @@ const StyledWrapper = styled.div`
       <div className="App">
         <Layout style={{ minHeight: "100vh" }}>
           <Sider
-            collapsible
-            collapsed={collapsed}
-            onCollapse={() => setCollapesed(!collapsed)}
-            style={{ overflow: 'hidden' }}
+            breakpoint="lg"
+            collapsedWidth="0"
           >
             <div className="logo" />
             <Menu
@@ -131,7 +129,7 @@ const StyledWrapper = styled.div`
                     renderItem={item => (
                       <List.Item>
                         <List.Item.Meta
-                          title={<a href="https://ant.design">{item.title}</a>}
+                          title={item.title}
                           description={item.description}
                         />
                       </List.Item>
