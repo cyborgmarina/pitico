@@ -6,7 +6,7 @@ import SLPSDK from 'slp-sdk';
 import getSlpInstance from './getSlpInstance';
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = process.env.NETWORK;
+const NETWORK = process.env.REACT_APP_NETWORK;
 const SLP = getSlpInstance(NETWORK);
 
 export async function getBalance(wallet, logs = true) {

@@ -8,7 +8,7 @@ import getSlpInstance from './getSlpInstance';
 let Utils = require('slpjs').Utils;
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = process.env.NETWORK
+const NETWORK = process.env.REACT_APP_NETWORK
 
 // Instantiate SLP based on the network.
 const SLP = getSlpInstance(NETWORK);

@@ -2,7 +2,7 @@ import SLPSDK from "slp-sdk";
 import util from "util";
 import getSlpInstance from './getSlpInstance'
 
-const NETWORK = process.env.NETWORK
+const NETWORK = process.env.REACT_APP_NETWORK
 
 util.inspect.defaultOptions = { depth: 1 }
 
