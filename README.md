@@ -1,7 +1,7 @@
 # pitico.cash
 > tokens for *everyone*.
 
-## Full client-side webapp to create and manage your tokens in a user-friendly way.
+## Full client-side webapp to create and manage your SLP tokens in a user-friendly way.
 
 **This project is in EARLY STAGES. Be careful!**
 
