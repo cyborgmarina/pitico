@@ -3,7 +3,7 @@
 
 ## Full client-side webapp to create and manage your tokens in a user-friendly way.
 
-** This project is in EARLY STAGES. Be careful! **
+**This project is in EARLY STAGES. Be careful!**
 
 - Create
 - Mint
