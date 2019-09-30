@@ -19,23 +19,10 @@ const { Paragraph } = Typography;
 
 const App = () => {
   const [collapsed, setCollapesed] = React.useState(false);
-  const [key, setKey] = React.useState(1);
+  const [key, setKey] = React.useState("0");
   const [address, setAddress] = React.useState("slpAddress");
   const ContextValue = React.useContext(WalletContext);
   const { wallet, balances, loading } = ContextValue;
-
-  React.useEffect(() => {
-    const url = window.location.href.toString();
-    if (url.includes("/", url.length - 1)) {
-      setKey("0");
-    } else if (url.includes("/portfolio", url.length - 10)) {
-      setKey("0");
-    } else if (url.includes("/create", url.length - 7)) {
-      setKey("1");
-    } else if (url.includes("/configure", url.length - 10)) {
-      setKey("2");
-    }
-  }, []);
 
   const handleChange = e => {
     setKey(e.key);
@@ -45,13 +32,18 @@ const App = () => {
     setAddress(e.target.value);
   };
 
-const StyledWrapper = styled.div`
-  ${ButtonQR} {
-    button {
-      display: none;
+  const route = () => {
+    switch (key) {
+      case "0":
+        return <Portfolio />
+      case "1":
+        return <Create />
+      case "2":
+        return <Configure />
+      default:
+        return <NotFound />
     }
   }
-`;
 
   return (
     <Router>
@@ -70,7 +62,6 @@ const StyledWrapper = styled.div`
               style={{ textAlign: "left" }}
             >
               <Menu.Item key="0">
-                <Link to="/portfolio">
                   {" "}
                   <Icon
                     style={{ fontSize: "16px" }}
@@ -78,10 +69,8 @@ const StyledWrapper = styled.div`
                     theme="filled"
                   />
                   <span>Portfolio</span>
-                </Link>
               </Menu.Item>
               <Menu.Item key="1">
-                <Link to="/create">
                   {" "}
                   <Icon
                     style={{ fontSize: "16px" }}
@@ -89,10 +78,8 @@ const StyledWrapper = styled.div`
                     theme="filled"
                   />
                   <span>Create</span>
-                </Link>
               </Menu.Item>
               <Menu.Item key="2">
-                <Link to="/configure">
                   {" "}
                   <Icon
                     style={{ fontSize: "16px" }}
@@ -100,14 +87,13 @@ const StyledWrapper = styled.div`
                     theme="filled"
                   />
                   <span>Configure</span>
-                </Link>
               </Menu.Item>
             </Menu>
             {wallet ? (
               <div style={{ paddingTop: "120px" }}>
-                <StyledWrapper>
+                <div>
                   <QRCode address={address === 'slpAddress' ? wallet.slpAddress : wallet.cashAddress} />
-                </StyledWrapper>
+                </div>
                 <Radio.Group
                   defaultValue="slpAddress"
                   onChange={(e) => handleChangeAddress(e)}
@@ -167,13 +153,7 @@ const StyledWrapper = styled.div`
                   backgroundColor: "#171717"
                 }}
               >
-                <Switch>
-                  <Route exact path="/" component={Portfolio} />
-                  <Route path="/portfolio" component={Portfolio} />
-                  <Route path="/create" component={Create} />
-                  <Route path="/configure" component={Configure} />
-                  <Route component={NotFound} />
-                </Switch>
+                {route()}
               </div>
             </Content>
           </Layout>
