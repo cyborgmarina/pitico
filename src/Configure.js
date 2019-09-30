@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
-import { Row, Col, Card, Icon, Alert, Typography, Form, Input, Button } from 'antd';
+import { Row, Col, Card, Icon, Alert, Typography, Form, Input, Button, Collapse } from 'antd';
+import { WalletContext } from "./badger/context";
 const { Paragraph } = Typography;
+const { Panel } = Collapse;
 
 
 export default () => {
+	const ContextValue = React.useContext(WalletContext);
+	const { wallet } = ContextValue;
 	const [visible, setVisible] = useState(true);
 	const handleClose = () => setVisible(false);
 	const [isConfigUpdated, setIsConfigUpdated] = React.useState(false);
@@ -40,31 +44,37 @@ export default () => {
 			afterClose={handleClose}
 			/>
 			) : null}
-			<Form>
-			<Form.Item
-			validateStatus={!data.dirty && !data.restAPI? "error" : ""}
-			help={
-				!data.dirty && !data.restAPI
-				? "Should be something like https://rest.bitcoin.com"
-				: ""
-			}
-			>
-			<Input
-			placeholder={data.restAPI}
-			name="restAPI"
-			onChange={e => handleChange(e)}
-			required
-			/>
-			</Form.Item>
-			<div style={{ paddingTop: "12px", marginBottom: '10px' }}>
-			<Button onClick={() => handleConfigure()}>
-			Update Config
-			</Button>
-			{isConfigUpdated && <Paragraph>Your configuration has been updated. Now connecting to {data.restAPI}...</Paragraph>}
-
-			</div>
-			</Form>
-			</Card>
-			</Col>
-			</Row>)
+		<Form>
+		<Form.Item
+		validateStatus={!data.dirty && !data.restAPI? "error" : ""}
+		help={
+			!data.dirty && !data.restAPI
+			? "Should be something like https://rest.bitcoin.com"
+			: ""
 		}
+		>
+		<Input
+		placeholder={data.restAPI}
+		name="restAPI"
+		onChange={e => handleChange(e)}
+		required
+		/>
+		</Form.Item>
+		<div style={{ paddingTop: "12px", marginBottom: '10px' }}>
+		<Button onClick={() => handleConfigure()}>
+		Update Config
+		</Button>
+		{isConfigUpdated && <Paragraph>Your configuration has been updated. Now connecting to {data.restAPI}...</Paragraph>}
+
+		</div>
+		</Form>
+		
+		  <Collapse>
+		    <Panel header="Seed Phrase (Mnemonic)" key="1">
+		      <p>{ (wallet && wallet.mnemonic) ? wallet.mnemonic : ""}</p>
+		    </Panel>
+		  </Collapse>
+		  		</Card>
+		</Col>
+		</Row>)
+}

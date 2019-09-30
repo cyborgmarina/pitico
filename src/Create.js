@@ -63,8 +63,8 @@ const Create = ({ history }) => {
         (
           <a href={link} target="_blank">
             <Paragraph>
-              Transaction successful. It might take a little bit to show up on your portfolio. 
-              You can verify this transaction here: {link}
+              Transaction successful.
+              Click or tap here for more details
             </Paragraph>
           </a>
         ),
