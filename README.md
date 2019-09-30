@@ -13,10 +13,10 @@
 - Can be run locally as well, just an npm start away.
 - Pay Dividends (Highly experimental!)
 
-![Alt text](/screnshots/ss01.png)
-![Alt text](/screnshots/ss02.png)
-![Alt text](/screnshots/ss03.png)
-![Alt text](/screnshots/ss04.jpg)
+![Alt text](/screenshots/ss01.png)
+![Alt text](/screenshots/ss02.png)
+![Alt text](/screenshots/ss03.png)
+![Alt text](/screenshots/ss04.jpg)
 
 In the project directory, you can run:
 
