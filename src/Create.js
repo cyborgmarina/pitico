@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { withRouter } from "react-router-dom";
 import { ButtonQR } from "badger-components-react";
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import { WalletContext } from "./badger/context";
 import {
   Input,
@@ -29,6 +29,8 @@ const Create = ({ history }) => {
     dirty: true,
     tokenName: "",
     tokenSymbol: "",
+    documentHash: "",
+    documentUri: "developer.bitcoin.com",
     amount: ""
   });
 
@@ -41,6 +43,7 @@ const Create = ({ history }) => {
     if (
       !data.tokenName ||
       !data.tokenSymbol ||
+      !data.documentUri ||
       !data.amount ||
       Number(data.amount) <= 0
     ) {
@@ -48,35 +51,37 @@ const Create = ({ history }) => {
     }
 
     setLoading(true);
-    const { tokenName, tokenSymbol, amount } = data;
+    const { tokenName, tokenSymbol, documentHash, documentUri, amount } = data;
     console.log("data", data);
     try {
       const link = await createToken(wallet, {
         tokenName,
         tokenSymbol,
+        documentHash,
+        documentUri,
         qty: amount
       });
 
       notification.success({
         message: "Success",
-        description:
-        (
+        description: (
           <a href={link} target="_blank">
             <Paragraph>
-              Transaction successful. It might take a little bit to show up on your portfolio. 
-              You can verify this transaction here: {link}
+              Transaction successful. It might take a little bit to show up on
+              your portfolio. You can verify this transaction here: {link}
             </Paragraph>
           </a>
         ),
         duration: 0
       });
-
-      history.push("/");
     } catch (e) {
       let message;
       switch (e.message) {
         case "Transaction has no inputs":
           message = "Insufficient balance";
+          break;
+        case "Document hash must be provided as a 64 character hex string":
+          message = e.message;
           break;
         default:
           message = "Unknown Error, try again later";
@@ -97,10 +102,10 @@ const Create = ({ history }) => {
 
     setData(p => ({ ...p, [name]: value }));
   };
-console.info(loadingContext)
+  console.info(loadingContext);
   return (
     <Row justify="center" type="flex">
-      <Col span={8}>
+      <Col lg={8} span={24}>
         <Spin spinning={loading || loadingContext}>
           <Card
             title={
@@ -111,36 +116,22 @@ console.info(loadingContext)
             bordered={false}
           >
             <div>
-              {!loadingContext && !balances.balance && !balances.unconfirmedBalance ? (
+              {!loadingContext &&
+              !balances.balance &&
+              !balances.unconfirmedBalance ? (
                 <>
                   <Paragraph>
                     <QRCode address={wallet && wallet.cashAddress} />
                   </Paragraph>
+                  <Paragraph>You currently have 0 BCH.</Paragraph>
                   <Paragraph>
-                    You currently have 0 BCH. 
-                  </Paragraph>
-                  <Paragraph>
-                    Deposit some BCH in order to pay for the transaction that will generate the token
+                    Deposit some BCH in order to pay for the transaction that
+                    will generate the token
                   </Paragraph>
                 </>
               ) : null}
             </div>
             <Form>
-              <Form.Item
-                validateStatus={!data.dirty && !data.tokenName ? "error" : ""}
-                help={
-                  !data.dirty && !data.tokenName
-                    ? "Should be combination of numbers & alphabets"
-                    : ""
-                }
-              >
-                <Input
-                  placeholder="tokenName"
-                  name="tokenName"
-                  onChange={e => handleChange(e)}
-                  required
-                />
-              </Form.Item>
               <Form.Item
                 validateStatus={!data.dirty && !data.tokenSymbol ? "error" : ""}
                 help={
@@ -157,9 +148,47 @@ console.info(loadingContext)
                 />
               </Form.Item>
               <Form.Item
-                validateStatus={!data.dirty && Number(data.amount) <= 0 ? "error" : ""}
+                validateStatus={
+                  !data.dirty && Number(data.tokenName) <= 0 ? "error" : ""
+                }
                 help={
-                  !data.dirty && Number(data.amount) <= 0 ? "Should be greater than 0" : ""
+                  !data.dirty && Number(data.tokenName) <= 0
+                    ? "Should be combination of numbers & alphabets"
+                    : ""
+                }
+              >
+                <Input
+                  placeholder="tokenName"
+                  name="tokenName"
+                  onChange={e => handleChange(e)}
+                  required
+                />
+              </Form.Item>
+              <Form.Item>
+                <Input
+                  placeholder="documentHash"
+                  name="documentHash"
+                  onChange={e => handleChange(e)}
+                  required
+                />
+              </Form.Item>
+              <Form.Item>
+                <Input
+                  value={data.documentUri}
+                  placeholder="documentUri"
+                  name="documentUri"
+                  onChange={e => handleChange(e)}
+                  required
+                />
+              </Form.Item>
+              <Form.Item
+                validateStatus={
+                  !data.dirty && Number(data.amount) <= 0 ? "error" : ""
+                }
+                help={
+                  !data.dirty && Number(data.amount) <= 0
+                    ? "Should be greater than 0"
+                    : ""
                 }
               >
                 <Input

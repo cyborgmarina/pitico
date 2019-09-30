@@ -50,6 +50,7 @@ const App = () => {
       <div className="App">
         <Layout style={{ minHeight: "100vh" }}>
           <Sider
+            style={{ position: 'fixed', zIndex: 2, height: '100vh' }}
             breakpoint="lg"
             collapsedWidth="0"
           >

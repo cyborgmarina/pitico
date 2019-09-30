@@ -58,6 +58,21 @@ const PayDividends = ({ token, onClose }) => {
         tokenId: token.tokenId,
       });
 
+      if (!link) {
+        setLoading(false);
+
+        return notification.info({
+          message: "Info",
+          description:
+          (
+            <Paragraph>
+              Sorry, you're the only token holder. 
+            </Paragraph>
+          ),
+          duration: 0
+        });
+      }
+
       notification.success({
         message: "Success",
         description:

@@ -29,7 +29,7 @@ export default () => {
 
 	return (
 		<Row justify="center" type="flex">
-		<Col span={8}>
+		<Col lg={8} span={24}>
 		<Card title={<h2><Icon type="tool" theme="filled" /> Configure</h2>} bordered={false}>
 		{visible ? (
 			<Alert

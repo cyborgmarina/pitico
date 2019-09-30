@@ -11,7 +11,7 @@ const SLP = getSlpInstance(NETWORK);
 const util = require("util")
 util.inspect.defaultOptions = { depth: 1 }
 
-export async function createToken(walletInfo, { tokenName, tokenSymbol, qty }) {
+export async function createToken(walletInfo, { tokenName, tokenSymbol, documentUri, documentHash, qty }) {
   try {
     const mnemonic = walletInfo.mnemonic
 
@@ -47,8 +47,8 @@ export async function createToken(walletInfo, { tokenName, tokenSymbol, qty }) {
       decimals: 0,
       name: tokenName,
       symbol: tokenSymbol,
-      documentUri: "developer.bitcoin.com",
-      documentHash: null,
+      documentUri: documentUri || "developer.bitcoin.com",
+      documentHash,
       initialTokenQty: qty
     }
 
