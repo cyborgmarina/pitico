@@ -50,7 +50,7 @@ export const OnBoarding = ({ history }) => {
 
   return (
     <Row gutter={8} type="flex">
-      <Col span={8}>
+      <Col span={8} offset={4}>
         <Card
           title={
             <h2>
