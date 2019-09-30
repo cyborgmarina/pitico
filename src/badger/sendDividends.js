@@ -30,11 +30,15 @@ export const sendDividends = async (wallet, { value, tokenId }) => {
 
     for (let i = 0; i < balances.length; i++) {
       const balance = balances[i];
-      
+      const address = Utils.toCashAddress(balance.slpAddress);
+      if (address === wallet.cashAddress) {
+        continue;
+      }
+
       try {
-        await sendBch(wallet, {value: value * (balance.tokenBalance/total), address: Utils.toCashAddress(balance.slpAddress)});
+        await sendBch(wallet, {value: value * (balance.tokenBalance/total), address: address});
       } catch(error) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
         i--;
       }
     }

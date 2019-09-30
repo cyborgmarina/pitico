@@ -29,12 +29,11 @@ export default () => {
   return (
     <Row type="flex" gutter={8} style={{ position: "relative" }}>
       {loading
-        ? Array.from({ length: 4 }).map((v, i) => (
-            <Col style={{  marginTop: "8px" }}>
+        ? Array.from({ length: 20 }).map((v, i) => (
+            <Col style={{  marginTop: "8px" }} lg={8} span={24}>
               <EnhancedCard
                 loading
                 key={i}
-                style={{ width: 300 }}
                 bordered={false}
               >
                 <Meta
@@ -50,7 +49,7 @@ export default () => {
         : null}
       {tokens.length
         ? tokens.map(token => (
-          <Col style={{  marginTop: "8px" }}>
+          <Col style={{  marginTop: "8px" }} lg={8} span={24}>
               <EnhancedCard
                 loading={!token.info}
                 expand={
@@ -64,7 +63,7 @@ export default () => {
                   )
                 }
                 key={token.tokenId}
-                style={{ width: 300, marginTop: "8px", textAlign: "left" }}
+                style={{ marginTop: "8px", textAlign: "left" }}
                 onClose={onClose}
                 actions={[
                   <span onClick={() => setAction(action !== "mint" ? "mint" : null)}>
@@ -76,7 +75,7 @@ export default () => {
                   <span
                   >
                     <MoreCardOptions 
-                    	hoverContent={<PayDividendsOption onClick={() => setAction(action !== "dividends" ? "dividends" : null)} />}>
+                    	hoverContent={<PayDividendsOption onClick={evt => setAction(action !== "dividends" ? "dividends" : null)} />}>
                     	<span><Icon style={{ fontSize: "18px" }}type="ellipsis" key="ellipsis"/></span>
                     </MoreCardOptions>
                   </span>
