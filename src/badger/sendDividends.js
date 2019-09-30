@@ -16,7 +16,6 @@ const SLP = getSlpInstance(NETWORK);
 export async function balancesForToken(tokenId) {
   try {
     const balances = await SLP.Utils.balancesForToken(tokenId);
-    console.log(balances)
     return balances;
   } catch (err) {
     console.error(`Error in getTokenInfo: `, err)

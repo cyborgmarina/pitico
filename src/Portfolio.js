@@ -7,7 +7,9 @@ import Img from "react-image";
 import Jdenticon from "react-jdenticon";
 import Mint from "./Mint";
 import Transfer from "./Transfer";
+import PayDividends from "./PayDividends";
 import MoreCardOptions from './MoreCardOptions';
+import PayDividendsOption from './PayDividendsOption';
 import Paragraph from "antd/lib/typography/Paragraph";
 import { OnBoarding } from "./OnBoarding";
 
@@ -72,46 +74,50 @@ export default () => {
                     <Icon type="interaction" key="interaction" /> Transfer
                   </span>,
                   <span
-                    onClick={() =>
-                      setAction(action !== "other" ? "other" : null)
-                    }
                   >
-                    <MoreCardOptions hoverContent="teste"><span><Icon style={{ fontSize: "18px" }}type="ellipsis" key="ellipsis"/></span></MoreCardOptions>
+                    <MoreCardOptions 
+                    	hoverContent={<PayDividendsOption onClick={() => setAction(action !== "dividends" ? "dividends" : null)} />}>
+                    	<span><Icon style={{ fontSize: "18px" }}type="ellipsis" key="ellipsis"/></span>
+                    </MoreCardOptions>
                   </span>
                 ]}
                 renderExpanded={() => (
+
                     <>
-                        {
-                          selectedToken && token.tokenId === selectedToken.tokenId ? (
-                            <Alert
-                              message={
-                                <div>
-                                    <Paragraph>
-                                      <Icon type="info-circle" /> &nbsp; Token properties
-                                    </Paragraph>
-                                    {
-                                      action ? (
-                                        <Paragraph small copyable ellipsis style={{ whiteSpace: 'nowrap', maxWidth: '100%' }}>
-                                          Token Id: {token.tokenId}
-                                        </Paragraph>
-                                      ) : Object.entries(token.info || {}).map(entry => (
-                                        <Paragraph small copyable={{ text: entry[1] }} ellipsis style={{ whiteSpace: 'nowrap', maxWidth: '100%' }}>
-                                          {entry[0]}: {entry[1]}
-                                        </Paragraph>
-                                      ))
-                                    }
-                                </div>
-                              }
-                              type="warning"
-                              style={{ marginTop: 4 }}
-                            />
-                          ) : null
-                        }
+                        {selectedToken && action === null && token.tokenId === selectedToken.tokenId ? (
+                          <Alert
+                            message={
+                              <div>
+                                  <Paragraph>
+                                    <Icon type="info-circle" /> &nbsp; Token properties
+                                  </Paragraph>
+                                  {
+                                    action ? (
+                                      <Paragraph small copyable ellipsis style={{ whiteSpace: 'nowrap', maxWidth: '100%' }}>
+                                        Token Id: {token.tokenId}
+                                      </Paragraph>
+                                    ) : Object.entries(token.info || {}).map(entry => (
+                                      <Paragraph small copyable={{ text: entry[1] }} ellipsis style={{ whiteSpace: 'nowrap', maxWidth: '100%' }}>
+                                        {entry[0]}: {entry[1]}
+                                      </Paragraph>
+                                    ))
+                                  }
+                              </div>
+                            }
+                            type="warning"
+                            style={{ marginTop: 4 }}
+                          />
+                        ) : null
+                      }
+
                         {
                             selectedToken && action === 'mint' ? <Mint token={selectedToken} onClose={onClose}/> : null
                         }
                         {
                             selectedToken && action === 'transfer' ? <Transfer token={selectedToken} onClose={onClose}/> : null
+                        }
+                        {
+                            selectedToken && action === 'dividends' ? <PayDividends token={selectedToken} onClose={onClose}/> : null
                         }
                     </>
                 )}

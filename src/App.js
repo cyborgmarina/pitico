@@ -126,7 +126,7 @@ const StyledWrapper = styled.div`
                     loading={loading}
                     itemLayout="horizontal"
                     dataSource={[
-                      { title: 'BCH', description: balances.balance || '0' },
+                      { title: 'BCH', description: balances.balance + balances.unconfirmedBalance || '0' },
                     ]}
                     renderItem={item => (
                       <List.Item>
