@@ -25,6 +25,10 @@
 .App-link {
   color: #09d3ac;
 }
+.ant-card-actions > li > span:hover, .ant-btn:hover, .ant-btn:focus  {
+    color: #6e6e6e;
+    transition: color 0.3s;
+}
 
 .ant-radio-group-solid
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
