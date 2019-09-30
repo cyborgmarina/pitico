@@ -45,7 +45,7 @@ const PayDividends = ({ token, onClose }) => {
     if (
       !formData.tokenId ||
       !formData.value ||
-      Number(formData.value) <= 0
+      Number(formData.value) <= 0.00005
     ) {
       return;
     }
@@ -96,6 +96,8 @@ const PayDividends = ({ token, onClose }) => {
         message = e.message;
       } else if(/Invalid BCH address/.test(e.message)) {
         message = 'Invalid BCH address';
+      }else if(/64: dust/.test(e.message)) {
+        message = 'Small amount';
       } else {
         message = "Unknown Error, try again later";
       }
@@ -166,8 +168,8 @@ const PayDividends = ({ token, onClose }) => {
                     !formData.dirty && Number(formData.value) <= 0 ? "error" : ""
                   }
                   help={
-                    !formData.dirty && Number(formData.value) <= 0
-                      ? "Should be greater than 0"
+                    !formData.dirty && Number(formData.value) <= 0.00005
+                      ? "Should be greater than 0.00005"
                       : ""
                   }
                 >
