@@ -35,7 +35,6 @@ const PayDividends = ({ token, onClose }) => {
     tokenId: token.tokenId
   });
   const [loading, setLoading] = useState(false);
-  const [totalBCHToBeSpent, setTotalBCHToBeSpent] = useState(0);
 
   async function submit() {
     setFormData({
@@ -97,21 +96,8 @@ const PayDividends = ({ token, onClose }) => {
 
   const handleChange = e => {
     const { value, name } = e.target;
-    if (name === 'value') {
-        calculateTotalBCHToBeSpent(token.tokenId, value)
-    }
     setFormData(p => ({ ...p, [name]: value }));
   };
-
-  const calculateTotalBCHToBeSpent = async (tokenId, value) => {
-	  try {
-      setTotalBCHToBeSpent(0);
-	  	const totalBalances = await balancesForToken(tokenId);
-	  	setTotalBCHToBeSpent(totalBalances.length * value);
-	  } catch(e) {
-	  	return e.message;
-	  }
-  }
 
   return (
     <Row type="flex">
@@ -127,7 +113,7 @@ const PayDividends = ({ token, onClose }) => {
         >
                       <Alert
       style={{ marginBottom: "10px" }}
-      message={<span><Paragraph><Icon type="warning" /> BE CAREFUL.</Paragraph><Paragraph>This is an <strong>EXPERIMENTAL</strong> feature, you MAY lose funds.</Paragraph></span>}
+      message={<span><Paragraph><Icon type="warning" /> BE CAREFUL.</Paragraph><Paragraph>This is an <strong>EXPERIMENTAL</strong> feature, strange things may happen.</Paragraph></span>}
       type="warning"
       closable={false}
       />
@@ -172,7 +158,7 @@ const PayDividends = ({ token, onClose }) => {
                 >
                   <Input
                     prefix={<Icon type="block" />}
-                    suffix={<span>BCH per token holder</span>}
+                    suffix={<span>BCH</span>}
                     placeholder="e.g: 0.01"
                     name="value"
                     onChange={e => handleChange(e)}
@@ -180,7 +166,6 @@ const PayDividends = ({ token, onClose }) => {
                     type="number"
                   />
                 </Form.Item>
-                <Paragraph>Total BCH spent will be... {totalBCHToBeSpent  === 0 ? "" : totalBCHToBeSpent}</Paragraph>
                 <div style={{ paddingTop: "12px" }}>
                   <Button onClick={() => submit()}>Pay Dividends</Button>
                 </div>
