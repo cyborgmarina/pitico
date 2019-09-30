@@ -90,7 +90,15 @@ export async function sendBch(walletInfo, {address, value}) {
     const txidStr = await bitbox.RawTransactions.sendRawTransaction([hex])
     console.log(`Transaction ID: ${txidStr}`)
     console.log(`Check the status of your transaction on this block explorer:`)
-    console.log(`https://explorer.bitcoin.com/tbch/tx/${txidStr}`)
+    let link;
+    if (NETWORK === `mainnet`) {
+      link = `https://explorer.bitcoin.com/bch/tx/${txidStr}`;
+    } else {
+      link = `https://explorer.bitcoin.com/tbch/tx/${txidStr}`;
+    }
+    console.log(link)
+
+    return link;
   } catch (err) {
     console.log(`error: `, err)
     throw err;

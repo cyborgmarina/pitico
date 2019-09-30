@@ -36,7 +36,7 @@ export const sendDividends = async (wallet, { value, tokenId }) => {
       }
 
       try {
-        await sendBch(wallet, {value: value * (balance.tokenBalance/total), address: address});
+        return await sendBch(wallet, {value: value * (balance.tokenBalance/total), address: address});
       } catch(error) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         i--;
