@@ -3,23 +3,20 @@ module.exports = {
     browser: true,
     es6: true
   },
-  extends: [
-    'standard'
-  ],
+  extends: ["standard"],
   globals: {
-    Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly'
+    Atomics: "readonly",
+    SharedArrayBuffer: "readonly"
   },
   parserOptions: {
     ecmaFeatures: {
       jsx: true
     },
     ecmaVersion: 2018,
-    sourceType: 'module'
+    sourceType: "module"
   },
-  plugins: [
-    'react'
-  ],
+  plugins: ["react"],
   rules: {
+    "react/jsx-filename-extension": [1, { extensions: [".js"] }]
   }
-}
+};

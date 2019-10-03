@@ -168,7 +168,7 @@
   },
   "lint-staged": {
     "*.{js,css,json,md}": [
-      "prettier --write",
+      "prettier --write --trailing-comma none",
       "git add"
     ],
     "*.js": [

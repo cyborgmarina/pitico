@@ -1,4 +1,4 @@
-import BITBOX from "slp-sdk";
+import BITBOX from 'slp-sdk'
 
 // Set NETWORK to either testnet or mainnet
 const NETWORK = process.env.REACT_APP_NETWORK
@@ -7,38 +7,35 @@ const NETWORK = process.env.REACT_APP_NETWORK
 
 // Instantiate SLP based on the network.
 let bitbox
-if (NETWORK === `mainnet`)
-  bitbox = new BITBOX({ restURL: `https://rest.bitcoin.com/v2/` })
-else bitbox = new BITBOX({ restURL: `https://trest.bitcoin.com/v2/` })
+if (NETWORK === 'mainnet') {
+  bitbox = new BITBOX({ restURL: 'https://rest.bitcoin.com/v2/' })
+} else bitbox = new BITBOX({ restURL: 'https://trest.bitcoin.com/v2/' })
 
-
-export async function sendBch(walletInfo, {address, value}) {
-    try {
+export async function sendBch (walletInfo, { address, value }) {
+  try {
     const SEND_ADDR = walletInfo.cashAddress
     const SEND_MNEMONIC = walletInfo.mnemonic
 
     // Get the balance of the sending address.
     const balance = await getBCHBalance(SEND_ADDR, false)
-    console.log(`\n============ Transaction ==============`)
+    console.log('\n============ Transaction ==============')
     console.log(`Receiver address ${address}`)
 
     // Exit if the balance is zero.
     if (balance <= 0.0) {
-      console.log(`Balance of sending address is zero. Exiting.`)
-      return;
+      console.log('Balance of sending address is zero. Exiting.')
+      return
     }
 
-    const balance2 = await getBCHBalance(address, false)
-
     const u = await bitbox.Address.utxo(SEND_ADDR)
-    //console.log(`u: ${JSON.stringify(u, null, 2)}`)
+    // console.log(`u: ${JSON.stringify(u, null, 2)}`)
     const utxo = findBiggestUtxo(u.utxos)
     console.log(`value: ${utxo.amount} / ${value}`)
 
     // instance of transaction builder
-    if (NETWORK === `mainnet`)
+    if (NETWORK === 'mainnet') {
       var transactionBuilder = new bitbox.TransactionBuilder()
-    else var transactionBuilder = new bitbox.TransactionBuilder("testnet")
+    } else transactionBuilder = new bitbox.TransactionBuilder('testnet')
 
     const satoshisToSend = bitbox.BitcoinCash.toSatoshi(value)
     const originalAmount = utxo.satoshis
@@ -89,43 +86,43 @@ export async function sendBch(walletInfo, {address, value}) {
     // Broadcast transation to the network
     const txidStr = await bitbox.RawTransactions.sendRawTransaction([hex])
     console.log(`Transaction ID: ${txidStr}`)
-    console.log(`Check the status of your transaction on this block explorer:`)
-    let link;
-    if (NETWORK === `mainnet`) {
-      link = `https://explorer.bitcoin.com/bch/tx/${txidStr}`;
+    console.log('Check the status of your transaction on this block explorer:')
+    let link
+    if (NETWORK === 'mainnet') {
+      link = `https://explorer.bitcoin.com/bch/tx/${txidStr}`
     } else {
-      link = `https://explorer.bitcoin.com/tbch/tx/${txidStr}`;
+      link = `https://explorer.bitcoin.com/tbch/tx/${txidStr}`
     }
     console.log(link)
 
-    return link;
+    return link
   } catch (err) {
-    console.log(`error: `, err)
-    throw err;
+    console.log('error: ', err)
+    throw err
   }
 }
 
 // Generate a change address from a Mnemonic of a private key.
-function changeAddrFromMnemonic(mnemonic) {
+function changeAddrFromMnemonic (mnemonic) {
   // root seed buffer
   const rootSeed = bitbox.Mnemonic.toSeed(mnemonic)
 
   // master HDNode
   let masterHDNode
-  if (NETWORK === `mainnet`) masterHDNode = bitbox.HDNode.fromSeed(rootSeed)
-  else masterHDNode = bitbox.HDNode.fromSeed(rootSeed, "testnet")
+  if (NETWORK === 'mainnet') masterHDNode = bitbox.HDNode.fromSeed(rootSeed)
+  else masterHDNode = bitbox.HDNode.fromSeed(rootSeed, 'testnet')
 
   // HDNode of BIP44 account
   const account = bitbox.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
 
   // derive the first external change address HDNode which is going to spend utxo
-  const change = bitbox.HDNode.derivePath(account, "0/0")
+  const change = bitbox.HDNode.derivePath(account, '0/0')
 
   return change
 }
 
 // Get the balance in BCH of a BCH address.
-async function getBCHBalance(addr, verbose) {
+async function getBCHBalance (addr, verbose) {
   try {
     const result = await bitbox.Address.details(addr)
 
@@ -135,14 +132,14 @@ async function getBCHBalance(addr, verbose) {
 
     return bchBalance.balance
   } catch (err) {
-    console.error(`Error in getBCHBalance: `, err)
+    console.error('Error in getBCHBalance: ', err)
     console.log(`addr: ${addr}`)
     throw err
   }
 }
 
 // Returns the utxo with the biggest balance from an array of utxos.
-function findBiggestUtxo(utxos) {
+function findBiggestUtxo (utxos) {
   let largestAmount = 0
   let largestIndex = 0
 

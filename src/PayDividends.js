@@ -3,11 +3,22 @@ import styled from "styled-components";
 import { ButtonQR } from "badger-components-react";
 import { WalletContext } from "./badger/context";
 import { sendDividends, balancesForToken } from "./badger/sendDividends";
-import { Card, Icon, Avatar, Table, Form, Input, Button, Alert, Select, Spin, notification } from "antd";
+import {
+  Card,
+  Icon,
+  Avatar,
+  Table,
+  Form,
+  Input,
+  Button,
+  Alert,
+  Select,
+  Spin,
+  notification
+} from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import Text from "antd/lib/typography/Text";
-
 
 const InputGroup = Input.Group;
 const { Meta } = Card;
@@ -54,8 +65,8 @@ const PayDividends = ({ token, onClose }) => {
     const { value, tokenId } = formData;
     try {
       const link = await sendDividends(wallet, {
-      	value,
-        tokenId: token.tokenId,
+        value,
+        tokenId: token.tokenId
       });
 
       if (!link) {
@@ -63,11 +74,8 @@ const PayDividends = ({ token, onClose }) => {
 
         return notification.info({
           message: "Info",
-          description:
-          (
-            <Paragraph>
-              Sorry, you're the only token holder. 
-            </Paragraph>
+          description: (
+            <Paragraph>Sorry, you're the only token holder.</Paragraph>
           ),
           duration: 0
         });
@@ -75,12 +83,10 @@ const PayDividends = ({ token, onClose }) => {
 
       notification.success({
         message: "Success",
-        description:
-        (
+        description: (
           <a href={link} target="_blank">
             <Paragraph>
-              Transaction successful.
-              Click or tap here for more details
+              Transaction successful. Click or tap here for more details
             </Paragraph>
           </a>
         ),
@@ -92,12 +98,12 @@ const PayDividends = ({ token, onClose }) => {
     } catch (e) {
       let message;
 
-      if(/don't have the minting baton/.test(e.message)) {
+      if (/don't have the minting baton/.test(e.message)) {
         message = e.message;
-      } else if(/Invalid BCH address/.test(e.message)) {
-        message = 'Invalid BCH address';
-      }else if(/64: dust/.test(e.message)) {
-        message = 'Small amount';
+      } else if (/Invalid BCH address/.test(e.message)) {
+        message = "Invalid BCH address";
+      } else if (/64: dust/.test(e.message)) {
+        message = "Small amount";
       } else {
         message = "Unknown Error, try again later";
       }
@@ -109,7 +115,7 @@ const PayDividends = ({ token, onClose }) => {
       console.error(e.message);
       setLoading(false);
     }
-  };
+  }
 
   const handleChange = e => {
     const { value, name } = e.target;
@@ -121,75 +127,91 @@ const PayDividends = ({ token, onClose }) => {
       <Col span={24}>
         <Spin spinning={loading}>
           <Card
-          title={
-            <h2>
-              <Icon type="dollar" /> Pay Dividends
-            </h2>
-          }
-          bordered={false}
-        >
-                      <Alert
-      style={{ marginBottom: "10px" }}
-      message={<span><Paragraph><Icon type="warning" /> BE CAREFUL.</Paragraph><Paragraph>This is an <strong>EXPERIMENTAL</strong> feature, strange things may happen.</Paragraph></span>}
-      type="warning"
-      closable={false}
-      />
-          <Row justify="center" type="flex">
-            <Col>
-              <StyledButtonWrapper>
-                {!balances.balance && !balances.unconfirmedBalance ? (
-                  <>
-                    <br />
-                    <Paragraph>
-                      <ButtonQR
-                        toAddress={wallet.cashAddress}
-                        sizeQR={125}
-                        step={"fresh"}
-                        amountSatoshis={0}
-                      />
-                    </Paragraph>
-                    <Paragraph style={{ overflowWrap: "break-word" }} copyable>
-                      {wallet.cashAddress}
-                    </Paragraph>
-                    <Paragraph>You currently have 0 BCH.</Paragraph>
-                    <Paragraph>
-                      Dividends are paid in BCH, deposit some so you can pay dividends to token holders.
-                    </Paragraph>
-                  </>
-                ) : null}
-              </StyledButtonWrapper>
-            </Col>
-          </Row>
-          <Row type="flex">
-            <Col span={24}>
-              <Form style={{ width: "auto" }}>
-                <Form.Item
-                  validateStatus={
-                    !formData.dirty && Number(formData.value) <= 0 ? "error" : ""
-                  }
-                  help={
-                    !formData.dirty && Number(formData.value) <= 0.00005
-                      ? "Should be greater than 0.00005"
-                      : ""
-                  }
-                >
-                  <Input
-                    prefix={<Icon type="block" />}
-                    suffix={<span>BCH</span>}
-                    placeholder="e.g: 0.01"
-                    name="value"
-                    onChange={e => handleChange(e)}
-                    required
-                    type="number"
-                  />
-                </Form.Item>
-                <div style={{ paddingTop: "12px" }}>
-                  <Button onClick={() => submit()}>Pay Dividends</Button>
-                </div>
-              </Form>
-            </Col>
-          </Row>
-        </Card>
+            title={
+              <h2>
+                <Icon type="dollar" /> Pay Dividends
+              </h2>
+            }
+            bordered={false}
+          >
+            <Alert
+              style={{ marginBottom: "10px" }}
+              message={
+                <span>
+                  <Paragraph>
+                    <Icon type="warning" /> BE CAREFUL.
+                  </Paragraph>
+                  <Paragraph>
+                    This is an <strong>EXPERIMENTAL</strong> feature, strange
+                    things may happen.
+                  </Paragraph>
+                </span>
+              }
+              type="warning"
+              closable={false}
+            />
+            <Row justify="center" type="flex">
+              <Col>
+                <StyledButtonWrapper>
+                  {!balances.balance && !balances.unconfirmedBalance ? (
+                    <>
+                      <br />
+                      <Paragraph>
+                        <ButtonQR
+                          toAddress={wallet.cashAddress}
+                          sizeQR={125}
+                          step={"fresh"}
+                          amountSatoshis={0}
+                        />
+                      </Paragraph>
+                      <Paragraph
+                        style={{ overflowWrap: "break-word" }}
+                        copyable
+                      >
+                        {wallet.cashAddress}
+                      </Paragraph>
+                      <Paragraph>You currently have 0 BCH.</Paragraph>
+                      <Paragraph>
+                        Dividends are paid in BCH, deposit some so you can pay
+                        dividends to token holders.
+                      </Paragraph>
+                    </>
+                  ) : null}
+                </StyledButtonWrapper>
+              </Col>
+            </Row>
+            <Row type="flex">
+              <Col span={24}>
+                <Form style={{ width: "auto" }}>
+                  <Form.Item
+                    validateStatus={
+                      !formData.dirty && Number(formData.value) <= 0
+                        ? "error"
+                        : ""
+                    }
+                    help={
+                      !formData.dirty && Number(formData.value) <= 0.00005
+                        ? "Should be greater than 0.00005"
+                        : ""
+                    }
+                  >
+                    <Input
+                      prefix={<Icon type="block" />}
+                      suffix={<span>BCH</span>}
+                      placeholder="e.g: 0.01"
+                      name="value"
+                      onChange={e => handleChange(e)}
+                      required
+                      type="number"
+                    />
+                  </Form.Item>
+                  <div style={{ paddingTop: "12px" }}>
+                    <Button onClick={() => submit()}>Pay Dividends</Button>
+                  </div>
+                </Form>
+              </Col>
+            </Row>
+          </Card>
         </Spin>
       </Col>
     </Row>

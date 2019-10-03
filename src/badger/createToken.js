@@ -1,17 +1,19 @@
-import SLPSDK from "slp-sdk";
-import getSlpInstance from './getSlpInstance';
+import getSlpInstance from './getSlpInstance'
 
 // Set NETWORK to either testnet or mainnet
-const NETWORK = process.env.REACT_APP_NETWORK;
+const NETWORK = process.env.REACT_APP_NETWORK
 
 // Instantiate SLP based on the network.
-const SLP = getSlpInstance(NETWORK);
+const SLP = getSlpInstance(NETWORK)
 
 // Used for debugging and investigating JS objects.
-const util = require("util")
+const util = require('util')
 util.inspect.defaultOptions = { depth: 1 }
 
-export async function createToken(walletInfo, { tokenName, tokenSymbol, documentUri, documentHash, qty }) {
+export async function createToken (
+  walletInfo,
+  { tokenName, tokenSymbol, documentUri, documentHash, qty }
+) {
   try {
     const mnemonic = walletInfo.mnemonic
 
@@ -19,13 +21,13 @@ export async function createToken(walletInfo, { tokenName, tokenSymbol, document
     const rootSeed = SLP.Mnemonic.toSeed(mnemonic)
     // master HDNode
     let masterHDNode
-    if (NETWORK === `mainnet`) masterHDNode = SLP.HDNode.fromSeed(rootSeed)
-    else masterHDNode = SLP.HDNode.fromSeed(rootSeed, "testnet") // Testnet
+    if (NETWORK === 'mainnet') masterHDNode = SLP.HDNode.fromSeed(rootSeed)
+    else masterHDNode = SLP.HDNode.fromSeed(rootSeed, 'testnet') // Testnet
 
     // HDNode of BIP44 account
     const account = SLP.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
 
-    const change = SLP.HDNode.derivePath(account, "0/0")
+    const change = SLP.HDNode.derivePath(account, '0/0')
 
     // get the cash address and get some tBCH form our faucet https://developer.bitcoin.com/faucets/bch/
     const cashAddress = SLP.HDNode.toCashAddress(change)
@@ -47,7 +49,7 @@ export async function createToken(walletInfo, { tokenName, tokenSymbol, document
       decimals: 0,
       name: tokenName,
       symbol: tokenSymbol,
-      documentUri: documentUri || "developer.bitcoin.com",
+      documentUri: documentUri || 'developer.bitcoin.com',
       documentHash,
       initialTokenQty: qty
     }
@@ -58,21 +60,21 @@ export async function createToken(walletInfo, { tokenName, tokenSymbol, document
 
     console.log(`genesisTxID: ${util.inspect(genesisTxId)}`)
     console.log(
-      `The genesis TxID above is used to uniquely identify your new class of SLP token. Save it and keep it handy.`
+      'The genesis TxID above is used to uniquely identify your new class of SLP token. Save it and keep it handy.'
     )
-    console.log(`View this transaction on the block explorer:`)
-    let link;
-    if (NETWORK === `mainnet`) {
-      link = `https://explorer.bitcoin.com/bch/tx/${genesisTxId}`;
+    console.log('View this transaction on the block explorer:')
+    let link
+    if (NETWORK === 'mainnet') {
+      link = `https://explorer.bitcoin.com/bch/tx/${genesisTxId}`
     } else {
-      link = `https://explorer.bitcoin.com/tbch/tx/${genesisTxId}`;
+      link = `https://explorer.bitcoin.com/tbch/tx/${genesisTxId}`
     }
     console.log(link)
 
-    return link;
+    return link
   } catch (err) {
-    console.error(`Error in createToken: `, err)
+    console.error('Error in createToken: ', err)
     console.log(`Error message: ${err.message}`)
-    throw err;
+    throw err
   }
 }

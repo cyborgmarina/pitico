@@ -57,10 +57,10 @@ export const OnBoarding = ({ history }) => {
               <Icon type="plus-square" theme="filled" /> New Wallet
             </h2>
           }
-          style={{ height: '100%'}}
+          style={{ height: "100%" }}
           bordered={false}
         >
-          <div style={{ }}>
+          <div style={{}}>
             <Button onClick={() => createWallet()}>Create</Button>
           </div>
         </Card>

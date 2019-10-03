@@ -67,8 +67,7 @@ const Create = ({ history }) => {
         description: (
           <a href={link} target="_blank">
             <Paragraph>
-              Transaction successful.
-              Click or tap here for more details
+              Transaction successful. Click or tap here for more details
             </Paragraph>
           </a>
         ),

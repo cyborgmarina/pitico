@@ -10,7 +10,7 @@ import NotFound from "./NotFound";
 import "./App.css";
 import { WalletContext } from "./badger/context";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
-import styled from 'styled-components';
+import styled from "styled-components";
 import { QRCode } from "./QRCode";
 import Text from "antd/lib/typography/Text";
 
@@ -35,24 +35,21 @@ const App = () => {
   const route = () => {
     switch (key) {
       case "0":
-        return <Portfolio />
+        return <Portfolio />;
       case "1":
-        return <Create />
+        return <Create />;
       case "2":
-        return <Configure />
+        return <Configure />;
       default:
-        return <NotFound />
+        return <NotFound />;
     }
-  }
+  };
 
   return (
     <Router>
       <div className="App">
         <Layout style={{ minHeight: "100vh" }}>
-          <Sider
-            breakpoint="lg"
-            collapsedWidth="0"
-          >
+          <Sider breakpoint="lg" collapsedWidth="0">
             <div className="logo" />
             <Menu
               theme="dark"
@@ -62,47 +59,53 @@ const App = () => {
               style={{ textAlign: "left" }}
             >
               <Menu.Item key="0">
-                  {" "}
-                  <Icon
-                    style={{ fontSize: "16px" }}
-                    type="appstore"
-                    theme="filled"
-                  />
-                  <span>Portfolio</span>
+                {" "}
+                <Icon
+                  style={{ fontSize: "16px" }}
+                  type="appstore"
+                  theme="filled"
+                />
+                <span>Portfolio</span>
               </Menu.Item>
               <Menu.Item key="1">
-                  {" "}
-                  <Icon
-                    style={{ fontSize: "16px" }}
-                    type="plus-square"
-                    theme="filled"
-                  />
-                  <span>Create</span>
+                {" "}
+                <Icon
+                  style={{ fontSize: "16px" }}
+                  type="plus-square"
+                  theme="filled"
+                />
+                <span>Create</span>
               </Menu.Item>
               <Menu.Item key="2">
-                  {" "}
-                  <Icon
-                    style={{ fontSize: "16px" }}
-                    type="tool"
-                    theme="filled"
-                  />
-                  <span>Configure</span>
+                {" "}
+                <Icon style={{ fontSize: "16px" }} type="tool" theme="filled" />
+                <span>Configure</span>
               </Menu.Item>
             </Menu>
             {wallet ? (
               <div style={{ paddingTop: "120px" }}>
                 <div>
-                  <QRCode address={address === 'slpAddress' ? wallet.slpAddress : wallet.cashAddress} />
+                  <QRCode
+                    address={
+                      address === "slpAddress"
+                        ? wallet.slpAddress
+                        : wallet.cashAddress
+                    }
+                  />
                 </div>
                 <Radio.Group
                   defaultValue="slpAddress"
-                  onChange={(e) => handleChangeAddress(e)}
+                  onChange={e => handleChangeAddress(e)}
                   value={address}
                   size="small"
                   buttonStyle="solid"
                 >
-                  <Radio.Button style={{ borderRadius: 0 }} value="slpAddress">SLP</Radio.Button>
-                  <Radio.Button style={{ borderRadius: 0 }} value="cashAddress">BCH</Radio.Button>
+                  <Radio.Button style={{ borderRadius: 0 }} value="slpAddress">
+                    SLP
+                  </Radio.Button>
+                  <Radio.Button style={{ borderRadius: 0 }} value="cashAddress">
+                    BCH
+                  </Radio.Button>
                 </Radio.Group>
                 {!loading ? (
                   <List
@@ -110,7 +113,11 @@ const App = () => {
                     loading={loading}
                     itemLayout="horizontal"
                     dataSource={[
-                      { title: 'BCH', description: balances.balance + balances.unconfirmedBalance || '0' },
+                      {
+                        title: "BCH",
+                        description:
+                          balances.balance + balances.unconfirmedBalance || "0"
+                      }
                     ]}
                     renderItem={item => (
                       <List.Item>
@@ -139,8 +146,7 @@ const App = () => {
                   paddingRight: "4px",
                   paddingTop: "32px"
                 }}
-              >
-              </div>
+              ></div>
 
               <span style={{ display: "inline" }}>pitico.cash</span>
             </Header>

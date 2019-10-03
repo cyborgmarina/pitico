@@ -1,46 +1,47 @@
-import React, { useState } from 'react';
-import { Popover, Button } from 'antd';
+import React, { useState } from "react";
+import { Popover, Button } from "antd";
 
 export default ({ children, hoverContent, clickContent }) => {
-	const [hovered, setHovered] = useState(false);
-	const [clicked, setClicked] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [clicked, setClicked] = useState(false);
 
+  const hide = () => {
+    setHovered(false);
+    setClicked(false);
+  };
 
-	const hide = () => {
-		setHovered(false);
-		setClicked(false); 
-	};
+  const handleHoverChange = visible => {
+    setHovered(visible);
+    setClicked(false);
+  };
 
-	const handleHoverChange = visible => {
-		setHovered(visible); 
-		setClicked(false);
-	};
+  const handleClickChange = visible => {
+    setHovered(visible);
+    setClicked(visible);
+  };
 
-	const handleClickChange = visible => {
-		setHovered(visible);
-		setClicked(visible);
-	};
-
-	return (<Popover
-		style={{ width: 100 }}
-		content={hoverContent}
-		title=""
-		trigger="hover"
-		visible={hovered}
-		onVisibleChange={handleHoverChange}
-		>
-			<Popover
-			content={
-				<div>
-				{clickContent}
-				<a onClick={hide}>Close</a>
-				</div>
-			}
-			trigger="click"
-			visible={clicked}
-			onVisibleChange={handleClickChange}
-			>
-			{children}
-			</Popover>
-		</Popover>)
-}
+  return (
+    <Popover
+      style={{ width: 100 }}
+      content={hoverContent}
+      title=""
+      trigger="hover"
+      visible={hovered}
+      onVisibleChange={handleHoverChange}
+    >
+      <Popover
+        content={
+          <div>
+            {clickContent}
+            <a onClick={hide}>Close</a>
+          </div>
+        }
+        trigger="click"
+        visible={clicked}
+        onVisibleChange={handleClickChange}
+      >
+        {children}
+      </Popover>
+    </Popover>
+  );
+};
