@@ -155,8 +155,10 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.15.1",
     "eslint-plugin-standard": "^4.0.1",
+    "husky": "^3.0.8",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
+    "lint-staged": "^9.4.1",
     "prettier": "1.18.2"
   },
   "husky": {
