@@ -22,15 +22,12 @@ export const getWallet = () => {
 
 export const createWallet = importMnemonic => {
   const lang = 'english'
-  let outStr = ''
   const outObj = {}
 
   // create 128 bit BIP39 mnemonic
   const mnemonic =
     importMnemonic ||
     SLP.Mnemonic.generate(128, SLP.Mnemonic.wordLists()[lang])
-  outStr += 'BIP44 $BCH Wallet\n'
-  outStr += `\n128 bit ${lang} BIP32 Mnemonic:\n${mnemonic}\n\n`
   outObj.mnemonic = mnemonic.toString()
 
   // root seed buffer
@@ -43,11 +40,9 @@ export const createWallet = importMnemonic => {
 
   // HDNode of BIP44 account
   const account = SLP.HDNode.derivePath(masterHDNode, "m/44'/145'/0'")
-  outStr += "BIP44 Account: \"m/44'/145'/0'\"\n"
 
   for (let i = 0; i < 10; i++) {
     const childNode = masterHDNode.derivePath(`m/44'/145'/0'/0/${i}`)
-    outStr += `m/44'/145'/0'/0/${i}: ${SLP.HDNode.toCashAddress(childNode)}\n`
 
     if (i === 0) {
       outObj.cashAddress = SLP.HDNode.toCashAddress(childNode)
@@ -61,10 +56,6 @@ export const createWallet = importMnemonic => {
 
   // get the cash address
   SLP.HDNode.toCashAddress(change)
-
-  // Get the legacy address.
-
-  outStr += '\n\n\n'
 
   window.localStorage.setItem('wallet', JSON.stringify(outObj))
   return outObj
