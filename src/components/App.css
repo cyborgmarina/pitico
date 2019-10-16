@@ -1,0 +1,69 @@
+@import "~antd/dist/antd.less";
+@import url("https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap&.css");
+
+.App {
+  text-align: center;
+  font-family: "Roboto Mono", monospace;
+  background-color: #171717;
+}
+
+.App-logo {
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #09d3ac;
+}
+.ant-card-actions > li > span:hover,
+.ant-btn:hover,
+.ant-btn:focus {
+  color: #6e6e6e;
+  transition: color 0.3s;
+}
+
+.ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+  background: white;
+}
+
+input.ant-input {
+  border-radius: 0;
+}
+
+input.ant-input {
+  border-radius: 0;
+  padding: 20px;
+}
+
+/*
+.ant-input-affix-wrapper .ant-input-prefix, .ant-input-affix-wrapper .ant-input-suffix {
+  transform: none;
+} */
+
+.ant-btn {
+  border-radius: 0;
+}
+
+.ant-card-actions > li:not(:last-child) {
+  border-right: 0;
+}
+
+.ant-alert-warning {
+  background-color: #30303d;
+  border: 1px solid #17171f;
+  border-radius: 0;
+}
+
+.ant-alert-message {
+  color: #fff;
+}
