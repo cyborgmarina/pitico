@@ -1,11 +1,11 @@
 # pitico.cash - Japurá (v0.1.0)
 
-## Full client-side webapp to create and manage your Bitcoin Cash SLP tokens in a user-friendly way.
-## Learn more about the Simple Ledger Protocol: https://simpleledger.cash/
+## Browser-only tool to create and manage your Bitcoin Cash SLP tokens in a user-friendly way.
+### Learn more about the Simple Ledger Protocol: https://simpleledger.cash/
 
-** We're pleased to announce that pitico is now a award-winning project! We won 3rd place in the Simple Ledger Virtual Hackathon (SLPVH) 2019: https://simpleledger.info/slpvh/
+** We're pleased to announce that pitico is now a award-winning project! We won 3rd place in the Simple Ledger Virtual Hackathon (SLPVH) 2019: https://simpleledger.info/slpvh/ **
 
-** Still in early stages, be careful!
+** Still in early stages, be careful! **
 
 - Create
 - Mint
