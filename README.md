@@ -1,9 +1,11 @@
 # pitico.cash
-> tokens for *everyone*.
 
-## Full client-side webapp to create and manage your SLP tokens in a user-friendly way.
+## Manage your Bitcoin Cash SLP Tokens in your browser.
+_(Full Client-Side, you can choose whatever backend you desire!)_
 
-**This project is in EARLY STAGES. Be careful!**
+**We're pleased to announce that pitico is now a award-winning project! We won 3rd place in the Simple Ledger Virtual Hackathon (SLPVH) 2019: https://simpleledger.info/slpvh/**
+
+**Still in early stages, be careful!**
 
 - Create
 - Mint
@@ -11,12 +13,15 @@
 - Import existing wallets
 - Change the REST APIs to one you trust (default: rest.bitcoin.com)
 - Can be run locally as well, just an npm start away.
-- Pay Dividends (Highly experimental!)
+- Pay Dividends
 
 ![Alt text](/screenshots/ss01.png)
 ![Alt text](/screenshots/ss02.png)
 ![Alt text](/screenshots/ss03.png)
-![Alt text](/screenshots/ss04.jpg)
+
+### Learn more about the Simple Ledger Protocol: https://simpleledger.cash/
+
+## Running locally:
 
 In the project directory, you can run:
 
@@ -27,11 +32,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
