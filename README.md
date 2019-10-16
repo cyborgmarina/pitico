@@ -1,10 +1,7 @@
-# pitico.cash - Japurá (v0.1.0)
+# pitico.cash
 
 ## Manage your Bitcoin Cash SLP Tokens in your browser.
 _(Full Client-Side, you can choose whatever backend you desire!)_
-
-### Learn more about the Simple Ledger Protocol: https://simpleledger.cash/
-<br>
 
 **We're pleased to announce that pitico is now a award-winning project! We won 3rd place in the Simple Ledger Virtual Hackathon (SLPVH) 2019: https://simpleledger.info/slpvh/**
 
@@ -21,6 +18,8 @@ _(Full Client-Side, you can choose whatever backend you desire!)_
 ![Alt text](/screenshots/ss01.png)
 ![Alt text](/screenshots/ss02.png)
 ![Alt text](/screenshots/ss03.png)
+
+### Learn more about the Simple Ledger Protocol: https://simpleledger.cash/
 
 ## Running locally:
 
