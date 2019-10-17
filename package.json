@@ -1,8 +1,8 @@
 {
-  "name": "antd-demo",
+  "name": "pitico",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://www.pitico.cash",
+  "homepage": "https://www.pitico.cash",
   "dependencies": {
     "@ant-design/dark-theme": "^1.0.3",
     "@babel/core": "7.6.0",
@@ -34,6 +34,7 @@
     "fs-extra": "7.0.1",
     "gh-pages": "^2.1.1",
     "html-webpack-plugin": "4.0.0-beta.5",
+    "husky": "^3.0.9",
     "identity-obj-proxy": "3.0.0",
     "is-wsl": "^1.1.0",
     "jdenticon": "^2.2.0",
@@ -41,6 +42,7 @@
     "jest-environment-jsdom-fourteen": "0.1.0",
     "jest-resolve": "24.9.0",
     "jest-watch-typeahead": "0.4.0",
+    "lint-staged": "^9.4.2",
     "mini-css-extract-plugin": "0.8.0",
     "optimize-css-assets-webpack-plugin": "5.0.3",
     "pnp-webpack-plugin": "1.5.0",
@@ -49,6 +51,7 @@
     "postcss-normalize": "7.0.1",
     "postcss-preset-env": "6.7.0",
     "postcss-safe-parser": "4.0.1",
+    "prettier": "^1.18.2",
     "qrcode.react": "^0.9.3",
     "react": "^16.10.0",
     "react-app-polyfill": "^1.0.3",
@@ -66,7 +69,6 @@
     "slp-sdk": "^4.11.0",
     "style-loader": "1.0.0",
     "styled-components": "^4.4.0",
-    "surge": "^0.21.3",
     "terser-webpack-plugin": "1.4.1",
     "ts-pnp": "1.1.4",
     "url-loader": "2.1.0",
@@ -75,11 +77,16 @@
     "webpack-manifest-plugin": "2.0.4",
     "workbox-webpack-plugin": "4.3.1"
   },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "predeploy": "npm run build",
-    "deploy": "surge build www.pitico.cash",
     "test": "node scripts/test.js"
   },
   "eslintConfig": {
@@ -153,5 +160,10 @@
   "devDependencies": {
     "less": "^3.10.3",
     "less-loader": "^5.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
