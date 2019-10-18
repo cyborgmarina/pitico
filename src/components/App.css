@@ -67,3 +67,14 @@ input.ant-input {
 .ant-alert-message {
   color: #fff;
 }
+
+.audit {
+  a,
+  a:active {
+    color: #46464a;
+  }
+
+  a:hover {
+    color: #111117;
+  }
+}

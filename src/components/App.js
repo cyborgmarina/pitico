@@ -6,6 +6,7 @@ import Portfolio from "./Portfolio";
 import { ButtonQR } from "badger-components-react";
 import Create from "./Create";
 import Configure from "./Configure";
+import Audit from "./Audit";
 import NotFound from "./NotFound";
 import "./App.css";
 import { WalletContext } from "../utils/context";
@@ -40,6 +41,8 @@ const App = () => {
         return <Create />;
       case "2":
         return <Configure />;
+      case "3":
+        return <Audit />;
       default:
         return <NotFound />;
     }
@@ -72,6 +75,11 @@ const App = () => {
                 {" "}
                 <Icon style={{ fontSize: "16px" }} type="tool" theme="filled" />
                 <span>Configure</span>
+              </Menu.Item>
+              <Menu.Item key="3">
+                {" "}
+                <Icon style={{ fontSize: "16px" }} type="eye" theme="filled" />
+                <span>Audit</span>
               </Menu.Item>
             </Menu>
             {wallet ? (
