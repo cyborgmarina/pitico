@@ -19,7 +19,8 @@ const { Header, Content, Sider } = Layout;
 const { Paragraph } = Typography;
 
 const App = () => {
-  const [collapsed, setCollapesed] = React.useState(false);
+  const [collapsed, setCollapesed] = React.useState(window.innerWidth < 768);
+  const [mobile, setMobile] = React.useState(false);
   const [key, setKey] = React.useState("0");
   const [address, setAddress] = React.useState("slpAddress");
   const ContextValue = React.useContext(WalletContext);
@@ -27,6 +28,7 @@ const App = () => {
 
   const handleChange = e => {
     setKey(e.key);
+    mobile && setCollapesed(true);
   };
 
   const handleChangeAddress = e => {
@@ -48,11 +50,27 @@ const App = () => {
     }
   };
 
+  const handleResize = () => setMobile(window.innerWidth < 768);
+
+  React.useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <Router>
       <div className="App">
-        <Layout style={{ minHeight: "100vh" }}>
-          <Sider breakpoint="lg" collapsedWidth="0">
+        <Layout style={{ height: "100vh" }}>
+          <Sider
+            breakpoint="lg"
+            collapsedWidth="0"
+            collapsed={collapsed}
+            onCollapse={() => setCollapesed(!collapsed)}
+            style={mobile ? { position: "absolute", zIndex: "100000", height: "100vh" } : null}
+          >
             <div className="logo" />
             <Menu
               theme="dark"
@@ -142,7 +160,7 @@ const App = () => {
 
               <span style={{ display: "inline" }}>pitico.cash</span>
             </Header>
-            <Content style={{ margin: "0 16px", backgroundColor: "#171717" }}>
+            <Content style={{ margin: "0 16px", backgroundColor: "#171717", zIndex: "100" }}>
               <div
                 style={{
                   padding: 24,
