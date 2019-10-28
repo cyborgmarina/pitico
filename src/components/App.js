@@ -104,6 +104,7 @@ const App = () => {
               <div style={{ paddingTop: "120px" }}>
                 <div>
                   <QRCode
+                    id="borderedQRCode"
                     address={address === "slpAddress" ? wallet.slpAddress : wallet.cashAddress}
                   />
                 </div>
