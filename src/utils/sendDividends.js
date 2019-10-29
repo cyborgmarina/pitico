@@ -2,18 +2,11 @@
   Get the token information based on the id.
 */
 
-import SLPSDK from "slp-sdk";
 import { sendBch } from "./sendBch";
-import getSlpInstance from "./getSlpInstance";
+import withSLP from "./withSLP";
 let Utils = require("slpjs").Utils;
 
-// Set NETWORK to either testnet or mainnet
-const NETWORK = process.env.REACT_APP_NETWORK;
-
-// Instantiate SLP based on the network.
-const SLP = getSlpInstance(NETWORK);
-
-export async function outputsForToken(tokenId) {
+export const outputsForToken = withSLP(async (SLP, tokenId) => {
   try {
     const balances = await SLP.Utils.balancesForToken(tokenId);
     return balances;
@@ -21,9 +14,9 @@ export async function outputsForToken(tokenId) {
     console.error(`Error in getTokenInfo: `, err);
     throw err;
   }
-}
+});
 
-export const sendDividends = async (wallet, { value, tokenId }) => {
+export const sendDividends = withSLP(async (SLP, wallet, { value, tokenId }) => {
   const outputs = await outputsForToken(tokenId);
   const addresses = [];
   const values = [];
@@ -41,4 +34,4 @@ export const sendDividends = async (wallet, { value, tokenId }) => {
   }
 
   return await sendBch(wallet, { addresses, values });
-};
+});

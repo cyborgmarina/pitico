@@ -18,7 +18,7 @@ import {
 } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
-import Text from "antd/lib/typography/Text";
+import isPiticoTokenHolder from "../utils/isPiticoTokenHolder";
 
 const InputGroup = Input.Group;
 const { Meta } = Card;
@@ -115,7 +115,7 @@ const PayDividends = ({ token, onClose }) => {
   };
 
   return (
-    <Row type="flex">
+    <Row type="flex" className="dividends">
       <Col span={24}>
         <Spin spinning={loading}>
           <Card
@@ -126,75 +126,103 @@ const PayDividends = ({ token, onClose }) => {
             }
             bordered={false}
           >
-            <Alert
-              style={{ marginBottom: "10px" }}
-              message={
-                <span>
-                  <Paragraph>
-                    <Icon type="warning" /> BE CAREFUL.
-                  </Paragraph>
-                  <Paragraph>
-                    This is an <strong>EXPERIMENTAL</strong> feature, strange things may happen.
-                  </Paragraph>
-                </span>
-              }
-              type="warning"
-              closable={false}
-            />
-            <Row justify="center" type="flex">
-              <Col>
-                <StyledButtonWrapper>
-                  {!balances.balance && !balances.unconfirmedBalance ? (
-                    <>
-                      <br />
+            {!isPiticoTokenHolder(tokens) && (
+              <Alert
+                style={{ marginBottom: "10px" }}
+                message={
+                  <span>
+                    <Paragraph>
+                      <Icon type="warning" /> EXPERIMENTAL
+                    </Paragraph>
+                    <Paragraph>
+                      This is an experimental feature, available only to Pitico Cash token holders.
+                    </Paragraph>
+                    <Paragraph>
+                      <a href="https://t.me/piticocash" target="_blank">
+                        Join our Telegram Group to get your $PTCH.
+                      </a>
+                    </Paragraph>
+                  </span>
+                }
+                type="warning"
+                closable={false}
+              />
+            )}
+            {isPiticoTokenHolder(tokens) && (
+              <>
+                <Alert
+                  style={{ marginBottom: "10px" }}
+                  message={
+                    <span>
                       <Paragraph>
-                        <ButtonQR
-                          toAddress={wallet.cashAddress}
-                          sizeQR={125}
-                          step={"fresh"}
-                          amountSatoshis={0}
-                        />
+                        <Icon type="warning" /> BE CAREFUL.
                       </Paragraph>
-                      <Paragraph style={{ overflowWrap: "break-word" }} copyable>
-                        {wallet.cashAddress}
-                      </Paragraph>
-                      <Paragraph>You currently have 0 BCH.</Paragraph>
                       <Paragraph>
-                        Dividends are paid in BCH, deposit some so you can pay dividends to token
-                        holders.
+                        This is an experimental feature, strange things may happen.
                       </Paragraph>
-                    </>
-                  ) : null}
-                </StyledButtonWrapper>
-              </Col>
-            </Row>
-            <Row type="flex">
-              <Col span={24}>
-                <Form style={{ width: "auto" }}>
-                  <Form.Item
-                    validateStatus={!formData.dirty && Number(formData.value) <= 0 ? "error" : ""}
-                    help={
-                      !formData.dirty && Number(formData.value) <= 0.00005
-                        ? "Should be greater than 0.00005"
-                        : ""
-                    }
-                  >
-                    <Input
-                      prefix={<Icon type="block" />}
-                      suffix={<span>BCH</span>}
-                      placeholder="e.g: 0.01"
-                      name="value"
-                      onChange={e => handleChange(e)}
-                      required
-                      type="number"
-                    />
-                  </Form.Item>
-                  <div style={{ paddingTop: "12px" }}>
-                    <Button onClick={() => submit()}>Pay Dividends</Button>
-                  </div>
-                </Form>
-              </Col>
-            </Row>
+                    </span>
+                  }
+                  type="warning"
+                  closable={false}
+                />
+                <Row justify="center" type="flex">
+                  <Col>
+                    <StyledButtonWrapper>
+                      {!balances.balance && !balances.unconfirmedBalance ? (
+                        <>
+                          <br />
+                          <Paragraph>
+                            <ButtonQR
+                              toAddress={wallet.cashAddress}
+                              sizeQR={125}
+                              step={"fresh"}
+                              amountSatoshis={0}
+                            />
+                          </Paragraph>
+                          <Paragraph style={{ overflowWrap: "break-word" }} copyable>
+                            {wallet.cashAddress}
+                          </Paragraph>
+                          <Paragraph>You currently have 0 BCH.</Paragraph>
+                          <Paragraph>
+                            Dividends are paid in BCH, deposit some so you can pay dividends to
+                            token holders.
+                          </Paragraph>
+                        </>
+                      ) : null}
+                    </StyledButtonWrapper>
+                  </Col>
+                </Row>
+              </>
+            )}
+            {isPiticoTokenHolder(tokens) && (
+              <Row type="flex">
+                <Col span={24}>
+                  <Form style={{ width: "auto" }}>
+                    <Form.Item
+                      validateStatus={!formData.dirty && Number(formData.value) <= 0 ? "error" : ""}
+                      help={
+                        !formData.dirty && Number(formData.value) <= 0.00005
+                          ? "Should be greater than 0.00005"
+                          : ""
+                      }
+                    >
+                      <Input
+                        prefix={<Icon type="block" />}
+                        suffix={<span>BCH</span>}
+                        placeholder="e.g: 0.01"
+                        name="value"
+                        onChange={e => handleChange(e)}
+                        required
+                        type="number"
+                      />
+                    </Form.Item>
+                    <div style={{ paddingTop: "12px" }}>
+                      <Button onClick={() => submit()}>Pay Dividends</Button>
+                    </div>
+                  </Form>
+                </Col>
+              </Row>
+            )}
           </Card>
         </Spin>
       </Col>

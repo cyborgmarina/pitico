@@ -6,7 +6,7 @@ import { ButtonQR } from "badger-components-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { WalletContext } from "../utils/context";
 import { Input, Button, notification, Spin, Icon, Row, Col, Card, Form, Typography } from "antd";
-import { createToken } from "../utils/createToken";
+import createToken from "../utils/broadcastTransaction";
 import { QRCode } from "./QRCode";
 
 const { Paragraph, Text } = Typography;
@@ -20,36 +20,31 @@ const Create = ({ history }) => {
     tokenName: "",
     tokenSymbol: "",
     documentHash: "",
-    documentUri: "developer.bitcoin.com",
+    documentUri: "",
     amount: ""
   });
 
   async function handleCreateToken() {
+    debugger;
     setData({
       ...data,
       dirty: false
     });
 
-    if (
-      !data.tokenName ||
-      !data.tokenSymbol ||
-      !data.documentUri ||
-      !data.amount ||
-      Number(data.amount) <= 0
-    ) {
+    if (!data.tokenName || !data.tokenSymbol || !data.amount || Number(data.amount) <= 0) {
       return;
     }
 
     setLoading(true);
     const { tokenName, tokenSymbol, documentHash, documentUri, amount } = data;
-    console.log("data", data);
     try {
+      const docUri = documentUri || "pitico.cash";
       const link = await createToken(wallet, {
-        tokenName,
-        tokenSymbol,
+        name: tokenName,
+        symbol: tokenSymbol,
         documentHash,
-        documentUri,
-        qty: amount
+        docUri,
+        initialTokenQty: amount
       });
 
       notification.success({
@@ -89,7 +84,6 @@ const Create = ({ history }) => {
 
     setData(p => ({ ...p, [name]: value }));
   };
-  console.info(loadingContext);
   return (
     <Row justify="center" type="flex">
       <Col lg={8} span={24}>
@@ -126,7 +120,7 @@ const Create = ({ history }) => {
                 }
               >
                 <Input
-                  placeholder="tokenSymbol"
+                  placeholder="token symbol e.g.: PTC"
                   name="tokenSymbol"
                   onChange={e => handleChange(e)}
                   required
@@ -141,7 +135,7 @@ const Create = ({ history }) => {
                 }
               >
                 <Input
-                  placeholder="tokenName"
+                  placeholder="token name"
                   name="tokenName"
                   onChange={e => handleChange(e)}
                   required
@@ -149,7 +143,7 @@ const Create = ({ history }) => {
               </Form.Item>
               <Form.Item>
                 <Input
-                  placeholder="documentHash"
+                  placeholder="white paper/document hash"
                   name="documentHash"
                   onChange={e => handleChange(e)}
                   required
@@ -157,8 +151,7 @@ const Create = ({ history }) => {
               </Form.Item>
               <Form.Item>
                 <Input
-                  value={data.documentUri}
-                  placeholder="documentUri"
+                  placeholder="token website e.g.: pitico.cash"
                   name="documentUri"
                   onChange={e => handleChange(e)}
                   required

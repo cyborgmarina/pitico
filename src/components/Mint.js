@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { ButtonQR } from "badger-components-react";
 import { WalletContext } from "../utils/context";
-import { mintToken } from "../utils/mintToken";
+import mintToken from "../utils/broadcastTransaction";
 import {
   Card,
   Icon,
@@ -63,8 +63,8 @@ const Mint = ({ token, onClose }) => {
     try {
       const link = await mintToken(wallet, {
         tokenId: token.tokenId,
-        quantity,
-        baton
+        additionalTokenQty: quantity,
+        batonReceiverAddress: baton
       });
 
       notification.success({
