@@ -12,6 +12,7 @@ const getWalletDetails = (SLPInstance, wallet) => {
   const change = SLPInstance.HDNode.derivePath(hdNodeBip44Account, "0/0");
   const cashAddress = SLPInstance.HDNode.toCashAddress(change);
   const slpAddress = SLPInstance.Address.toSLPAddress(SLPInstance.HDNode.toCashAddress(change));
+
   return {
     cashAddress,
     slpAddress,
