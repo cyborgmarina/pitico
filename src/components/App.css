@@ -78,3 +78,14 @@ input.ant-input {
     color: #111117;
   }
 }
+
+.dividends {
+  a,
+  a:active {
+    color: #111117;
+  }
+
+  a:hover {
+    color: #46464a;
+  }
+}

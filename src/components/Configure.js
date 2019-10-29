@@ -48,7 +48,8 @@ export default () => {
                   <Paragraph>
                     <Icon type="warning" /> Be careful.
                   </Paragraph>
-                  <Paragraph>This is for experienced users.</Paragraph>
+                  <Paragraph>Backup your wallet first.</Paragraph>
+                  <Paragraph>Updating the configuration will restart the app.</Paragraph>
                 </span>
               }
               type="warning"
@@ -66,14 +67,14 @@ export default () => {
               }
             >
               <Input
-                placeholder={data.restAPI}
+                placeholder={data.restAPI || "https://rest.bitcoin.com"}
                 name="restAPI"
                 onChange={e => handleChange(e)}
                 required
               />
             </Form.Item>
             <div style={{ paddingTop: "12px", marginBottom: "10px" }}>
-              <Button onClick={() => handleConfigure()}>Update Config</Button>
+              <Button onClick={() => handleConfigure()}>Update REST API</Button>
               {isConfigUpdated && (
                 <Paragraph>
                   Your configuration has been updated. Now connecting to {data.restAPI}...

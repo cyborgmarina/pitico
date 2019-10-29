@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-import { ButtonQR } from "badger-components-react";
 import { WalletContext } from "../utils/context";
-import { mintToken } from "../utils/mintToken";
+
 import {
   Card,
   Icon,
@@ -19,7 +17,7 @@ import {
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import Text from "antd/lib/typography/Text";
-import { sendToken } from "../utils/sendToken";
+import sendToken from "../utils/broadcastTransaction";
 
 const InputGroup = Input.Group;
 const { Meta } = Card;
@@ -51,8 +49,8 @@ const Transfer = ({ token, onClose }) => {
     try {
       const link = await sendToken(wallet, {
         tokenId: token.tokenId,
-        quantity,
-        address
+        amount: quantity,
+        tokenReceiverAddress: address
       });
 
       notification.success({

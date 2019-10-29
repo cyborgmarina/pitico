@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getWallet, createWallet } from "./createWallet";
-import { getBalance } from "./getBalance";
-import { getTokenInfo } from "./getTokenInfo";
+import getBalance from "./getBalance";
+import getTokenInfo from "./getTokenInfo";
 
 const tokensCache = {};
 
