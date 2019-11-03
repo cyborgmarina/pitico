@@ -58,9 +58,11 @@ export default () => {
                 style={{ marginTop: "8px", textAlign: "left" }}
                 onClose={onClose}
                 actions={[
-                  <span onClick={() => setAction(action !== "mint" ? "mint" : null)}>
-                    <Icon type="printer" key="printer" /> Mint
-                  </span>,
+                  token.info && token.info.hasBaton && (
+                    <span onClick={() => setAction(action !== "mint" ? "mint" : null)}>
+                      <Icon type="printer" key="printer" /> Mint
+                    </span>
+                  ),
                   <span onClick={() => setAction(action !== "transfer" ? "transfer" : null)}>
                     <Icon type="interaction" key="interaction" /> Transfer
                   </span>,

@@ -1,8 +1,11 @@
 import withSLP from "./withSLP";
+import isBatonHolder from "./isBatonHolder";
 
-const getTokenInfo = async (SLP, tokenId) => {
+const getTokenInfo = async (SLP, slpAddress, tokenId) => {
   try {
-    return await SLP.Utils.list(tokenId);
+    const info = await SLP.Utils.list(tokenId);
+    info.hasBaton = await isBatonHolder(slpAddress, tokenId);
+    return info;
   } catch (error) {
     console.error(error);
   }

@@ -7,13 +7,13 @@ const tokensCache = {};
 
 const sortTokens = tokens => tokens.sort((a, b) => (a.tokenId > b.tokenId ? 1 : -1));
 
-const updateTokensInfo = async (tokens = [], setTokens) => {
+const updateTokensInfo = async (slpAddress, tokens = [], setTokens) => {
   for (let i = 0; i < tokens.length; i++) {
     const token = tokens[i];
 
     if (!token.info) {
       try {
-        const info = await getTokenInfo(token.tokenId);
+        const info = await getTokenInfo(slpAddress, token.tokenId);
         tokens[i] = {
           ...token,
           info
@@ -47,7 +47,7 @@ const update = async ({ wallet, tokens, setBalances, setTokens, setLoading, show
         : token
     );
     setTokens(sortTokens(tokens));
-    await updateTokensInfo(tokens, setTokens);
+    await updateTokensInfo(wallet.slpAddress, tokens, setTokens);
   } catch (error) {
     setLoading(false);
     console.log("update error", error.message);

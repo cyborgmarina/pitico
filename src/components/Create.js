@@ -25,7 +25,6 @@ const Create = ({ history }) => {
   });
 
   async function handleCreateToken() {
-    debugger;
     setData({
       ...data,
       dirty: false
