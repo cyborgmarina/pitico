@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { ButtonQR } from "badger-components-react";
 import { WalletContext } from "../utils/context";
-import { sendDividends, balancesForToken } from "../utils/sendDividends";
+import { sendDividends, getBalancesForToken, getElegibleAddresses } from "../utils/sendDividends";
 import {
   Card,
   Icon,
@@ -14,7 +14,9 @@ import {
   Alert,
   Select,
   Spin,
-  notification
+  notification,
+  Badge,
+  Tooltip
 } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
@@ -23,6 +25,8 @@ import Text from "antd/lib/typography/Text";
 const InputGroup = Input.Group;
 const { Meta } = Card;
 const { Option } = Select;
+
+const DUST = 0.00005;
 
 const StyledButtonWrapper = styled.div`
   display: flex;
@@ -37,6 +41,15 @@ const StyledButtonWrapper = styled.div`
   }
 `;
 
+const StyledStat = styled.div`
+  font-size: 12px;
+
+  .ant-badge sup {
+    background-color: #3b3b4d;
+    color: rgba(255, 255, 255, 0.65);
+  }
+`;
+
 const PayDividends = ({ token, onClose }) => {
   const ContextValue = React.useContext(WalletContext);
   const { wallet, tokens, balances } = ContextValue;
@@ -46,6 +59,21 @@ const PayDividends = ({ token, onClose }) => {
     tokenId: token.tokenId
   });
   const [loading, setLoading] = useState(false);
+  const [stats, setStats] = useState({ tokens: 0, holders: 0, eligibles: 0 });
+
+  useEffect(() => {
+    setLoading(true);
+    getBalancesForToken(token.tokenId)
+      .then(balancesForToken => {
+        setStats({
+          ...stats,
+          tokens: balancesForToken.totalBalance,
+          holders: balancesForToken.length ? balancesForToken.length - 1 : 0,
+          balances: balancesForToken
+        });
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   async function submit() {
     setFormData({
@@ -53,7 +81,7 @@ const PayDividends = ({ token, onClose }) => {
       dirty: false
     });
 
-    if (!formData.tokenId || !formData.value || Number(formData.value) <= 0.00005) {
+    if (!formData.tokenId || !formData.value || Number(formData.value) < DUST) {
       return;
     }
 
@@ -70,7 +98,9 @@ const PayDividends = ({ token, onClose }) => {
 
         return notification.info({
           message: "Info",
-          description: <Paragraph>Sorry, you're the only token holder.</Paragraph>,
+          description: (
+            <Paragraph>No token holder with sufficient balance to receive dividends.</Paragraph>
+          ),
           duration: 0
         });
       }
@@ -96,6 +126,10 @@ const PayDividends = ({ token, onClose }) => {
         message = "Invalid BCH address";
       } else if (/64: dust/.test(e.message)) {
         message = "Small amount";
+      } else if (/Balance 0/.test(e.message)) {
+        message = "Balance of sending address is zero";
+      } else if (/Insufficient funds/.test(e.message)) {
+        message = "Insufficient funds.";
       } else {
         message = "Unknown Error, try again later";
       }
@@ -112,6 +146,13 @@ const PayDividends = ({ token, onClose }) => {
   const handleChange = e => {
     const { value, name } = e.target;
     setFormData(p => ({ ...p, [name]: value }));
+
+    if (name === "value") {
+      if (stats.balances && value && !Number.isNaN(value)) {
+        const { addresses } = getElegibleAddresses(wallet, stats.balances, value);
+        setStats({ ...stats, eligibles: addresses.length });
+      }
+    }
   };
 
   return (
@@ -169,19 +210,53 @@ const PayDividends = ({ token, onClose }) => {
               </Col>
             </Row>
             <Row type="flex">
+              <Col>
+                <Tooltip title="Circulating Supply">
+                  <StyledStat>
+                    <Icon type="gold" />
+                    &nbsp;
+                    <Badge count={stats.tokens} overflowCount={100000000} showZero />
+                    <Paragraph>Tokens</Paragraph>
+                  </StyledStat>
+                </Tooltip>
+              </Col>
+              &nbsp; &nbsp; &nbsp;
+              <Col>
+                <Tooltip title="Addresses with at least one token">
+                  <StyledStat>
+                    <Icon type="team" />
+                    &nbsp;
+                    <Badge count={stats.holders} overflowCount={100000000} showZero />
+                    <Paragraph>Holders</Paragraph>
+                  </StyledStat>
+                </Tooltip>
+              </Col>
+              &nbsp; &nbsp; &nbsp;
+              <Col>
+                <Tooltip title="Addresses elegible to receive dividends for the specified value">
+                  <StyledStat>
+                    <Icon type="usergroup-add" />
+                    &nbsp;
+                    <Badge count={stats.eligibles} overflowCount={100000000} showZero />
+                    <Paragraph>Eligibles</Paragraph>
+                  </StyledStat>
+                </Tooltip>
+              </Col>
+            </Row>
+            <Row type="flex">
               <Col span={24}>
                 <Form style={{ width: "auto" }}>
                   <Form.Item
                     validateStatus={!formData.dirty && Number(formData.value) <= 0 ? "error" : ""}
                     help={
-                      !formData.dirty && Number(formData.value) <= 0.00005
-                        ? "Should be greater than 0.00005"
+                      !formData.dirty && Number(formData.value) < DUST
+                        ? "BCH dividend must be greater than 0.00005 BCH"
                         : ""
                     }
                   >
                     <Input
                       prefix={<Icon type="block" />}
-                      suffix={<span>BCH</span>}
+                      suffix="BCH"
                       placeholder="e.g: 0.01"
                       name="value"
                       onChange={e => handleChange(e)}
@@ -189,10 +264,12 @@ const PayDividends = ({ token, onClose }) => {
                       type="number"
                     />
                   </Form.Item>
-                  <div style={{ paddingTop: "12px" }}>
-                    <Button onClick={() => submit()}>Pay Dividends</Button>
-                  </div>
                 </Form>
+              </Col>
+              <br />
+              <br />
+              <Col span={24}>
+                <Button onClick={() => submit()}>Pay Dividends</Button>
               </Col>
             </Row>
           </Card>

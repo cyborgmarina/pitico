@@ -12,6 +12,10 @@ else bitbox = new BITBOX({ restURL: `https://trest.bitcoin.com/v2/` });
 
 export async function sendBch(walletInfo, { addresses, values }) {
   try {
+    if (!values.length) {
+      return null;
+    }
+
     const value = values.reduce((previous, current) => previous + current, 0);
     const SEND_ADDR = walletInfo.cashAddress;
     const SEND_MNEMONIC = walletInfo.mnemonic;
@@ -21,8 +25,7 @@ export async function sendBch(walletInfo, { addresses, values }) {
 
     // Exit if the balance is zero.
     if (balance <= 0.0) {
-      console.log(`Balance of sending address is zero. Exiting.`);
-      return;
+      throw new Error(`Balance 0`);
     }
 
     const u = await bitbox.Address.utxo(SEND_ADDR);
@@ -43,13 +46,18 @@ export async function sendBch(walletInfo, { addresses, values }) {
     transactionBuilder.addInput(txid, vout);
 
     // get byte count to calculate fee. paying 1.2 sat/byte
-    const byteCount = bitbox.BitcoinCash.getByteCount({ P2PKH: 1 }, { P2PKH: 2 });
-    const satoshisPerByte = 1.0 * addresses.length;
+    // const info = await bitbox.Control.getInfo();
+    // const relayFee = bitbox.BitcoinCash.toSatoshi(info.relayfee);
+    const byteCount = bitbox.BitcoinCash.getByteCount({ P2PKH: addresses.length }, { P2PKH: 2 });
+    const satoshisPerByte = 1.2;
     const txFee = Math.floor(satoshisPerByte * byteCount);
 
     // amount to send back to the sending address.
-    // It's the original amount - 1 sat/byte for tx size
     const remainder = originalAmount - satoshisToSend - txFee;
+
+    if (remainder < 0) {
+      throw new Error(`Insufficient funds`);
+    }
 
     // add output w/ address and amount to send
     for (let i = 0; i < addresses.length; i++) {
