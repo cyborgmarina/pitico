@@ -95,7 +95,7 @@ module.exports = function(webpackEnv) {
           modifyVars: {
             "@layout-sider-background": "#131720",
             "@layout-trigger-background": "#20242D",
-            '@light': '#fff',
+            '@light': '#7F7F7F',
             '@dark': '#000',
             '@heading-color': 'fade(@light, 85)',
             '@text-color': 'fade(@light, 65)',

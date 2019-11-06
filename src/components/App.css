@@ -26,6 +26,11 @@
   padding-top: 24px;
   /* margin-bottom: 46px;  */
 }
+.ant-list-item-meta .ant-list-item-meta-content {
+  margin-left: -64px;
+  display: flex;
+  justify-content: flex-end;
+}
 
 #borderedQRCode {
   border: 20px solid #fff;

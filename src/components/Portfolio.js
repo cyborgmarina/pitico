@@ -221,14 +221,33 @@ export default () => {
                     />
                   }
                   title={
-                    <>
-                      <span>x{token.balance} </span>
-                      <span>{token.info && token.info.symbol}</span>
-                    </>
+                    <div style={{ float: "right" }}>
+                      {/* <span>{token.balance} </span> */}
+                      <div
+                        style={{ fontSize: "16px", fontWeight: "bold", color: "rgb(62, 63, 66)" }}
+                      >
+                        {token.info && token.info.symbol.toUpperCase()}
+                      </div>
+                      <div
+                        style={{ color: "rgb(158, 160, 165)", fontSize: "12px", fontWeight: "500" }}
+                      >
+                        {token.info && token.info.name}
+                      </div>
+                    </div>
                   }
                   description={
                     <div>
-                      <div>{token.info && token.info.name}</div>
+                      {/* <div>{token.info && token.info.name}</div> */}
+                      <div
+                        style={{
+                          color: "rgb(62, 63, 66)",
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          marginLeft: "100px"
+                        }}
+                      >
+                        {token.balance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}
+                      </div>
                     </div>
                   }
                 />

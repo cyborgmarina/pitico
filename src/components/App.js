@@ -93,7 +93,11 @@ const App = () => {
               </Menu.ItemGroup>
 
               {wallet ? (
-                <Menu.ItemGroup style={{ marginTop: "320px" }} key="menu" title="RECEIVE">
+                <Menu.ItemGroup
+                  style={{ position: "absolute", bottom: "43px" }}
+                  key="menu"
+                  title="RECEIVE"
+                >
                   <div style={{ marginLeft: "20px", paddingTop: "10px" }}>
                     <div>
                       <QRCode
