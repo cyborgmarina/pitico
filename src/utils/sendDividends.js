@@ -1,14 +1,16 @@
 /*
   Get the token information based on the id.
 */
-
-import { sendBch } from "./sendBch";
+import Big from "big.js";
+import { Utils } from "slpjs";
 import withSLP from "./withSLP";
-let Utils = require("slpjs").Utils;
+import { sendBch } from "./sendBch";
+import getWalletDetails from "./getWalletDetails";
 
-export const outputsForToken = withSLP(async (SLP, tokenId) => {
+export const getBalancesForToken = withSLP(async (SLP, tokenId) => {
   try {
     const balances = await SLP.Utils.balancesForToken(tokenId);
+    balances.totalBalance = balances.reduce((p, c) => c.tokenBalance + p, 0);
     return balances;
   } catch (err) {
     console.error(`Error in getTokenInfo: `, err);
@@ -16,22 +18,40 @@ export const outputsForToken = withSLP(async (SLP, tokenId) => {
   }
 });
 
-export const sendDividends = withSLP(async (SLP, wallet, { value, tokenId }) => {
-  const outputs = await outputsForToken(tokenId);
-  const addresses = [];
-  const values = [];
-  const total = outputs.reduce((p, c) => c.tokenBalance + p, 0);
+export const getElegibleAddresses = async (wallet, balances, value) => {
+  let addresses = [];
+  let values = [];
+  const elegibleBalances = [...balances];
 
-  for (let i = 0; i < outputs.length; i++) {
-    const output = outputs[i];
+  for (let i = 0; i < elegibleBalances.length; i++) {
+    const output = elegibleBalances[i];
     const address = Utils.toCashAddress(output.slpAddress);
-    if (address === wallet.cashAddress) {
-      continue;
-    }
 
-    addresses.push(address);
-    values.push((output.tokenBalance / total) * value);
+    const tokenBalanceSum = new Big(elegibleBalances.reduce((p, c) => c.tokenBalance + p, 0));
+    const outputValue = new Big(output.tokenBalance).div(tokenBalanceSum).mul(new Big(value));
+    if (address !== wallet.cashAddress && outputValue.gte(0.00005)) {
+      addresses.push(address);
+      values.push(Number(outputValue.toFixed(8)));
+    } else {
+      addresses = [];
+      values = [];
+      elegibleBalances.splice(i, 1);
+      i = -1;
+    }
   }
 
-  return await sendBch(wallet, { addresses, values });
-});
+  return {
+    addresses,
+    values
+  };
+};
+
+export const sendDividends = async (wallet, { value, tokenId }) => {
+  const outputs = await getBalancesForToken(tokenId);
+
+  const walletDetails = getWalletDetails(wallet);
+
+  const { addresses, values } = await getElegibleAddresses(walletDetails, outputs, value);
+
+  return await sendBch(walletDetails, { addresses, values });
+};

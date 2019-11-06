@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { ButtonQR } from "badger-components-react";
 import { WalletContext } from "../utils/context";
-import { sendDividends, balancesForToken } from "../utils/sendDividends";
+import { sendDividends, getBalancesForToken, getElegibleAddresses } from "../utils/sendDividends";
 import {
   Card,
   Icon,
@@ -14,15 +14,20 @@ import {
   Alert,
   Select,
   Spin,
-  notification
+  notification,
+  Badge,
+  Tooltip
 } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import isPiticoTokenHolder from "../utils/isPiticoTokenHolder";
+import debounce from "../utils/debounce";
 
 const InputGroup = Input.Group;
 const { Meta } = Card;
 const { Option } = Select;
+
+const DUST = 0.00005;
 
 const StyledButtonWrapper = styled.div`
   display: flex;
@@ -37,6 +42,15 @@ const StyledButtonWrapper = styled.div`
   }
 `;
 
+const StyledStat = styled.div`
+  font-size: 12px;
+
+  .ant-badge sup {
+    background-color: #3b3b4d;
+    color: rgba(255, 255, 255, 0.65);
+  }
+`;
+
 const PayDividends = ({ token, onClose }) => {
   const ContextValue = React.useContext(WalletContext);
   const { wallet, tokens, balances } = ContextValue;
@@ -46,6 +60,34 @@ const PayDividends = ({ token, onClose }) => {
     tokenId: token.tokenId
   });
   const [loading, setLoading] = useState(false);
+  const [stats, setStats] = useState({ tokens: 0, holders: 0, eligibles: 0 });
+
+  useEffect(() => {
+    setLoading(true);
+    getBalancesForToken(token.tokenId)
+      .then(balancesForToken => {
+        setStats({
+          ...stats,
+          tokens: balancesForToken.totalBalance,
+          holders: balancesForToken.length ? balancesForToken.length - 1 : 0,
+          balances: balancesForToken
+        });
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  const calcElegibles = useCallback(
+    debounce(value => {
+      if (stats.balances && value && !Number.isNaN(value)) {
+        getElegibleAddresses(wallet, stats.balances, value).then(({ addresses }) => {
+          setStats({ ...stats, eligibles: addresses.length });
+        });
+      } else {
+        setStats({ ...stats, eligibles: 0 });
+      }
+    }),
+    [wallet, stats]
+  );
 
   async function submit() {
     setFormData({
@@ -53,7 +95,7 @@ const PayDividends = ({ token, onClose }) => {
       dirty: false
     });
 
-    if (!formData.tokenId || !formData.value || Number(formData.value) <= 0.00005) {
+    if (!formData.tokenId || !formData.value || Number(formData.value) < DUST) {
       return;
     }
 
@@ -70,7 +112,9 @@ const PayDividends = ({ token, onClose }) => {
 
         return notification.info({
           message: "Info",
-          description: <Paragraph>Sorry, you're the only token holder.</Paragraph>,
+          description: (
+            <Paragraph>No token holder with sufficient balance to receive dividends.</Paragraph>
+          ),
           duration: 0
         });
       }
@@ -96,8 +140,12 @@ const PayDividends = ({ token, onClose }) => {
         message = "Invalid BCH address";
       } else if (/64: dust/.test(e.message)) {
         message = "Small amount";
+      } else if (/Balance 0/.test(e.message)) {
+        message = "Balance of sending address is zero";
+      } else if (/Insufficient funds/.test(e.message)) {
+        message = "Insufficient funds.";
       } else {
-        message = "Unknown Error, try again later";
+        message = "Service unavailable, try again later";
       }
 
       notification.error({
@@ -112,6 +160,10 @@ const PayDividends = ({ token, onClose }) => {
   const handleChange = e => {
     const { value, name } = e.target;
     setFormData(p => ({ ...p, [name]: value }));
+
+    if (name === "value") {
+      calcElegibles(value);
+    }
   };
 
   return (
@@ -126,103 +178,82 @@ const PayDividends = ({ token, onClose }) => {
             }
             bordered={false}
           >
-            {!isPiticoTokenHolder(tokens) && (
-              <Alert
-                style={{ marginBottom: "10px" }}
-                message={
-                  <span>
-                    <Paragraph>
-                      <Icon type="warning" /> EXPERIMENTAL
-                    </Paragraph>
-                    <Paragraph>
-                      This is an experimental feature, available only to Pitico Cash token holders.
-                    </Paragraph>
-                    <Paragraph>
-                      <a href="https://t.me/piticocash" target="_blank">
-                        Join our Telegram Group to get your $PTCH.
-                      </a>
-                    </Paragraph>
-                  </span>
-                }
-                type="warning"
-                closable={false}
-              />
-            )}
-            {isPiticoTokenHolder(tokens) && (
-              <>
-                <Alert
-                  style={{ marginBottom: "10px" }}
-                  message={
-                    <span>
-                      <Paragraph>
-                        <Icon type="warning" /> BE CAREFUL.
-                      </Paragraph>
-                      <Paragraph>
-                        This is an experimental feature, strange things may happen.
-                      </Paragraph>
-                    </span>
-                  }
-                  type="warning"
-                  closable={false}
-                />
-                <Row justify="center" type="flex">
-                  <Col>
-                    <StyledButtonWrapper>
-                      {!balances.balance && !balances.unconfirmedBalance ? (
-                        <>
-                          <br />
-                          <Paragraph>
-                            <ButtonQR
-                              toAddress={wallet.cashAddress}
-                              sizeQR={125}
-                              step={"fresh"}
-                              amountSatoshis={0}
-                            />
-                          </Paragraph>
-                          <Paragraph style={{ overflowWrap: "break-word" }} copyable>
-                            {wallet.cashAddress}
-                          </Paragraph>
-                          <Paragraph>You currently have 0 BCH.</Paragraph>
-                          <Paragraph>
-                            Dividends are paid in BCH, deposit some so you can pay dividends to
-                            token holders.
-                          </Paragraph>
-                        </>
-                      ) : null}
-                    </StyledButtonWrapper>
-                  </Col>
-                </Row>
-              </>
-            )}
-            {isPiticoTokenHolder(tokens) && (
-              <Row type="flex">
-                <Col span={24}>
-                  <Form style={{ width: "auto" }}>
-                    <Form.Item
-                      validateStatus={!formData.dirty && Number(formData.value) <= 0 ? "error" : ""}
-                      help={
-                        !formData.dirty && Number(formData.value) <= 0.00005
-                          ? "Should be greater than 0.00005"
-                          : ""
-                      }
-                    >
-                      <Input
-                        prefix={<Icon type="block" />}
-                        suffix={<span>BCH</span>}
-                        placeholder="e.g: 0.01"
-                        name="value"
-                        onChange={e => handleChange(e)}
-                        required
-                        type="number"
-                      />
-                    </Form.Item>
-                    <div style={{ paddingTop: "12px" }}>
-                      <Button onClick={() => submit()}>Pay Dividends</Button>
-                    </div>
-                  </Form>
-                </Col>
-              </Row>
-            )}
+            <Alert
+              message={
+                <>
+                  <Paragraph>
+                    <Icon type="warning" /> BE CAREFUL.
+                  </Paragraph>
+                  <Paragraph>This is an experimental feature, strange things may happen.</Paragraph>
+                </>
+              }
+              type="warning"
+              closable={false}
+            />
+            <br />
+            <Row type="flex">
+              <Col>
+                <Tooltip title="Circulating Supply">
+                  <StyledStat>
+                    <Icon type="gold" />
+                    &nbsp;
+                    <Badge count={stats.tokens} overflowCount={100000000} showZero />
+                    <Paragraph>Tokens</Paragraph>
+                  </StyledStat>
+                </Tooltip>
+              </Col>
+              &nbsp; &nbsp; &nbsp;
+              <Col>
+                <Tooltip title="Addresses with at least one token">
+                  <StyledStat>
+                    <Icon type="team" />
+                    &nbsp;
+                    <Badge count={stats.holders} overflowCount={100000000} showZero />
+                    <Paragraph>Holders</Paragraph>
+                  </StyledStat>
+                </Tooltip>
+              </Col>
+              &nbsp; &nbsp; &nbsp;
+              <Col>
+                <Tooltip title="Addresses elegible to receive dividends for the specified value">
+                  <StyledStat>
+                    <Icon type="usergroup-add" />
+                    &nbsp;
+                    <Badge count={stats.eligibles} overflowCount={100000000} showZero />
+                    <Paragraph>Eligibles</Paragraph>
+                  </StyledStat>
+                </Tooltip>
+              </Col>
+            </Row>
+            <Row type="flex">
+              <Col span={24}>
+                <Form style={{ width: "auto" }}>
+                  <Form.Item
+                    validateStatus={!formData.dirty && Number(formData.value) <= 0 ? "error" : ""}
+                    help={
+                      !formData.dirty && Number(formData.value) < DUST
+                        ? "BCH dividend must be greater than 0.00005 BCH"
+                        : ""
+                    }
+                  >
+                    <Input
+                      prefix={<Icon type="block" />}
+                      suffix="BCH"
+                      placeholder="e.g: 0.01"
+                      name="value"
+                      onChange={e => handleChange(e)}
+                      required
+                      type="number"
+                    />
+                  </Form.Item>
+                </Form>
+              </Col>
+              <br />
+              <br />
+              <Col span={24}>
+                <Button onClick={() => submit()}>Pay Dividends</Button>
+              </Col>
+            </Row>
           </Card>
         </Spin>
       </Col>
