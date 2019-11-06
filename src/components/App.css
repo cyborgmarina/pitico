@@ -31,6 +31,11 @@
   border: 20px solid #fff;
   border-radius: 8px;
 }
+
+#react-qrcode-logo {
+  border: 10px solid #fff;
+  border-radius: 8px;
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
