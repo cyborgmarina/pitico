@@ -8,7 +8,7 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
       return null;
     }
 
-    const value = values.reduce((previous, current) => previous + current, 0);
+    const value = Number(values.reduce((previous, current) => previous + current, 0).toFixed(8));
     const SEND_ADDR = wallet.cashAddress;
     const SEND_MNEMONIC = wallet.mnemonic;
 
