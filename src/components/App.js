@@ -10,6 +10,7 @@ import Audit from "./Audit";
 import NotFound from "./NotFound";
 import "./App.css";
 import { WalletContext } from "../utils/context";
+import logo from "./logo.png";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import styled from "styled-components";
 import { QRCode } from "./QRCode";
@@ -52,8 +53,23 @@ const App = () => {
     <Router>
       <div className="App">
         <Layout style={{ minHeight: "100vh" }}>
-          <Sider breakpoint="lg" collapsedWidth="0">
-            <div className="logo" />
+          <Sider
+            breakpoint="lg"
+            collapsedWidth="0"
+            // style={{ maxWidth: "256px", minWidth: "256px", width: "256px" }}
+          >
+            <div className="logo">
+              <img src={logo} alt="Bitcoin.com Mint" />
+            </div>
+            <div
+              style={{
+                background: "rgba(0, 0, 0, 0.5)",
+                width: "100%",
+                height: "1px",
+                marginBottom: "26px",
+                marginTop: "19px"
+              }}
+            />
             <Menu
               theme="dark"
               selectedKeys={[key]}
@@ -61,49 +77,51 @@ const App = () => {
               defaultSelectedKeys={["1"]}
               style={{ textAlign: "left" }}
             >
-              <Menu.Item key="0">
-                {" "}
-                <Icon style={{ fontSize: "16px" }} type="appstore" theme="filled" />
-                <span>Portfolio</span>
-              </Menu.Item>
-              <Menu.Item key="1">
-                {" "}
-                <Icon style={{ fontSize: "16px" }} type="plus-square" theme="filled" />
-                <span>Create</span>
-              </Menu.Item>
-              <Menu.Item key="2">
-                {" "}
-                <Icon style={{ fontSize: "16px" }} type="tool" theme="filled" />
-                <span>Configure</span>
-              </Menu.Item>
-              <Menu.Item key="3">
-                {" "}
-                <Icon style={{ fontSize: "16px" }} type="eye" theme="filled" />
-                <span>Audit</span>
-              </Menu.Item>
-            </Menu>
-            {wallet ? (
-              <div style={{ paddingTop: "120px" }}>
-                <div>
-                  <QRCode
-                    address={address === "slpAddress" ? wallet.slpAddress : wallet.cashAddress}
-                  />
-                </div>
-                <Radio.Group
-                  defaultValue="slpAddress"
-                  onChange={e => handleChangeAddress(e)}
-                  value={address}
-                  size="small"
-                  buttonStyle="solid"
-                >
-                  <Radio.Button style={{ borderRadius: 0 }} value="slpAddress">
-                    SLP
-                  </Radio.Button>
-                  <Radio.Button style={{ borderRadius: 0 }} value="cashAddress">
-                    BCH
-                  </Radio.Button>
-                </Radio.Group>
-                {!loading ? (
+              <Menu.ItemGroup style={{ marginTop: "0px" }} key="menu" title="MENU">
+                <Menu.Item key="0">
+                  <span>Portfolio</span>
+                </Menu.Item>
+                <Menu.Item key="1">
+                  <span>Create</span>
+                </Menu.Item>
+                <Menu.Item key="2">
+                  <span>Configure</span>
+                </Menu.Item>
+                <Menu.Item key="3">
+                  <span>Audit</span>
+                </Menu.Item>
+              </Menu.ItemGroup>
+
+              {wallet ? (
+                <Menu.ItemGroup style={{ marginTop: "320px" }} key="menu" title="RECEIVE">
+                  <div style={{ marginLeft: "20px", paddingTop: "10px" }}>
+                    <div>
+                      <QRCode
+                        id="borderedQRCode"
+                        address={address === "slpAddress" ? wallet.slpAddress : wallet.cashAddress}
+                      />
+                    </div>
+                    <Radio.Group
+                      defaultValue="slpAddress"
+                      onChange={e => handleChangeAddress(e)}
+                      value={address}
+                      size="small"
+                      buttonStyle="solid"
+                    >
+                      <Radio.Button
+                        style={{ borderRadius: "19.5px", height: "40px", width: "103px" }}
+                        value="slpAddress"
+                      >
+                        SLP Tokens
+                      </Radio.Button>
+                      <Radio.Button
+                        style={{ borderRadius: "19.5px", height: "40px", width: "103px" }}
+                        value="cashAddress"
+                      >
+                        Bitcoin Cash
+                      </Radio.Button>
+                    </Radio.Group>
+                    {/* {!loading ? (
                   <List
                     style={{ marginTop: 16 }}
                     loading={loading}
@@ -120,14 +138,16 @@ const App = () => {
                       </List.Item>
                     )}
                   />
-                ) : null}
-              </div>
-            ) : null}
+                ) : null} */}
+                  </div>
+                </Menu.ItemGroup>
+              ) : null}
+            </Menu>
           </Sider>
-          <Layout style={{ backgroundColor: "#171717" }}>
+          <Layout style={{ backgroundColor: "#FBFBFD" }}>
             <Header
               style={{
-                background: "#171717",
+                background: "#FBFBFD",
                 fontSize: "24px",
                 color: "#fff"
               }}
@@ -142,13 +162,13 @@ const App = () => {
 
               <span style={{ display: "inline" }}>pitico.cash</span>
             </Header>
-            <Content style={{ margin: "0 16px", backgroundColor: "#171717" }}>
+            <Content style={{ margin: "0 16px", backgroundColor: "#FBFBFD" }}>
               <div
                 style={{
                   padding: 24,
                   background: "#f0f2f5",
                   minHeight: 360,
-                  backgroundColor: "#171717"
+                  backgroundColor: "#FBFBFD"
                 }}
               >
                 {route()}

@@ -26,6 +26,11 @@ const GlobalStyle = createGlobalStyle`
 const StyledWrapper = styled.div``;
 
 const StyledEnhancedCard = styled(Card)`
+  border-radius: 8px;
+
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.04);
+  height: 173px;
+  width: 321px;
   cursor: pointer;
   will-change: width, height, box-shadow;
   transition: all 300ms ease-in-out;
@@ -41,8 +46,15 @@ const StyledEnhancedCard = styled(Card)`
     white-space: nowrap;
   }
 
+  .ant-card-bordered {
+    border: 1px solid rgb(234, 237, 243);
+    border-radius: 8px;
+  }
+
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.35);
+
   &:hover {
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.35);
+    box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.35);
   }
 `;
 

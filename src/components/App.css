@@ -1,16 +1,36 @@
 @import "~antd/dist/antd.less";
-@import url("https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap&.css");
+@import url("https://fonts.googleapis.com/css?family=Khula&display=swap&.css");
 
 .App {
   text-align: center;
-  font-family: "Roboto Mono", monospace;
-  background-color: #171717;
+  font-family: "Khula", sans-serif;
+  background-color: #fbfbfd;
 }
-
+/* #131720 */
 .App-logo {
-  height: 40vmin;
+  width: 100%;
+  display: block;
+  /* min-width: 90px; */
+  /* margin-left: 24px;
+  margin-right: 53px;
+  margin-top: 15px;
+  margin-bottom: 46px; */
 }
 
+.logo img {
+  width: 100%;
+  min-width: 193px;
+  display: block;
+  padding-left: 24px;
+  padding-right: 34px;
+  padding-top: 24px;
+  /* margin-bottom: 46px;  */
+}
+
+#borderedQRCode {
+  border: 20px solid #fff;
+  border-radius: 8px;
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -25,6 +45,23 @@
 .App-link {
   color: #09d3ac;
 }
+.ant-menu-item-group-title {
+  padding-left: 30px;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+
+.ant-menu-item > span {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+.ant-layout-sider {
+  flex: 0 0 256px !important;
+  max-width: 256px !important;
+  min-width: 256px !important;
+  width: 256px !important;
+}
 .ant-card-actions > li > span:hover,
 .ant-btn:hover,
 .ant-btn:focus {
@@ -32,8 +69,59 @@
   transition: color 0.3s;
 }
 
-.ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-  background: white;
+.ant-card-actions > li {
+  color: #3e3f42;
+}
+.anticon {
+  color: #3e3f42;
+}
+.ant-list-item-meta-description,
+.ant-list-item-meta-title {
+  color: #3e3f42;
+}
+
+.ant-radio-group-solid .ant-radio-button-wrapper {
+  padding-top: 10px;
+  padding-left: 20px;
+  margin-top: 30px;
+  border: 1px solid rgb(0, 0, 0) !important;
+  box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.81) !important;
+  background: #10131b !important;
+}
+
+.ant-radio-group-solid .ant-radio-button-wrapper-checked:not {
+  background: red !important;
+}
+.identicon {
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  margin-top: -75px;
+  margin-left: -75px;
+  margin-bottom: 20px;
+  box-shadow: 1px 1px 2px 1px #444;
+}
+.ant-list-item-meta {
+  width: 40px;
+  height: 40px;
+}
+
+/* .ant-radio-group-solid .ant-radio-button-wrapper-checked:not :hover > span{
+  color: red !important;
+  
+} */
+
+.ant-radio-group-solid .ant-radio-button-wrapper-checked {
+  background: #2b3240 !important;
+}
+
+/* background: #2B3240;
+10131B */
+
+.ant-radio-group.ant-radio-group-solid.ant-radio-group-small {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  vertical-align: middle;
 }
 
 input.ant-input {
@@ -45,10 +133,42 @@ input.ant-input {
   padding: 20px;
 }
 
+.ant-card-bordered {
+  border: 1px solid rgb(234, 237, 243);
+  border-radius: 8px;
+}
+
+.ant-card-actions {
+  border-top: 1px solid rgb(234, 237, 243);
+  border-bottom: 1px solid rgb(234, 237, 243);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* .ant-card-actions:hover {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.35);
+} */
+
 /*
 .ant-input-affix-wrapper .ant-input-prefix, .ant-input-affix-wrapper .ant-input-suffix {
   transform: none;
 } */
+/* 5DAA7E */
+
+.ant-menu-item.ant-menu-item-selected > span {
+  color: #5daa7e;
+}
+
+.ant-menu-item.ant-menu-item-selected {
+  border-radius: 6px;
+  border: 0;
+  overflow: hidden;
+  margin-left: 14px !important;
+  margin-right: 14px !important;
+  text-align: left;
+  padding-left: 12px;
+}
 
 .ant-btn {
   border-radius: 0;
@@ -59,7 +179,7 @@ input.ant-input {
 }
 
 .ant-alert-warning {
-  background-color: #30303d;
+  background-color: #20242d;
   border: 1px solid #17171f;
   border-radius: 0;
 }

@@ -8,7 +8,7 @@ export const StyledRawQRCode = styled(RawQRCode)`
   cursor: pointer;
 `;
 
-export const QRCode = ({ address, size = 125, onClick = () => null, ...otherProps }) => {
+export const QRCode = ({ address, size = 210, onClick = () => null, ...otherProps }) => {
   const [visible, setVisible] = useState(false);
 
   const handleOnClick = evt => {
