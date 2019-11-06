@@ -6,11 +6,11 @@ const Identicon = seed => {
   const [hash, setHash] = React.useState([]);
 
   React.useEffect(() => {
-    sha256("abhsbhbahsb").then(e => {
+    sha256(seed.seed).then(e => {
       console.log("eee", e);
       setHash(e);
     });
-  }, []);
+  }, [seed.seed]);
 
   const size = 100;
   let content = null;
