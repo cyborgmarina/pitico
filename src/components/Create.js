@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import "../index.css";
 import styled from "styled-components";
 import { withRouter } from "react-router-dom";
 import { ButtonQR } from "badger-components-react";
@@ -24,7 +25,6 @@ const Create = ({ history }) => {
   });
 
   async function handleCreateToken() {
-    debugger;
     setData({
       ...data,
       dirty: false
@@ -99,7 +99,7 @@ const Create = ({ history }) => {
               {!loadingContext && !balances.balance && !balances.unconfirmedBalance ? (
                 <>
                   <Paragraph>
-                    <QRCode address={wallet && wallet.cashAddress} />
+                    <QRCode id="borderedQRCode" address={wallet && wallet.cashAddress} />
                   </Paragraph>
                   <Paragraph>You currently have 0 BCH.</Paragraph>
                   <Paragraph>

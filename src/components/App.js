@@ -20,7 +20,8 @@ const { Header, Content, Sider } = Layout;
 const { Paragraph } = Typography;
 
 const App = () => {
-  const [collapsed, setCollapesed] = React.useState(false);
+  const [collapsed, setCollapesed] = React.useState(window.innerWidth < 768);
+  const [mobile, setMobile] = React.useState(false);
   const [key, setKey] = React.useState("0");
   const [address, setAddress] = React.useState("slpAddress");
   const ContextValue = React.useContext(WalletContext);
@@ -28,6 +29,7 @@ const App = () => {
 
   const handleChange = e => {
     setKey(e.key);
+    mobile && setCollapesed(true);
   };
 
   const handleChangeAddress = e => {
@@ -48,6 +50,16 @@ const App = () => {
         return <NotFound />;
     }
   };
+
+  const handleResize = () => setMobile(window.innerWidth < 768);
+
+  React.useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <Router>

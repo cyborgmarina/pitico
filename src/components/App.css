@@ -198,6 +198,10 @@ input.ant-input {
   color: #fff;
 }
 
+#borderedQRCode {
+  border: 5px solid #fff;
+}
+
 .audit {
   a,
   a:active {
