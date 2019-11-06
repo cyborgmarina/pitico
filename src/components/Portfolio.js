@@ -85,7 +85,17 @@ const plane = () => (
 );
 const HammerIcon = props => <Icon component={hammer} {...props} />;
 const PlaneIcon = props => <Icon component={plane} {...props} />;
+// cont hasAvatar = tokenId =>{console.log(`${SLP_TOKEN_ICONS_URL}/${tokenId}.png`);};
 
+const imageExists = image_url => {
+  // var http = new XMLHttpRequest();
+
+  // http.open("HEAD", image_url, false);
+  // http.send();
+
+  // return http.status !== 404;
+  return false;
+};
 export default () => {
   const ContextValue = React.useContext(WalletContext);
   const { wallet, tokens, loading } = ContextValue;
@@ -103,7 +113,7 @@ export default () => {
     <Row type="flex" gutter={8} style={{ position: "relative" }}>
       {loading
         ? Array.from({ length: 20 }).map((v, i) => (
-            <Col style={{ marginTop: "8px" }} lg={8} span={24}>
+            <Col style={{ marginTop: "8px" }} lg={7} span={24}>
               <EnhancedCard loading key={i} bordered={false}>
                 <Meta
                   avatar={
@@ -118,7 +128,7 @@ export default () => {
         : null}
       {tokens.length
         ? tokens.map(token => (
-            <Col style={{ marginTop: "8px" }} lg={8} span={24}>
+            <Col style={{ marginTop: "8px" }} lg={7} span={24}>
               <EnhancedCard
                 loading={!token.info}
                 expand={selectedToken && token.tokenId === selectedToken.tokenId}
@@ -216,12 +226,23 @@ export default () => {
                           seed={token.tokenId}
                         />
                       }
-
+                      style={{
+                        marginTop: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
+                          ? "-10px"
+                          : null
+                      }}
                       // unloader={<Jdenticon size="64" value={token.tokenId} />}
                     />
                   }
                   title={
-                    <div style={{ float: "right" }}>
+                    <div
+                      style={{
+                        float: "right",
+                        marginLeft: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
+                          ? "60px"
+                          : null
+                      }}
+                    >
                       {/* <span>{token.balance} </span> */}
                       <div
                         style={{ fontSize: "16px", fontWeight: "bold", color: "rgb(62, 63, 66)" }}
@@ -243,7 +264,9 @@ export default () => {
                           color: "rgb(62, 63, 66)",
                           fontSize: "16px",
                           fontWeight: "bold",
-                          marginLeft: "100px"
+                          marginLeft: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
+                            ? "130px"
+                            : "100px"
                         }}
                       >
                         {token.balance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}
