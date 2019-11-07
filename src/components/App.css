@@ -95,6 +95,19 @@
   position: absolute;
 }
 
+.ant-modal-body .ant-list-item-meta {
+  height: 85px;
+  width: 85px;
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  overflow: visible !important;
+}
+
+.ant-modal-body .ant-card-actions {
+  border-top: 10px solid rgb(234, 237, 243);
+}
+
 .ant-radio-group-solid .ant-radio-button-wrapper {
   padding-top: 10px;
   padding-left: 20px;
@@ -140,12 +153,12 @@
 }
 
 input.ant-input {
-  border-radius: 0;
-}
-
-input.ant-input {
-  border-radius: 0;
+  background-color: #fff;
   padding: 20px;
+  border: 1px solid #eaedf3;
+  border-radius: 8px;
+  font-weight: bold;
+  color: rgb(62, 63, 66);
 }
 
 .ant-card-bordered {
@@ -186,7 +199,10 @@ input.ant-input {
 }
 
 .ant-btn {
-  border-radius: 0;
+  border-radius: 8px;
+  background-color: #fff;
+  color: rgb(62, 63, 66);
+  font-weight: bold;
 }
 
 .ant-card-actions > li:not(:last-child) {

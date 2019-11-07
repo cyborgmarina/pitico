@@ -2,7 +2,6 @@ import * as React from "react";
 import "./App.css";
 
 const Identicon = seed => {
-  console.log("seed", seed);
   const [hash, setHash] = React.useState([]);
 
   React.useEffect(() => {
@@ -40,9 +39,7 @@ const Identicon = seed => {
     }
   };
   if (hash) {
-    console.log("hashaquiii", hash);
     content = [];
-    console.log(" getRandomInt()", getRandomInt());
 
     let color = `rgb(${getColor(0, hash)}, ${getColor(5, hash)}, ${getColor(10, hash)})`;
     fill = `rgb(${
@@ -58,8 +55,6 @@ const Identicon = seed => {
         ? (getColor(25, hash) + 75) % 255
         : getColor(25, hash)
     })`;
-    // console.log('color', color)
-    // console.log('fill', fill)
     content.push(
       (hash[30] % 7) + 3 < 9 ? (
         <polygon
@@ -87,9 +82,6 @@ const Identicon = seed => {
         />
       )
     );
-    //impar  +-Math.PI/4
-    // par Math.PI/n
-    console.log("polial", polygonAllign(3, hash[31] < 125));
 
     content.push(
       (hash[31] % 7) + 3 < 7 ? (
