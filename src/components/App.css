@@ -104,6 +104,10 @@
   overflow: visible !important;
 }
 
+.ant-modal-body .ant-card-actions {
+  border-top: 10px solid rgb(234, 237, 243);
+}
+
 .ant-radio-group-solid .ant-radio-button-wrapper {
   padding-top: 10px;
   padding-left: 20px;
