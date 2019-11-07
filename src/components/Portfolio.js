@@ -17,7 +17,6 @@ import { OnBoarding } from "./OnBoarding";
 async function sha256(message) {
   const bytes = new TextEncoder("utf-8").encode(message);
   const hash = await crypto.subtle.digest("SHA-256", bytes);
-  console.log("hash", hash);
   return Array.from(new Uint8Array(hash));
 }
 
@@ -85,17 +84,7 @@ const plane = () => (
 );
 const HammerIcon = props => <Icon component={hammer} {...props} />;
 const PlaneIcon = props => <Icon component={plane} {...props} />;
-// cont hasAvatar = tokenId =>{console.log(`${SLP_TOKEN_ICONS_URL}/${tokenId}.png`);};
 
-const imageExists = image_url => {
-  // var http = new XMLHttpRequest();
-
-  // http.open("HEAD", image_url, false);
-  // http.send();
-
-  // return http.status !== 404;
-  return false;
-};
 export default () => {
   const ContextValue = React.useContext(WalletContext);
   const { wallet, tokens, loading } = ContextValue;
