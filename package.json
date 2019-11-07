@@ -16,6 +16,7 @@
     "babel-plugin-named-asset-import": "^0.3.4",
     "babel-preset-react-app": "^9.0.2",
     "badger-components-react": "^0.6.0",
+    "big.js": "^5.2.2",
     "camelcase": "^5.2.0",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
     "core-util-is": "^1.0.2",

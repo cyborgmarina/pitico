@@ -39,9 +39,7 @@ const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== "false";
 // makes for a smoother build process.
 const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== "false";
 
-const imageInlineSizeLimit = parseInt(
-  process.env.IMAGE_INLINE_SIZE_LIMIT || "10000"
-);
+const imageInlineSizeLimit = parseInt(process.env.IMAGE_INLINE_SIZE_LIMIT || "10000");
 
 // Check if TypeScript is setup
 const useTypeScript = fs.existsSync(paths.appTsConfig);
@@ -61,9 +59,7 @@ module.exports = function(webpackEnv) {
   // Webpack uses `publicPath` to determine where the app is being served from.
   // It requires a trailing slash, or the file assets will get an incorrect path.
   // In development, we always serve from the root. This makes config easier.
-  const publicPath = isEnvProduction
-    ? paths.servedPath
-    : isEnvDevelopment && "/";
+  const publicPath = isEnvProduction ? paths.servedPath : isEnvDevelopment && "/";
   // Some apps do not use client-side routing with pushState.
   // For these, "homepage" can be set to "." to enable relative asset paths.
   const shouldUseRelativeAssetPaths = publicPath === "./";
@@ -71,9 +67,7 @@ module.exports = function(webpackEnv) {
   // `publicUrl` is just like `publicPath`, but we will provide it to our app
   // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
   // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
-  const publicUrl = isEnvProduction
-    ? publicPath.slice(0, -1)
-    : isEnvDevelopment && "";
+  const publicUrl = isEnvProduction ? publicPath.slice(0, -1) : isEnvDevelopment && "";
   // Get environment variables to inject into our app.
   const env = getClientEnvironment(publicUrl);
 
@@ -95,103 +89,104 @@ module.exports = function(webpackEnv) {
           modifyVars: {
             "@layout-sider-background": "#23232E",
             "@layout-trigger-background": "#30303D",
-            '@light': '#fff',
-            '@dark': '#000',
-            '@heading-color': 'fade(@light, 85)',
-            '@text-color': 'fade(@light, 65)',
-            '@text-color-secondary': 'fade(@light, 45)',
-            '@disabled-color': 'fade(@light, 25)',
-            '@primary-5': '#40a9ff',
-            '@primary-color': '#30303D',
-            '@outline-color': '@primary-color',
-            '@icon-color': 'fade(@light, 65)',
-            '@icon-color-hover': 'fade(@light, 85)',
-            '@primary-6': '#096dd9',
-            '@border-color-base': '@border-color-split',
-            '@btn-default-color': '@heading-color',
-            '@btn-default-bg': '#444457',
-            '@btn-default-border': '#444457',
-            '@btn-ghost-color': 'fade(@light, 45)',
-            '@btn-ghost-border': 'fade(@light, 45)',
-            '@input-color': '@text-color',
-            '@input-bg': '#3b3b4d',
-            '@input-disabled-bg': '#4c4c61',
-            '@input-placeholder-color': '@text-color-secondary',
-            '@input-hover-border-color': 'fade(@light, 10)',
-            '@checkbox-check-color': '#3b3b4d',
-            '@checkbox-color': '@primary-color',
-            '@select-border-color': '#3b3b4d',
-            '@item-active-bg': '#272733',
-            '@border-color-split': '#17171f',
-            '@menu-dark-bg': '#23232E',
-            '@body-background': '#30303d',
-            '@component-background': '#23232e',
-            '@layout-body-background': '#171717',
-            '@tooltip-bg': '#191922',
-            '@tooltip-arrow-color': '#191922',
-            '@popover-bg': '#2d2d3b',
-            '@success-color': '#00a854',
-            '@info-color': '@primary-color',
-            '@warning-color': '#ffbf00',
-            '@error-color': '#f04134',
-            '@menu-bg': '#30303d',
-            '@menu-item-active-bg': 'fade(@light, 5)',
-            '@menu-highlight-color': '@light',
-            '@card-background': '@component-background',
-            '@card-hover-border': '#383847',
-            '@card-actions-background': '#30303d',
-            '@tail-color': 'fade(@light, 10)',
-            '@radio-button-bg': 'transparent',
-            '@radio-button-checked-bg': 'transparent',
-            '@radio-dot-color': '@primary-color',
-            '@table-row-hover-bg': '#383847',
-            '@item-hover-bg': '#383847',
-            '@alert-text-color': 'fade(@dark, 65%)',
+            "@light": "#fff",
+            "@dark": "#000",
+            "@heading-color": "fade(@light, 85)",
+            "@text-color": "fade(@light, 65)",
+            "@text-color-secondary": "fade(@light, 45)",
+            "@disabled-color": "fade(@light, 25)",
+            "@primary-5": "#40a9ff",
+            "@primary-color": "#30303D",
+            "@outline-color": "@primary-color",
+            "@icon-color": "fade(@light, 65)",
+            "@icon-color-hover": "fade(@light, 85)",
+            "@primary-6": "#096dd9",
+            "@border-color-base": "@border-color-split",
+            "@btn-default-color": "@heading-color",
+            "@btn-default-bg": "#444457",
+            "@btn-default-border": "#444457",
+            "@btn-ghost-color": "fade(@light, 45)",
+            "@btn-ghost-border": "fade(@light, 45)",
+            "@input-color": "@text-color",
+            "@input-bg": "#3b3b4d",
+            "@input-disabled-bg": "#4c4c61",
+            "@input-placeholder-color": "@text-color-secondary",
+            "@input-hover-border-color": "fade(@light, 10)",
+            "@checkbox-check-color": "#3b3b4d",
+            "@checkbox-color": "@primary-color",
+            "@select-border-color": "#3b3b4d",
+            "@item-active-bg": "#272733",
+            "@border-color-split": "#17171f",
+            "@menu-dark-bg": "#23232E",
+            "@body-background": "#30303d",
+            "@component-background": "#23232e",
+            "@layout-body-background": "#171717",
+            "@tooltip-bg": "#191922",
+            "@tooltip-arrow-color": "#191922",
+            "@popover-bg": "#2d2d3b",
+            "@success-color": "#00a854",
+            "@info-color": "@primary-color",
+            "@warning-color": "#ffbf00",
+            "@error-color": "#f04134",
+            "@menu-bg": "#30303d",
+            "@menu-item-active-bg": "fade(@light, 5)",
+            "@menu-highlight-color": "@light",
+            "@card-background": "@component-background",
+            "@card-hover-border": "#383847",
+            "@card-actions-background": "#30303d",
+            "@tail-color": "fade(@light, 10)",
+            "@radio-button-bg": "transparent",
+            "@radio-button-checked-bg": "transparent",
+            "@radio-dot-color": "@primary-color",
+            "@table-row-hover-bg": "#383847",
+            "@item-hover-bg": "#383847",
+            "@alert-text-color": "fade(@dark, 65%)",
 
-            '@tabs-horizontal-padding': '12px 0',
+            "@tabs-horizontal-padding": "12px 0",
 
             // zIndex': 'notification > popover > tooltip
-            '@zindex-notification': '1063',
-            '@zindex-popover': '1061',
-            '@zindex-tooltip': '1060',
+            "@zindex-notification": "1063",
+            "@zindex-popover": "1061",
+            "@zindex-tooltip": "1060",
 
             // width
-            '@anchor-border-width': '1px',
+            "@anchor-border-width": "1px",
 
             // margin
-            '@form-item-margin-bottom': '24px',
-            '@menu-item-vertical-margin': '0px',
-            '@menu-item-boundary-margin': '0px',
+            "@form-item-margin-bottom": "24px",
+            "@menu-item-vertical-margin": "0px",
+            "@menu-item-boundary-margin": "0px",
 
             // size
-            '@font-size-base': '14px',
-            '@font-size-lg': '16px',
-            '@screen-xl': '1208px',
-            '@screen-lg': '1024px',
-            '@screen-md': '768px',
+            "@font-size-base": "14px",
+            "@font-size-lg": "16px",
+            "@screen-xl": "1208px",
+            "@screen-lg": "1024px",
+            "@screen-md": "768px",
 
             // 移动
-            '@screen-sm': '767.9px',
+            "@screen-sm": "767.9px",
             // 超小屏
-            '@screen-xs': '375px',
-            '@alert-message-color': '@popover-bg',
-            '@background-color-light': '@popover-bg',
-            '@layout-header-background': '@menu-dark-bg',
+            "@screen-xs": "375px",
+            "@alert-message-color": "@popover-bg",
+            "@background-color-light": "@popover-bg",
+            "@layout-header-background": "@menu-dark-bg",
 
             // 官网
-            '@site-text-color': '@text-color',
-            '@site-border-color-split': 'fade(@light, 5)',
-            '@site-heading-color': '@heading-color',
-            '@site-header-box-shadow': '0 0.3px 0.9px rgba(0, 0, 0, 0.12), 0 1.6px 3.6px rgba(0, 0, 0, 0.12)',
-            '@home-text-color': '@text-color',
+            "@site-text-color": "@text-color",
+            "@site-border-color-split": "fade(@light, 5)",
+            "@site-heading-color": "@heading-color",
+            "@site-header-box-shadow":
+              "0 0.3px 0.9px rgba(0, 0, 0, 0.12), 0 1.6px 3.6px rgba(0, 0, 0, 0.12)",
+            "@home-text-color": "@text-color",
 
             //自定义需要找设计师
-            '@gray-8': '@text-color',
-            '@background-color-base': '#171717',
-            '@skeleton-color': 'rgba(0,0,0,0.8)',
+            "@gray-8": "@text-color",
+            "@background-color-base": "#171717",
+            "@skeleton-color": "rgba(0,0,0,0.8)",
 
             // pro
-            '@pro-header-box-shadow': '@site-header-box-shadow',
+            "@pro-header-box-shadow": "@site-header-box-shadow"
           },
           javascriptEnabled: true
         }
@@ -263,8 +258,7 @@ module.exports = function(webpackEnv) {
       // the line below with these two lines if you prefer the stock client:
       // require.resolve('webpack-dev-server/client') + '?/',
       // require.resolve('webpack/hot/dev-server'),
-      isEnvDevelopment &&
-        require.resolve("react-dev-utils/webpackHotDevClient"),
+      isEnvDevelopment && require.resolve("react-dev-utils/webpackHotDevClient"),
       // Finally, this is your app's code:
       paths.appIndexJs
       // We include the app code last so that if there is a runtime error during
@@ -292,12 +286,8 @@ module.exports = function(webpackEnv) {
       publicPath: publicPath,
       // Point sourcemap entries to original disk location (format as URL on Windows)
       devtoolModuleFilenameTemplate: isEnvProduction
-        ? info =>
-            path
-              .relative(paths.appSrc, info.absoluteResourcePath)
-              .replace(/\\/g, "/")
-        : isEnvDevelopment &&
-          (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, "/")),
+        ? info => path.relative(paths.appSrc, info.absoluteResourcePath).replace(/\\/g, "/")
+        : isEnvDevelopment && (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, "/")),
       // Prevents conflicts when multiple Webpack runtimes (from different apps)
       // are used on the same page.
       jsonpFunction: `webpackJsonp${appPackageJson.name}`
@@ -386,9 +376,7 @@ module.exports = function(webpackEnv) {
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
-      modules: ["node_modules", paths.appNodeModules].concat(
-        modules.additionalModulePaths || []
-      ),
+      modules: ["node_modules", paths.appNodeModules].concat(modules.additionalModulePaths || []),
       // These are the reasonable defaults supported by the Node ecosystem.
       // We also include JSX as a common component filename extension to support
       // some tools, although we do not recommend using it, see:
@@ -469,9 +457,7 @@ module.exports = function(webpackEnv) {
               include: paths.appSrc,
               loader: require.resolve("babel-loader"),
               options: {
-                customize: require.resolve(
-                  "babel-preset-react-app/webpack-overrides"
-                ),
+                customize: require.resolve("babel-preset-react-app/webpack-overrides"),
 
                 plugins: [
                   [
@@ -479,8 +465,7 @@ module.exports = function(webpackEnv) {
                     {
                       loaderMap: {
                         svg: {
-                          ReactComponent:
-                            "@svgr/webpack?-svgo,+titleProp,+ref![path]"
+                          ReactComponent: "@svgr/webpack?-svgo,+titleProp,+ref![path]"
                         }
                       }
                     }
@@ -506,10 +491,7 @@ module.exports = function(webpackEnv) {
                 configFile: false,
                 compact: false,
                 presets: [
-                  [
-                    require.resolve("babel-preset-react-app/dependencies"),
-                    { helpers: true }
-                  ]
+                  [require.resolve("babel-preset-react-app/dependencies"), { helpers: true }]
                 ],
                 cacheDirectory: true,
                 // See #6846 for context on why cacheCompression is disabled
@@ -667,8 +649,7 @@ module.exports = function(webpackEnv) {
       // to restart the development server for Webpack to discover it. This plugin
       // makes the discovery automatic so you don't have to restart.
       // See https://github.com/facebook/create-react-app/issues/186
-      isEnvDevelopment &&
-        new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+      isEnvDevelopment && new WatchMissingNodeModulesPlugin(paths.appNodeModules),
       isEnvProduction &&
         new MiniCssExtractPlugin({
           // Options similar to the same options in webpackOptions.output
@@ -726,9 +707,7 @@ module.exports = function(webpackEnv) {
           async: isEnvDevelopment,
           useTypescriptIncrementalApi: true,
           checkSyntacticErrors: true,
-          resolveModuleNameModule: process.versions.pnp
-            ? `${__dirname}/pnpTs.js`
-            : undefined,
+          resolveModuleNameModule: process.versions.pnp ? `${__dirname}/pnpTs.js` : undefined,
           resolveTypeReferenceDirectiveModule: process.versions.pnp
             ? `${__dirname}/pnpTs.js`
             : undefined,
