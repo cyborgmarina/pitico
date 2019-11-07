@@ -146,9 +146,11 @@ export default () => {
                     Send
                     {/* <span style={{marginTop:'-10px', transform:'tranlate(0, 20px)'}}>Send</span> */}
                   </span>,
-                  <span onClick={() => setAction(action !== "mint" ? "mint" : null)}>
-                    <HammerIcon /> Mint
-                  </span>,
+                  token.info && token.info.hasBaton && (
+                    <span onClick={() => setAction(action !== "mint" ? "mint" : null)}>
+                      <HammerIcon /> Mint
+                    </span>
+                  ),
                   <span>
                     <MoreCardOptions
                       hoverContent={

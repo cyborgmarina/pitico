@@ -193,18 +193,6 @@ const Mint = ({ token, onClose }) => {
                       }
                     />
                   </Form.Item>
-                  <Alert
-                    message={
-                      <Text>
-                        <Icon type="info-circle" /> &nbsp;
-                        <strong>
-                          The SLP Address which has the baton has the ability to mint more tokens.
-                        </strong>
-                      </Text>
-                    }
-                    type="warning"
-                    style={{ marginTop: 4 }}
-                  />
                   <div style={{ paddingTop: "12px" }}>
                     <Button onClick={() => submit()}>Mint</Button>
                   </div>
