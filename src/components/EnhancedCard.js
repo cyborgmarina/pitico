@@ -13,13 +13,22 @@ const GlobalStyle = createGlobalStyle`
     }
 
     .ant-modal-body {
-        padding: 0;
+        padding: 0 !important;
         background-color: transparent;
     }
 
     .ant-modal-close {
         top: 20px !important;
         right: 20px !important;
+    }
+
+    .ant-alert {
+      background-color: #FFFFFF !important;
+      border: none !important;
+
+      * {
+        color: rgb(62, 63, 66) !important;
+      }
     }
 `;
 
@@ -63,10 +72,11 @@ export const StyledModal = styled(Modal)`
     ${props =>
       props.visible
         ? `
-            // max-width: 100vw !important;
-            .ant-card-body > * {
+            .ant-card-body {
+              &> * {
                 overflow: auto;
                 max-height: 90%;
+              }
             }
         `
         : ""}
@@ -89,7 +99,7 @@ export const StyledModal = styled(Modal)`
 export const StyledExpandedWrapper = styled.div`
   .ant-card-head,
   .ant-card-body {
-    padding: 0;
+    padding: 0 !important;
   }
 `;
 

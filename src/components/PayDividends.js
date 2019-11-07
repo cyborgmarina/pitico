@@ -32,6 +32,12 @@ const InputGroup = Input.Group;
 const { Meta } = Card;
 const { Option } = Select;
 
+const StyledPayDividends = styled.div`
+  * {
+    color: rgb(62, 63, 66) !important;
+  }
+`;
+
 const StyledButtonWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -49,7 +55,7 @@ const StyledStat = styled.div`
   font-size: 12px;
 
   .ant-badge sup {
-    background-color: #3b3b4d;
+    background: #fbfcfd;
     color: rgba(255, 255, 255, 0.65);
   }
 `;
@@ -172,116 +178,123 @@ const PayDividends = ({ token, onClose }) => {
   };
 
   return (
-    <Row type="flex" className="dividends">
-      <Col span={24}>
-        <Spin spinning={loading}>
-          <Card
-            title={
-              <h2>
-                <Icon type="dollar" /> Pay Dividends
-              </h2>
-            }
-            bordered={false}
-          >
-            {!isPiticoTokenHolder(tokens) ? (
-              <Alert
-                message={
-                  <span>
-                    <Paragraph>
-                      <Icon type="warning" /> EXPERIMENTAL
-                    </Paragraph>
-                    <Paragraph>
-                      This is an experimental feature, available only to Pitico Cash token holders.
-                    </Paragraph>
-                    <Paragraph>
-                      <a href="https://t.me/piticocash" target="_blank">
-                        Join our Telegram Group to get your $PTCH.
-                      </a>
-                    </Paragraph>
-                  </span>
-                }
-                type="warning"
-                closable={false}
-              />
-            ) : null}
-            <br />
-            {isPiticoTokenHolder(tokens) ? (
-              <>
-                <Row type="flex">
-                  <Col>
-                    <Tooltip title="Circulating Supply">
-                      <StyledStat>
-                        <Icon type="gold" />
-                        &nbsp;
-                        <Badge
-                          count={parseInt(stats.tokens)}
-                          overflowCount={Number.MAX_VALUE}
-                          showZero
-                        />
-                        <Paragraph>Tokens</Paragraph>
-                      </StyledStat>
-                    </Tooltip>
-                  </Col>
-                  &nbsp; &nbsp; &nbsp;
-                  <Col>
-                    <Tooltip title="Addresses with at least one token">
-                      <StyledStat>
-                        <Icon type="team" />
-                        &nbsp;
-                        <Badge count={stats.holders} overflowCount={Number.MAX_VALUE} showZero />
-                        <Paragraph>Holders</Paragraph>
-                      </StyledStat>
-                    </Tooltip>
-                  </Col>
-                  &nbsp; &nbsp; &nbsp;
-                  <Col>
-                    <Tooltip title="Addresses elegible to receive dividends for the specified value">
-                      <StyledStat>
-                        <Icon type="usergroup-add" />
-                        &nbsp;
-                        <Badge count={stats.eligibles} overflowCount={Number.MAX_VALUE} showZero />
-                        <Paragraph>Eligibles</Paragraph>
-                      </StyledStat>
-                    </Tooltip>
-                  </Col>
-                </Row>
-                <Row type="flex">
-                  <Col span={24}>
-                    <Form style={{ width: "auto" }}>
-                      <Form.Item
-                        validateStatus={
-                          !formData.dirty && Number(formData.value) <= 0 ? "error" : ""
-                        }
-                        help={
-                          !formData.dirty && Number(formData.value) < DUST
-                            ? "BCH dividend must be greater than 0.00005 BCH"
-                            : ""
-                        }
-                      >
-                        <Input
-                          prefix={<Icon type="block" />}
-                          suffix="BCH"
-                          placeholder="e.g: 0.01"
-                          name="value"
-                          onChange={e => handleChange(e)}
-                          required
-                          type="number"
-                        />
-                      </Form.Item>
-                    </Form>
-                  </Col>
-                  <br />
-                  <br />
-                  <Col span={24}>
-                    <Button onClick={() => submit()}>Pay Dividends</Button>
-                  </Col>
-                </Row>
-              </>
-            ) : null}
-          </Card>
-        </Spin>
-      </Col>
-    </Row>
+    <StyledPayDividends>
+      <Row type="flex" className="dividends">
+        <Col span={24}>
+          <Spin spinning={loading}>
+            <Card
+              title={
+                <h2>
+                  <Icon type="dollar" /> Pay Dividends
+                </h2>
+              }
+              bordered={false}
+            >
+              {!isPiticoTokenHolder(tokens) ? (
+                <Alert
+                  message={
+                    <span>
+                      <Paragraph>
+                        <Icon type="warning" /> EXPERIMENTAL
+                      </Paragraph>
+                      <Paragraph>
+                        This is an experimental feature, available only to Pitico Cash token
+                        holders.
+                      </Paragraph>
+                      <Paragraph>
+                        <a href="https://t.me/piticocash" target="_blank">
+                          Join our Telegram Group to get your $PTCH.
+                        </a>
+                      </Paragraph>
+                    </span>
+                  }
+                  type="warning"
+                  closable={false}
+                />
+              ) : null}
+              <br />
+              {isPiticoTokenHolder(tokens) ? (
+                <>
+                  <Row type="flex">
+                    <Col>
+                      <Tooltip title="Circulating Supply">
+                        <StyledStat>
+                          <Icon type="gold" />
+                          &nbsp;
+                          <Badge
+                            count={parseInt(stats.tokens)}
+                            overflowCount={Number.MAX_VALUE}
+                            showZero
+                          />
+                          <Paragraph>Tokens</Paragraph>
+                        </StyledStat>
+                      </Tooltip>
+                    </Col>
+                    &nbsp; &nbsp; &nbsp;
+                    <Col>
+                      <Tooltip title="Addresses with at least one token">
+                        <StyledStat>
+                          <Icon type="team" />
+                          &nbsp;
+                          <Badge count={stats.holders} overflowCount={Number.MAX_VALUE} showZero />
+                          <Paragraph>Holders</Paragraph>
+                        </StyledStat>
+                      </Tooltip>
+                    </Col>
+                    &nbsp; &nbsp; &nbsp;
+                    <Col>
+                      <Tooltip title="Addresses elegible to receive dividends for the specified value">
+                        <StyledStat>
+                          <Icon type="usergroup-add" />
+                          &nbsp;
+                          <Badge
+                            count={stats.eligibles}
+                            overflowCount={Number.MAX_VALUE}
+                            showZero
+                          />
+                          <Paragraph>Eligibles</Paragraph>
+                        </StyledStat>
+                      </Tooltip>
+                    </Col>
+                  </Row>
+                  <Row type="flex">
+                    <Col span={24}>
+                      <Form style={{ width: "auto" }}>
+                        <Form.Item
+                          validateStatus={
+                            !formData.dirty && Number(formData.value) <= 0 ? "error" : ""
+                          }
+                          help={
+                            !formData.dirty && Number(formData.value) < DUST
+                              ? "BCH dividend must be greater than 0.00005 BCH"
+                              : ""
+                          }
+                        >
+                          <Input
+                            prefix={<Icon type="block" />}
+                            suffix="BCH"
+                            placeholder="e.g: 0.01"
+                            name="value"
+                            onChange={e => handleChange(e)}
+                            required
+                            type="number"
+                          />
+                        </Form.Item>
+                      </Form>
+                    </Col>
+                    <br />
+                    <br />
+                    <Col span={24}>
+                      <Button onClick={() => submit()}>Pay Dividends</Button>
+                    </Col>
+                  </Row>
+                </>
+              ) : null}
+            </Card>
+          </Spin>
+        </Col>
+      </Row>
+    </StyledPayDividends>
   );
 };
 

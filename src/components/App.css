@@ -123,7 +123,7 @@
 
 /* .ant-radio-group-solid .ant-radio-button-wrapper-checked:not :hover > span{
   color: red !important;
-  
+
 } */
 
 .ant-radio-group-solid .ant-radio-button-wrapper-checked {
@@ -234,5 +234,13 @@ input.ant-input {
 
   a:hover {
     color: #46464a;
+  }
+}
+
+.ant-popover-inner-content {
+  background: white;
+
+  &::after {
+    background: white;
   }
 }

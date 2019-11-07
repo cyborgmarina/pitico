@@ -19,7 +19,6 @@ const StyledConfigure = styled.div`
       color: #6e6e6e !important;
       background: #fbfcfd;
       border-bottom: 1px solid #eaedf3;
-      box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.35);
     }
 
     .ant-alert {
@@ -29,6 +28,23 @@ const StyledConfigure = styled.div`
   }
   .ant-card-body {
     border: none;
+  }
+  .ant-collapse {
+    background: #fbfcfd;
+    border: 1px solid #eaedf3;
+
+    .ant-collapse-content {
+      border: 1px solid #eaedf3;
+      border-top: none;
+    }
+
+    .ant-collapse-item {
+      border-bottom: 1px solid #eaedf3;
+    }
+
+    * {
+      color: rgb(62, 63, 66) !important;
+    }
   }
 `;
 
