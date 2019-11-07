@@ -7,7 +7,6 @@ const Identicon = seed => {
 
   React.useEffect(() => {
     sha256(seed.seed).then(e => {
-      console.log("eee", e);
       setHash(e);
     });
   }, [seed.seed]);
@@ -18,7 +17,7 @@ const Identicon = seed => {
   function getRandomInt() {
     const min = 3;
     const max = 9;
-    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+    return Math.floor(Math.random() * (max - min)) + min;
   }
   const generate = (n, offset, r, cx, cy) =>
     Array.from(Array(n))

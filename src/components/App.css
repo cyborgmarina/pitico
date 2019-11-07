@@ -27,7 +27,7 @@
   /* margin-bottom: 46px;  */
 }
 .ant-list-item-meta .ant-list-item-meta-content {
-  margin-left: -64px;
+  /* margin-left: -64px; */
   display: flex;
   justify-content: flex-end;
 }
@@ -88,6 +88,11 @@
 .ant-list-item-meta-description,
 .ant-list-item-meta-title {
   color: #3e3f42;
+}
+
+.ant-list-item-meta-description > :first-child {
+  right: 20px !important;
+  position: absolute;
 }
 
 .ant-radio-group-solid .ant-radio-button-wrapper {
@@ -186,6 +191,14 @@ input.ant-input {
 
 .ant-card-actions > li:not(:last-child) {
   border-right: 0;
+}
+.ant-list-item-meta-avatar > img {
+  margin-left: -12px;
+  transform: translate(0, -6px);
+}
+
+.ant-list-item-meta-avatar > svg {
+  margin-right: -70px;
 }
 
 .ant-alert-warning {

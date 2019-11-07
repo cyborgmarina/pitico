@@ -226,21 +226,21 @@ export default () => {
                           seed={token.tokenId}
                         />
                       }
-                      style={{
-                        marginTop: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
-                          ? "-10px"
-                          : null
-                      }}
+                      // style={{
+                      //   marginTop: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
+                      //     ? "-10px"
+                      //     : null
+                      // }}
                       // unloader={<Jdenticon size="64" value={token.tokenId} />}
                     />
                   }
                   title={
                     <div
                       style={{
-                        float: "right",
-                        marginLeft: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
-                          ? "60px"
-                          : null
+                        float: "right"
+                        // marginLeft: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
+                        //   ? "60px"
+                        //   : null
                       }}
                     >
                       {/* <span>{token.balance} </span> */}
@@ -263,10 +263,10 @@ export default () => {
                         style={{
                           color: "rgb(62, 63, 66)",
                           fontSize: "16px",
-                          fontWeight: "bold",
-                          marginLeft: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
-                            ? "130px"
-                            : "100px"
+                          fontWeight: "bold"
+                          // marginLeft: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
+                          //   ? "130px"
+                          //   : "100px"
                         }}
                       >
                         {token.balance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}
