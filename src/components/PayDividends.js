@@ -27,6 +27,8 @@ import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import isPiticoTokenHolder from "../utils/isPiticoTokenHolder";
 import debounce from "../utils/debounce";
+import withSLP from "../utils/withSLP";
+import Text from "antd/lib/typography/Text";
 
 const InputGroup = Input.Group;
 const { Meta } = Card;
@@ -57,19 +59,28 @@ const StyledStat = styled.div`
   .ant-badge sup {
     background: #fbfcfd;
     color: rgba(255, 255, 255, 0.65);
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.35);
   }
 `;
 
-const PayDividends = ({ token, onClose }) => {
+const PayDividends = ({ SLP, token, onClose }) => {
   const ContextValue = React.useContext(WalletContext);
   const { wallet, tokens, balances } = ContextValue;
   const [formData, setFormData] = useState({
     dirty: true,
-    value: 0,
-    tokenId: token.tokenId
+    value: "",
+    tokenId: token.tokenId,
+    txFee: 0
   });
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({ tokens: 0, holders: 0, eligibles: 0 });
+
+  const totalBalance = balances.balance + balances.unconfirmedBalance;
+  const submitEnabled =
+    formData.tokenId &&
+    formData.value &&
+    Number(formData.value) > DUST &&
+    totalBalance - Number(formData.value) - Number(formData.txFee) > 0;
 
   useEffect(() => {
     setLoading(true);
@@ -79,7 +90,8 @@ const PayDividends = ({ token, onClose }) => {
           ...stats,
           tokens: balancesForToken.totalBalance,
           holders: balancesForToken.length ? balancesForToken.length - 1 : 0,
-          balances: balancesForToken
+          balances: balancesForToken,
+          txFee: 0
         });
       })
       .finally(() => setLoading(false));
@@ -89,12 +101,13 @@ const PayDividends = ({ token, onClose }) => {
     debounce(value => {
       if (stats.balances && value && !Number.isNaN(value)) {
         setLoading(true);
-        getElegibleAddresses(wallet, stats.balances, value).then(({ addresses }) => {
-          setStats({ ...stats, eligibles: addresses.length });
-          setLoading(false);
-        });
+        getElegibleAddresses(wallet, stats.balances, value)
+          .then(({ addresses, txFee }) => {
+            setStats({ ...stats, eligibles: addresses.length, txFee });
+          })
+          .finally(() => setLoading(false));
       } else {
-        setStats({ ...stats, eligibles: 0 });
+        setStats({ ...stats, eligibles: 0, txFee: 0 });
       }
     }),
     [wallet, stats]
@@ -106,7 +119,7 @@ const PayDividends = ({ token, onClose }) => {
       dirty: false
     });
 
-    if (!formData.tokenId || !formData.value || Number(formData.value) < DUST) {
+    if (!submitEnabled) {
       return;
     }
 
@@ -177,6 +190,22 @@ const PayDividends = ({ token, onClose }) => {
     }
   };
 
+  const onMaxDividend = () => {
+    setLoading(true);
+    getElegibleAddresses(wallet, stats.balances, totalBalance)
+      .then(({ addresses, txFee }) => {
+        const value = (totalBalance - txFee).toFixed(8);
+        setFormData({
+          ...formData,
+          value: value
+        });
+        calcElegibles(value);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+
   return (
     <StyledPayDividends>
       <Row type="flex" className="dividends">
@@ -222,7 +251,7 @@ const PayDividends = ({ token, onClose }) => {
                           <Icon type="gold" />
                           &nbsp;
                           <Badge
-                            count={parseInt(stats.tokens)}
+                            count={new Intl.NumberFormat("en-US").format(stats.tokens)}
                             overflowCount={Number.MAX_VALUE}
                             showZero
                           />
@@ -236,7 +265,11 @@ const PayDividends = ({ token, onClose }) => {
                         <StyledStat>
                           <Icon type="team" />
                           &nbsp;
-                          <Badge count={stats.holders} overflowCount={Number.MAX_VALUE} showZero />
+                          <Badge
+                            count={new Intl.NumberFormat("en-US").format(stats.holders)}
+                            overflowCount={Number.MAX_VALUE}
+                            showZero
+                          />
                           <Paragraph>Holders</Paragraph>
                         </StyledStat>
                       </Tooltip>
@@ -248,7 +281,7 @@ const PayDividends = ({ token, onClose }) => {
                           <Icon type="usergroup-add" />
                           &nbsp;
                           <Badge
-                            count={stats.eligibles}
+                            count={new Intl.NumberFormat("en-US").format(stats.eligibles)}
                             overflowCount={Number.MAX_VALUE}
                             showZero
                           />
@@ -259,8 +292,9 @@ const PayDividends = ({ token, onClose }) => {
                   </Row>
                   <Row type="flex">
                     <Col span={24}>
-                      <Form style={{ width: "auto" }}>
+                      <Form style={{ width: "auto", marginBottom: "1em" }} noValidate>
                         <Form.Item
+                          style={{ margin: 0 }}
                           validateStatus={
                             !formData.dirty && Number(formData.value) <= 0 ? "error" : ""
                           }
@@ -271,21 +305,59 @@ const PayDividends = ({ token, onClose }) => {
                           }
                         >
                           <Input
-                            prefix={<Icon type="block" />}
+                            prefix={<Icon type="dollar" />}
                             suffix="BCH"
                             placeholder="e.g: 0.01"
                             name="value"
                             onChange={e => handleChange(e)}
                             required
                             type="number"
+                            value={formData.value}
+                            addonAfter={
+                              <Button onClick={onMaxDividend}>
+                                <Icon type="dollar" />
+                                max
+                              </Button>
+                            }
                           />
                         </Form.Item>
                       </Form>
                     </Col>
+                    <Col>
+                      <Tooltip title="Bitcoincash balance">
+                        <StyledStat>
+                          <Icon type="dollar" />
+                          &nbsp;
+                          <Badge
+                            count={totalBalance || "0"}
+                            overflowCount={Number.MAX_VALUE}
+                            showZero
+                          />
+                          <Paragraph>Balance</Paragraph>
+                        </StyledStat>
+                      </Tooltip>
+                    </Col>
+                    &nbsp; &nbsp; &nbsp;
+                    <Col>
+                      <Tooltip title="Transaction fee">
+                        <StyledStat>
+                          <Icon type="minus-circle" />
+                          &nbsp;
+                          <Badge
+                            count={stats.txFee || "0"}
+                            overflowCount={Number.MAX_VALUE}
+                            showZero
+                          />
+                          <Paragraph>Fee</Paragraph>
+                        </StyledStat>
+                      </Tooltip>
+                    </Col>
                     <br />
                     <br />
                     <Col span={24}>
-                      <Button onClick={() => submit()}>Pay Dividends</Button>
+                      <Button disabled={!submitEnabled} onClick={() => submit()}>
+                        Pay Dividends
+                      </Button>
                     </Col>
                   </Row>
                 </>

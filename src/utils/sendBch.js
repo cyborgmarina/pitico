@@ -120,7 +120,7 @@ const getBCHBalance = withSLP(async (SLP, addr, verbose) => {
 
     const bchBalance = result;
 
-    return bchBalance.balance;
+    return bchBalance.balance + bchBalance.unconfirmedBalance;
   } catch (err) {
     console.error(`Error in getBCHBalance: `, err);
     console.log(`addr: ${addr}`);
