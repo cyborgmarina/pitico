@@ -26,14 +26,19 @@ const App = () => {
   const [address, setAddress] = React.useState("slpAddress");
   const ContextValue = React.useContext(WalletContext);
   const { wallet, balances, loading } = ContextValue;
-
+  const radio = React.useRef(null);
   const handleChange = e => {
     setKey(e.key);
-    mobile && setCollapesed(true);
+    setTimeout(() => mobile && setCollapesed(true), 100);
   };
 
   const handleChangeAddress = e => {
-    setAddress(e.target.value);
+    const radioButton = radio.current;
+    console.log("radioButton :", radioButton);
+    // radioButton.onRadioChange("cashAddress");
+    // radioButton.state.value = "cashAddress";
+    console.log("e.target", e.target);
+    setAddress(address === "cashAddress" ? "slpAddress" : "cashAddress");
   };
 
   const route = () => {
@@ -68,7 +73,11 @@ const App = () => {
           <Sider
             breakpoint="lg"
             collapsedWidth="0"
-            // style={{ maxWidth: "256px", minWidth: "256px", width: "256px" }}
+            collapsed={collapsed}
+            onCollapse={() => setCollapesed(!collapsed)}
+            width="256"
+            // style={{ flex: "0 0 256px" }}
+            style={mobile ? { position: "absolute", zIndex: "2", height: "100vh" } : null}
           >
             <div className="logo">
               <img src={logo} alt="Bitcoin.com Mint" />
@@ -106,11 +115,17 @@ const App = () => {
 
               {wallet ? (
                 <Menu.ItemGroup
-                  style={{ position: "absolute", bottom: "43px" }}
+                  // style={{ position: "absolute", bottom: "43px" }}
                   key="menu"
                   title="RECEIVE"
                 >
-                  <div style={{ marginLeft: "20px", paddingTop: "10px" }}>
+                  <div
+                    style={{
+                      marginLeft: "20px",
+                      paddingTop: "10px"
+                      // display: `${window.innerWidth > 768 ? "none" : null}`
+                    }}
+                  >
                     <div>
                       <QRCode
                         id="borderedQRCode"
@@ -119,20 +134,31 @@ const App = () => {
                     </div>
                     <Radio.Group
                       defaultValue="slpAddress"
-                      onChange={e => handleChangeAddress(e)}
+                      // onChange={e => handleChangeAddress(e)}
                       value={address}
                       size="small"
                       buttonStyle="solid"
+                      ref={radio}
                     >
                       <Radio.Button
-                        style={{ borderRadius: "19.5px", height: "40px", width: "103px" }}
+                        style={{
+                          borderRadius: "19.5px",
+                          height: "40px",
+                          width: "103px"
+                        }}
                         value="slpAddress"
+                        onClick={e => handleChangeAddress(e)}
                       >
                         SLP Tokens
                       </Radio.Button>
                       <Radio.Button
-                        style={{ borderRadius: "19.5px", height: "40px", width: "103px" }}
+                        style={{
+                          borderRadius: "19.5px",
+                          height: "40px",
+                          width: "103px"
+                        }}
                         value="cashAddress"
+                        onClick={e => handleChangeAddress(e)}
                       >
                         Bitcoin Cash
                       </Radio.Button>

@@ -68,10 +68,10 @@
 }
 
 .ant-layout-sider {
-  flex: 0 0 256px !important;
-  max-width: 256px !important;
-  min-width: 256px !important;
-  width: 256px !important;
+  /* flex: 0 0 256px !important;
+  max-width: 256px !important; */
+  /* min-width: 256px !important; */
+  /* width: 256px !important; */
 }
 .ant-card-actions > li > span:hover,
 .ant-btn:hover,
@@ -113,14 +113,15 @@
 .ant-radio-group-solid .ant-radio-button-wrapper {
   padding-top: 10px;
   padding-left: 20px;
-  margin-top: 30px;
-  border: 1px solid rgb(0, 0, 0) !important;
+  margin-top: 0px;
+  /* border: 1px solid rgb(0, 0, 0) !important;
   box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.81) !important;
-  background: #10131b !important;
+  background: #10131b !important; */
 }
 
-.ant-radio-group-solid .ant-radio-button-wrapper-checked:not {
-  background: red !important;
+.ant-radio-group-solid .ant-radio-button-wrapper-checked {
+  border: 1px solid rgb(0, 0, 0) !important;
+  box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.81) !important;
 }
 .identicon {
   border-radius: 50%;
@@ -152,6 +153,15 @@
   font-size: 12px !important;
   font-weight: 600 !important;
   vertical-align: middle;
+  border-radius: 19.5px;
+  /* border: 1px solid red;
+  background-color: #10121a; */
+  overflow: auto;
+  border: 1px solid rgb(0, 0, 0) !important;
+  box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.81) !important;
+  background: #10131b !important;
+  margin-top: 30px;
+  cursor: pointer;
 }
 
 input.ant-input {
@@ -259,9 +269,5 @@ input.ant-input {
 }
 
 .ant-popover-inner-content {
-  background: white;
-
-  &::after {
-    background: white;
-  }
+  color: white;
 }
