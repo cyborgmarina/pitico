@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getWallet, createWallet } from "./createWallet";
 import getBalance from "./getBalance";
 import getTokenInfo from "./getTokenInfo";
+import { getBCHBalanceFromUTXO } from "./sendBch";
 
 const tokensCache = {};
 
@@ -35,7 +36,11 @@ const update = async ({ wallet, tokens, setBalances, setTokens, setLoading, show
     setLoading(!!showLoading);
 
     const balance = await getBalance(wallet, false);
-    setBalances(balance);
+    const balanceUTXO = await getBCHBalanceFromUTXO(wallet);
+    setBalances({
+      ...balance,
+      balanceUTXO
+    });
 
     setLoading(false);
     const tokens = balance.tokens.map(token =>

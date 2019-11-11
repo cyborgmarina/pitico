@@ -55,10 +55,7 @@ export const getElegibleAddresses = withSLP(async (SLP, wallet, balances, value)
 
   const byteCount = SLP.BitcoinCash.getByteCount({ P2PKH: 1 }, { P2PKH: addresses.length + 1 });
   const satoshisPerByte = 1.2;
-  const txFee = Math.max(
-    SLP.BitcoinCash.toBitcoinCash(Math.floor(satoshisPerByte * byteCount)),
-    DUST
-  ).toFixed(8);
+  const txFee = SLP.BitcoinCash.toBitcoinCash(Math.floor(satoshisPerByte * byteCount)).toFixed(8);
 
   return {
     addresses,

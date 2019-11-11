@@ -44,17 +44,14 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
     // const relayFee = SLP.BitcoinCash.toSatoshi(info.relayfee);
     const byteCount = SLP.BitcoinCash.getByteCount({ P2PKH: 1 }, { P2PKH: addresses.length + 1 });
     const satoshisPerByte = 1.2;
-    const txFee = Math.max(
-      Math.floor(satoshisPerByte * byteCount),
-      SLP.BitcoinCash.toSatoshi(DUST)
-    );
+    const txFee = Math.floor(satoshisPerByte * byteCount);
 
     // amount to send back to the sending address.
     const remainder = originalAmount - satoshisToSend - txFee;
 
-    if (remainder < 0) {
-      throw new Error(`Insufficient funds`);
-    }
+    // if (remainder < 0) {
+    //   throw new Error(`Insufficient funds`);
+    // }
 
     // add output w/ address and amount to send
     for (let i = 0; i < addresses.length; i++) {
@@ -115,6 +112,18 @@ const changeAddrFromMnemonic = withSLP((SLP, mnemonic) => {
   const change = SLP.HDNode.derivePath(account, "0/0");
 
   return change;
+});
+
+// Get the balance in BCH of a BCH address.
+export const getBCHBalanceFromUTXO = withSLP(async (SLP, wallet) => {
+  try {
+    const u = await SLP.Address.utxo(wallet.cashAddress);
+    const utxo = findBiggestUtxo(u.utxos);
+    return SLP.BitcoinCash.toBitcoinCash(utxo.satoshis);
+  } catch (err) {
+    console.error(`Error in getBCHBalanceFromUTXO: `, err);
+    throw err;
+  }
 });
 
 // Get the balance in BCH of a BCH address.

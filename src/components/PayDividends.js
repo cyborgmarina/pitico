@@ -29,6 +29,7 @@ import isPiticoTokenHolder from "../utils/isPiticoTokenHolder";
 import debounce from "../utils/debounce";
 import withSLP from "../utils/withSLP";
 import Text from "antd/lib/typography/Text";
+import { getBCHBalanceFromUTXO } from "../utils/sendBch";
 
 const InputGroup = Input.Group;
 const { Meta } = Card;
@@ -74,12 +75,13 @@ const PayDividends = ({ SLP, token, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({ tokens: 0, holders: 0, eligibles: 0, txFee: 0 });
 
-  const totalBalance = balances.balance + balances.unconfirmedBalance;
+  const balanceUTXO = balances.balanceUTXO;
+
   const submitEnabled =
     formData.tokenId &&
     formData.value &&
     Number(formData.value) > DUST &&
-    (totalBalance - Number(formData.value) - Number(stats.txFee)).toFixed(8) >= 0;
+    (balanceUTXO - Number(formData.value) - Number(stats.txFee)).toFixed(8) >= 0;
   useEffect(() => {
     setLoading(true);
     getBalancesForToken(token.tokenId)
@@ -188,20 +190,22 @@ const PayDividends = ({ SLP, token, onClose }) => {
     }
   };
 
-  const onMaxDividend = () => {
+  const onMaxDividend = async () => {
     setLoading(true);
-    getElegibleAddresses(wallet, stats.balances, totalBalance)
-      .then(({ addresses, txFee }) => {
-        const value = (totalBalance - txFee - DUST).toFixed(8);
-        setFormData({
-          ...formData,
-          value: value
-        });
-        calcElegibles(value);
-      })
-      .catch(() => {
-        setLoading(false);
+
+    try {
+      const bal = await getBCHBalanceFromUTXO(wallet);
+      // const { addresses, txFee } = await getElegibleAddresses(wallet, stats.balances, balanceUTXO);
+      // const value = (balanceUTXO - txFee - DUST).toFixed(8);
+      const { txFee } = await getElegibleAddresses(wallet, stats.balances, bal);
+      let value = bal - txFee - DUST >= 0 ? (bal - txFee - DUST).toFixed(8) : 0;
+      setFormData({
+        ...formData,
+        value: value
       });
+      await calcElegibles(value);
+      setLoading(false);
+    } catch (err) {}
   };
 
   return (
@@ -327,7 +331,7 @@ const PayDividends = ({ SLP, token, onClose }) => {
                           <Icon type="dollar" />
                           &nbsp;
                           <Badge
-                            count={totalBalance || "0"}
+                            count={balanceUTXO.toFixed(8) || "0"}
                             overflowCount={Number.MAX_VALUE}
                             showZero
                           />
