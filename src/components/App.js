@@ -116,7 +116,7 @@ const App = () => {
               {wallet ? (
                 <Menu.ItemGroup
                   // style={{ position: "absolute", bottom: "43px" }}
-                  key="menu"
+                  key="menu-receive"
                   title="RECEIVE"
                 >
                   <div

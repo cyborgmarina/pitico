@@ -28,7 +28,6 @@ export const getElegibleAddresses = withSLP(async (SLP, wallet, balances, value)
   while (true) {
     const tokenBalanceSum = elegibleBalances.reduce((p, c) => c.tokenBalance + p, 0);
     const minTokenBalance = (tokenBalanceSum * DUST) / value;
-    console.info(minTokenBalance);
 
     const newElegibleBalances = elegibleBalances.filter(
       elegibleBalance => elegibleBalance.tokenBalance >= minTokenBalance

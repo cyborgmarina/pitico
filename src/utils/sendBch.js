@@ -20,7 +20,8 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
     }
 
     const u = await SLP.Address.utxo(SEND_ADDR);
-    const utxo = findBiggestUtxo(u.utxos);
+    // const utxo = findBiggestUtxo(u.utxos);
+    const utxo = u.utxos[0];
 
     let transactionBuilder;
 
@@ -29,7 +30,8 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
     else transactionBuilder = new SLP.TransactionBuilder("testnet");
 
     const satoshisToSend = SLP.BitcoinCash.toSatoshi(value);
-    const originalAmount = utxo.satoshis;
+    // const originalAmount = utxo.satoshis;
+    const originalAmount = SLP.BitcoinCash.toSatoshi(balance);
     const vout = utxo.vout;
     const txid = utxo.txid;
 

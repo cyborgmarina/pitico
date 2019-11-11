@@ -171,6 +171,7 @@ input.ant-input {
   border-radius: 8px;
   font-weight: bold;
   color: rgb(62, 63, 66);
+  opacity: 1;
 }
 
 .ant-card-bordered {

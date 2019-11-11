@@ -69,19 +69,17 @@ const PayDividends = ({ SLP, token, onClose }) => {
   const [formData, setFormData] = useState({
     dirty: true,
     value: "",
-    tokenId: token.tokenId,
-    txFee: 0
+    tokenId: token.tokenId
   });
   const [loading, setLoading] = useState(false);
-  const [stats, setStats] = useState({ tokens: 0, holders: 0, eligibles: 0 });
+  const [stats, setStats] = useState({ tokens: 0, holders: 0, eligibles: 0, txFee: 0 });
 
   const totalBalance = balances.balance + balances.unconfirmedBalance;
   const submitEnabled =
     formData.tokenId &&
     formData.value &&
     Number(formData.value) > DUST &&
-    totalBalance - Number(formData.value) - Number(formData.txFee) > 0;
-
+    (totalBalance - Number(formData.value) - Number(stats.txFee)).toFixed(8) >= 0;
   useEffect(() => {
     setLoading(true);
     getBalancesForToken(token.tokenId)
@@ -169,7 +167,7 @@ const PayDividends = ({ SLP, token, onClose }) => {
       } else if (/Insufficient funds/.test(e.message)) {
         message = "Insufficient funds.";
       } else {
-        message = "Service unavailable, try again later";
+        message = e.error || e.message;
       }
 
       notification.error({
@@ -306,12 +304,12 @@ const PayDividends = ({ SLP, token, onClose }) => {
                         >
                           <Input
                             prefix={<Icon type="dollar" />}
+                            step="0.00000001"
                             suffix="BCH"
                             placeholder="e.g: 0.01"
                             name="value"
                             onChange={e => handleChange(e)}
                             required
-                            type="number"
                             value={formData.value}
                             addonAfter={
                               <Button onClick={onMaxDividend}>
