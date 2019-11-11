@@ -192,7 +192,7 @@ const PayDividends = ({ SLP, token, onClose }) => {
     setLoading(true);
     getElegibleAddresses(wallet, stats.balances, totalBalance)
       .then(({ addresses, txFee }) => {
-        const value = (totalBalance - txFee).toFixed(8);
+        const value = (totalBalance - txFee - DUST).toFixed(8);
         setFormData({
           ...formData,
           value: value

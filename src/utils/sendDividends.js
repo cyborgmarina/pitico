@@ -23,35 +23,42 @@ export const getBalancesForToken = withSLP(async (SLP, tokenId) => {
 export const getElegibleAddresses = withSLP(async (SLP, wallet, balances, value) => {
   let addresses = [];
   let values = [];
-  let elegibleBalances = [...balances];
 
+  const walletDetails = getWalletDetails(wallet);
+
+  let elegibleBalances = [
+    ...balances.filter(balance => balance.slpAddress !== walletDetails.slpAddress)
+  ];
   while (true) {
     const tokenBalanceSum = elegibleBalances.reduce((p, c) => c.tokenBalance + p, 0);
-    const minTokenBalance = (tokenBalanceSum * DUST) / value;
 
-    const newElegibleBalances = elegibleBalances.filter(
-      elegibleBalance => elegibleBalance.tokenBalance >= minTokenBalance
-    );
+    const newElegibleBalances = elegibleBalances.filter(elegibleBalance => {
+      // const address = Utils.toCashAddress(elegibleBalance.slpAddress);
+      const elegibleValue = (elegibleBalance.tokenBalance / tokenBalanceSum) * value;
+      if (elegibleValue > DUST) {
+        addresses.push(Utils.toCashAddress(elegibleBalance.slpAddress));
+        values.push(elegibleValue);
+        return true;
+      }
+      return false;
+    });
 
     if (newElegibleBalances.length === elegibleBalances.length) {
-      newElegibleBalances.forEach(elegibleBalance => {
-        const address = Utils.toCashAddress(elegibleBalance.slpAddress);
-        const elegibleValue = ((elegibleBalance.tokenBalance / tokenBalanceSum) * value).toFixed(8);
-        if (address !== wallet.cashAddress) {
-          addresses.push(address);
-          values.push(Number(elegibleValue));
-        }
-      });
       break;
     } else {
       elegibleBalances = newElegibleBalances;
+      addresses = [];
+      values = [];
     }
     await new Promise(resolve => setTimeout(resolve, 10));
   }
 
-  const byteCount = SLP.BitcoinCash.getByteCount({ P2PKH: addresses.length }, { P2PKH: 2 });
+  const byteCount = SLP.BitcoinCash.getByteCount({ P2PKH: 1 }, { P2PKH: addresses.length + 1 });
   const satoshisPerByte = 1.2;
-  const txFee = (Math.floor(satoshisPerByte * byteCount) / Math.pow(10, 8)).toFixed(8);
+  const txFee = Math.max(
+    SLP.BitcoinCash.toBitcoinCash(Math.floor(satoshisPerByte * byteCount)),
+    DUST
+  ).toFixed(8);
 
   return {
     addresses,
@@ -63,9 +70,9 @@ export const getElegibleAddresses = withSLP(async (SLP, wallet, balances, value)
 export const sendDividends = async (wallet, { value, tokenId }) => {
   const outputs = await getBalancesForToken(tokenId);
 
-  const walletDetails = getWalletDetails(wallet);
+  const { addresses, values } = await getElegibleAddresses(wallet, outputs, value);
 
-  const { addresses, values } = await getElegibleAddresses(walletDetails, outputs, value);
+  const walletDetails = getWalletDetails(wallet);
 
   return await sendBch(walletDetails, { addresses, values });
 };

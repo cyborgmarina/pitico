@@ -1,4 +1,5 @@
 import withSLP from "./withSLP";
+import { DUST } from "./sendDividends";
 
 const NETWORK = process.env.REACT_APP_NETWORK;
 
@@ -20,8 +21,8 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
     }
 
     const u = await SLP.Address.utxo(SEND_ADDR);
-    // const utxo = findBiggestUtxo(u.utxos);
-    const utxo = u.utxos[0];
+    const utxo = findBiggestUtxo(u.utxos);
+    // const utxo = u.utxos[0];
 
     let transactionBuilder;
 
@@ -30,8 +31,8 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
     else transactionBuilder = new SLP.TransactionBuilder("testnet");
 
     const satoshisToSend = SLP.BitcoinCash.toSatoshi(value);
-    // const originalAmount = utxo.satoshis;
-    const originalAmount = SLP.BitcoinCash.toSatoshi(balance);
+    const originalAmount = utxo.satoshis;
+    // const originalAmount = SLP.BitcoinCash.toSatoshi(balance);
     const vout = utxo.vout;
     const txid = utxo.txid;
 
@@ -41,9 +42,12 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
     // get byte count to calculate fee. paying 1.2 sat/byte
     // const info = await SLP.Control.getInfo();
     // const relayFee = SLP.BitcoinCash.toSatoshi(info.relayfee);
-    const byteCount = SLP.BitcoinCash.getByteCount({ P2PKH: addresses.length }, { P2PKH: 2 });
+    const byteCount = SLP.BitcoinCash.getByteCount({ P2PKH: 1 }, { P2PKH: addresses.length + 1 });
     const satoshisPerByte = 1.2;
-    const txFee = Math.floor(satoshisPerByte * byteCount);
+    const txFee = Math.max(
+      Math.floor(satoshisPerByte * byteCount),
+      SLP.BitcoinCash.toSatoshi(DUST)
+    );
 
     // amount to send back to the sending address.
     const remainder = originalAmount - satoshisToSend - txFee;
@@ -105,7 +109,7 @@ const changeAddrFromMnemonic = withSLP((SLP, mnemonic) => {
   else masterHDNode = SLP.HDNode.fromSeed(rootSeed, "testnet");
 
   // HDNode of BIP44 account
-  const account = SLP.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
+  const account = SLP.HDNode.derivePath(masterHDNode, "m/44'/245'/0'");
 
   // derive the first external change address HDNode which is going to spend utxo
   const change = SLP.HDNode.derivePath(account, "0/0");
