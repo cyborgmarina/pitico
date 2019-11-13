@@ -75,7 +75,7 @@ export const StyledModal = styled(Modal)`
             .ant-card-body {
               &> * {
                 overflow: auto;
-                max-height: 90%;
+                max-height: 85%;
               }
             }
         `

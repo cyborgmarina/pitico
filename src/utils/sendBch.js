@@ -1,4 +1,5 @@
 import withSLP from "./withSLP";
+import { DUST } from "./sendDividends";
 
 const NETWORK = process.env.REACT_APP_NETWORK;
 
@@ -21,6 +22,7 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
 
     const u = await SLP.Address.utxo(SEND_ADDR);
     const utxo = findBiggestUtxo(u.utxos);
+    // const utxo = u.utxos[0];
 
     let transactionBuilder;
 
@@ -30,6 +32,7 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
 
     const satoshisToSend = SLP.BitcoinCash.toSatoshi(value);
     const originalAmount = utxo.satoshis;
+    // const originalAmount = SLP.BitcoinCash.toSatoshi(balance);
     const vout = utxo.vout;
     const txid = utxo.txid;
 
@@ -39,16 +42,16 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
     // get byte count to calculate fee. paying 1.2 sat/byte
     // const info = await SLP.Control.getInfo();
     // const relayFee = SLP.BitcoinCash.toSatoshi(info.relayfee);
-    const byteCount = SLP.BitcoinCash.getByteCount({ P2PKH: addresses.length }, { P2PKH: 2 });
+    const byteCount = SLP.BitcoinCash.getByteCount({ P2PKH: 1 }, { P2PKH: addresses.length + 1 });
     const satoshisPerByte = 1.2;
     const txFee = Math.floor(satoshisPerByte * byteCount);
 
     // amount to send back to the sending address.
     const remainder = originalAmount - satoshisToSend - txFee;
 
-    if (remainder < 0) {
-      throw new Error(`Insufficient funds`);
-    }
+    // if (remainder < 0) {
+    //   throw new Error(`Insufficient funds`);
+    // }
 
     // add output w/ address and amount to send
     for (let i = 0; i < addresses.length; i++) {
@@ -103,12 +106,24 @@ const changeAddrFromMnemonic = withSLP((SLP, mnemonic) => {
   else masterHDNode = SLP.HDNode.fromSeed(rootSeed, "testnet");
 
   // HDNode of BIP44 account
-  const account = SLP.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
+  const account = SLP.HDNode.derivePath(masterHDNode, "m/44'/245'/0'");
 
   // derive the first external change address HDNode which is going to spend utxo
   const change = SLP.HDNode.derivePath(account, "0/0");
 
   return change;
+});
+
+// Get the balance in BCH of a BCH address.
+export const getBCHBalanceFromUTXO = withSLP(async (SLP, wallet) => {
+  try {
+    const u = await SLP.Address.utxo(wallet.cashAddress);
+    const utxo = findBiggestUtxo(u.utxos);
+    return SLP.BitcoinCash.toBitcoinCash(utxo.satoshis);
+  } catch (err) {
+    console.error(`Error in getBCHBalanceFromUTXO: `, err);
+    throw err;
+  }
 });
 
 // Get the balance in BCH of a BCH address.
@@ -120,7 +135,7 @@ const getBCHBalance = withSLP(async (SLP, addr, verbose) => {
 
     const bchBalance = result;
 
-    return bchBalance.balance;
+    return bchBalance.balance + bchBalance.unconfirmedBalance;
   } catch (err) {
     console.error(`Error in getBCHBalance: `, err);
     console.log(`addr: ${addr}`);

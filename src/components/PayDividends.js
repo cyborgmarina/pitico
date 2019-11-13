@@ -27,6 +27,9 @@ import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import isPiticoTokenHolder from "../utils/isPiticoTokenHolder";
 import debounce from "../utils/debounce";
+import withSLP from "../utils/withSLP";
+import Text from "antd/lib/typography/Text";
+import { getBCHBalanceFromUTXO } from "../utils/sendBch";
 
 const InputGroup = Input.Group;
 const { Meta } = Card;
@@ -57,20 +60,28 @@ const StyledStat = styled.div`
   .ant-badge sup {
     background: #fbfcfd;
     color: rgba(255, 255, 255, 0.65);
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.35);
   }
 `;
 
-const PayDividends = ({ token, onClose }) => {
+const PayDividends = ({ SLP, token, onClose }) => {
   const ContextValue = React.useContext(WalletContext);
   const { wallet, tokens, balances } = ContextValue;
   const [formData, setFormData] = useState({
     dirty: true,
-    value: 0,
+    value: "",
     tokenId: token.tokenId
   });
   const [loading, setLoading] = useState(false);
-  const [stats, setStats] = useState({ tokens: 0, holders: 0, eligibles: 0 });
+  const [stats, setStats] = useState({ tokens: 0, holders: 0, eligibles: 0, txFee: 0 });
 
+  const balanceUTXO = balances.balanceUTXO;
+
+  const submitEnabled =
+    formData.tokenId &&
+    formData.value &&
+    Number(formData.value) > DUST &&
+    (balanceUTXO - Number(formData.value) - Number(stats.txFee)).toFixed(8) >= 0;
   useEffect(() => {
     setLoading(true);
     getBalancesForToken(token.tokenId)
@@ -79,7 +90,8 @@ const PayDividends = ({ token, onClose }) => {
           ...stats,
           tokens: balancesForToken.totalBalance,
           holders: balancesForToken.length ? balancesForToken.length - 1 : 0,
-          balances: balancesForToken
+          balances: balancesForToken,
+          txFee: 0
         });
       })
       .finally(() => setLoading(false));
@@ -89,12 +101,13 @@ const PayDividends = ({ token, onClose }) => {
     debounce(value => {
       if (stats.balances && value && !Number.isNaN(value)) {
         setLoading(true);
-        getElegibleAddresses(wallet, stats.balances, value).then(({ addresses }) => {
-          setStats({ ...stats, eligibles: addresses.length });
-          setLoading(false);
-        });
+        getElegibleAddresses(wallet, stats.balances, value)
+          .then(({ addresses, txFee }) => {
+            setStats({ ...stats, eligibles: addresses.length, txFee });
+          })
+          .finally(() => setLoading(false));
       } else {
-        setStats({ ...stats, eligibles: 0 });
+        setStats({ ...stats, eligibles: 0, txFee: 0 });
       }
     }),
     [wallet, stats]
@@ -106,7 +119,7 @@ const PayDividends = ({ token, onClose }) => {
       dirty: false
     });
 
-    if (!formData.tokenId || !formData.value || Number(formData.value) < DUST) {
+    if (!submitEnabled) {
       return;
     }
 
@@ -156,7 +169,7 @@ const PayDividends = ({ token, onClose }) => {
       } else if (/Insufficient funds/.test(e.message)) {
         message = "Insufficient funds.";
       } else {
-        message = "Service unavailable, try again later";
+        message = e.error || e.message;
       }
 
       notification.error({
@@ -175,6 +188,24 @@ const PayDividends = ({ token, onClose }) => {
     if (name === "value") {
       calcElegibles(value);
     }
+  };
+
+  const onMaxDividend = async () => {
+    setLoading(true);
+
+    try {
+      const bal = await getBCHBalanceFromUTXO(wallet);
+      // const { addresses, txFee } = await getElegibleAddresses(wallet, stats.balances, balanceUTXO);
+      // const value = (balanceUTXO - txFee - DUST).toFixed(8);
+      const { txFee } = await getElegibleAddresses(wallet, stats.balances, bal);
+      let value = bal - txFee - DUST >= 0 ? (bal - txFee - DUST).toFixed(8) : 0;
+      setFormData({
+        ...formData,
+        value: value
+      });
+      await calcElegibles(value);
+      setLoading(false);
+    } catch (err) {}
   };
 
   return (
@@ -222,7 +253,7 @@ const PayDividends = ({ token, onClose }) => {
                           <Icon type="gold" />
                           &nbsp;
                           <Badge
-                            count={parseInt(stats.tokens)}
+                            count={new Intl.NumberFormat("en-US").format(stats.tokens)}
                             overflowCount={Number.MAX_VALUE}
                             showZero
                           />
@@ -236,7 +267,11 @@ const PayDividends = ({ token, onClose }) => {
                         <StyledStat>
                           <Icon type="team" />
                           &nbsp;
-                          <Badge count={stats.holders} overflowCount={Number.MAX_VALUE} showZero />
+                          <Badge
+                            count={new Intl.NumberFormat("en-US").format(stats.holders)}
+                            overflowCount={Number.MAX_VALUE}
+                            showZero
+                          />
                           <Paragraph>Holders</Paragraph>
                         </StyledStat>
                       </Tooltip>
@@ -248,7 +283,7 @@ const PayDividends = ({ token, onClose }) => {
                           <Icon type="usergroup-add" />
                           &nbsp;
                           <Badge
-                            count={stats.eligibles}
+                            count={new Intl.NumberFormat("en-US").format(stats.eligibles)}
                             overflowCount={Number.MAX_VALUE}
                             showZero
                           />
@@ -259,8 +294,9 @@ const PayDividends = ({ token, onClose }) => {
                   </Row>
                   <Row type="flex">
                     <Col span={24}>
-                      <Form style={{ width: "auto" }}>
+                      <Form style={{ width: "auto", marginBottom: "1em" }} noValidate>
                         <Form.Item
+                          style={{ margin: 0 }}
                           validateStatus={
                             !formData.dirty && Number(formData.value) <= 0 ? "error" : ""
                           }
@@ -271,21 +307,59 @@ const PayDividends = ({ token, onClose }) => {
                           }
                         >
                           <Input
-                            prefix={<Icon type="block" />}
+                            prefix={<Icon type="dollar" />}
+                            step="0.00000001"
                             suffix="BCH"
                             placeholder="e.g: 0.01"
                             name="value"
                             onChange={e => handleChange(e)}
                             required
-                            type="number"
+                            value={formData.value}
+                            addonAfter={
+                              <Button onClick={onMaxDividend}>
+                                <Icon type="dollar" />
+                                max
+                              </Button>
+                            }
                           />
                         </Form.Item>
                       </Form>
                     </Col>
+                    <Col>
+                      <Tooltip title="Bitcoincash balance">
+                        <StyledStat>
+                          <Icon type="dollar" />
+                          &nbsp;
+                          <Badge
+                            count={balanceUTXO.toFixed(8) || "0"}
+                            overflowCount={Number.MAX_VALUE}
+                            showZero
+                          />
+                          <Paragraph>Balance</Paragraph>
+                        </StyledStat>
+                      </Tooltip>
+                    </Col>
+                    &nbsp; &nbsp; &nbsp;
+                    <Col>
+                      <Tooltip title="Transaction fee">
+                        <StyledStat>
+                          <Icon type="minus-circle" />
+                          &nbsp;
+                          <Badge
+                            count={stats.txFee || "0"}
+                            overflowCount={Number.MAX_VALUE}
+                            showZero
+                          />
+                          <Paragraph>Fee</Paragraph>
+                        </StyledStat>
+                      </Tooltip>
+                    </Col>
                     <br />
                     <br />
                     <Col span={24}>
-                      <Button onClick={() => submit()}>Pay Dividends</Button>
+                      <Button disabled={!submitEnabled} onClick={() => submit()}>
+                        Pay Dividends
+                      </Button>
                     </Col>
                   </Row>
                 </>
