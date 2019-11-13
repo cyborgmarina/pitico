@@ -100,6 +100,58 @@ export default () => {
 
   return (
     <Row type="flex" gutter={8} style={{ position: "relative" }}>
+      <Col style={{ marginTop: "8px" }} lg={7} span={24}>
+        <EnhancedCard key={1} bordered={false}>
+          <Meta
+            avatar={
+              <Img
+                src="https://unstoppable.cash/wp-content/uploads/2018/03/12-bitcoin-cash-square-crop-small-GRN.png"
+                width="60"
+                height="60"
+                // style={{
+                //   marginTop: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
+                //     ? "-10px"
+                //     : null
+                // }}
+                // unloader={<Jdenticon size="64" value={token.tokenId} />}
+              />
+            }
+            title={
+              <div
+                style={{
+                  float: "right"
+                  // marginLeft: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
+                  //   ? "60px"
+                  //   : null
+                }}
+              >
+                {/* <span>{token.balance} </span> */}
+                <div style={{ fontSize: "16px", fontWeight: "bold", color: "rgb(62, 63, 66)" }}>
+                  BCH
+                </div>
+                <div style={{ color: "rgb(158, 160, 165)", fontSize: "12px", fontWeight: "500" }}>
+                  Bitcoin Cash
+                </div>
+              </div>
+            }
+            description={
+              <div>
+                {/* <div>{token.info && token.info.name}</div> */}
+                <div
+                  style={{
+                    color: "rgb(62, 63, 66)",
+                    fontSize: "16px",
+                    fontWeight: "bold"
+                    // marginLeft: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
+                    //   ? "130px"
+                    //   : "100px"
+                  }}
+                ></div>
+              </div>
+            }
+          />
+        </EnhancedCard>
+      </Col>
       {loading
         ? Array.from({ length: 20 }).map((v, i) => (
             <Col style={{ marginTop: "8px" }} lg={7} span={24}>
