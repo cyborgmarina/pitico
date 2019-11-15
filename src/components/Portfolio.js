@@ -87,7 +87,7 @@ const PlaneIcon = props => <Icon component={plane} {...props} />;
 
 export default () => {
   const ContextValue = React.useContext(WalletContext);
-  const { wallet, tokens, loading } = ContextValue;
+  const { wallet, tokens, loading, balances } = ContextValue;
 
   const [selectedToken, setSelectedToken] = useState(null);
   const [action, setAction] = useState(null);
@@ -102,7 +102,7 @@ export default () => {
     <Row type="flex" gutter={8} style={{ position: "relative" }}>
       {!loading && wallet && (
         <Col style={{ marginTop: "8px" }} lg={7} span={24}>
-          <EnhancedCard key={1} bordered={false}>
+          <EnhancedCard style={{ marginTop: "8px", textAlign: "left" }}>
             <Meta
               avatar={
                 <Img
@@ -130,7 +130,14 @@ export default () => {
                   <div style={{ fontSize: "16px", fontWeight: "bold", color: "rgb(62, 63, 66)" }}>
                     BCH
                   </div>
-                  <div style={{ color: "rgb(158, 160, 165)", fontSize: "12px", fontWeight: "500" }}>
+                  <div
+                    style={{
+                      color: "rgb(158, 160, 165)",
+                      fontSize: "12px",
+                      fontWeight: "500",
+                      whiteSpace: "nowrap"
+                    }}
+                  >
                     Bitcoin Cash
                   </div>
                 </div>
@@ -147,7 +154,9 @@ export default () => {
                       //   ? "130px"
                       //   : "100px"
                     }}
-                  ></div>
+                  >
+                    {balances.balance + balances.unconfirmedBalance || "0"}
+                  </div>
                 </div>
               }
             />
@@ -295,7 +304,12 @@ export default () => {
                         {token.info && token.info.symbol.toUpperCase()}
                       </div>
                       <div
-                        style={{ color: "rgb(158, 160, 165)", fontSize: "12px", fontWeight: "500" }}
+                        style={{
+                          color: "rgb(158, 160, 165)",
+                          fontSize: "12px",
+                          fontWeight: "500",
+                          whiteSpace: "nowrap"
+                        }}
                       >
                         {token.info && token.info.name}
                       </div>
