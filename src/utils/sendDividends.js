@@ -34,7 +34,9 @@ export const getElegibleAddresses = withSLP(async (SLP, wallet, balances, value)
 
     const newElegibleBalances = elegibleBalances.filter(elegibleBalance => {
       // const address = Utils.toCashAddress(elegibleBalance.slpAddress);
-      const elegibleValue = (elegibleBalance.tokenBalance / tokenBalanceSum) * value;
+      const elegibleValue = Number(
+        ((elegibleBalance.tokenBalance / tokenBalanceSum) * value).toFixed(8)
+      );
       if (elegibleValue > DUST) {
         addresses.push(Utils.toCashAddress(elegibleBalance.slpAddress));
         values.push(elegibleValue);
