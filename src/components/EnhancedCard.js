@@ -69,6 +69,10 @@ const StyledEnhancedCard = styled(Card)`
 
 export const StyledModal = styled(Modal)`
   ${StyledEnhancedCard} {
+    .ant-list-item-meta-description > :first-child {
+      display: none;
+    }
+
     ${props =>
       props.visible
         ? `
