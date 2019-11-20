@@ -101,7 +101,7 @@ export default () => {
   return (
     <Row type="flex" gutter={8} style={{ position: "relative" }}>
       {!loading && wallet && (
-        <Col style={{ marginTop: "8px" }} lg={7} span={24}>
+        <Col style={{ marginTop: "8px" }} xl={8} lg={12} span={24}>
           <EnhancedCard style={{ marginTop: "8px", textAlign: "left" }}>
             <Meta
               avatar={
@@ -165,7 +165,7 @@ export default () => {
       )}
       {loading
         ? Array.from({ length: 20 }).map((v, i) => (
-            <Col style={{ marginTop: "8px" }} lg={7} span={24}>
+            <Col style={{ marginTop: "8px" }} xl={8} lg={12} span={24}>
               <EnhancedCard loading key={i} bordered={false}>
                 <Meta
                   avatar={
@@ -180,7 +180,7 @@ export default () => {
         : null}
       {tokens.length
         ? tokens.map(token => (
-            <Col style={{ marginTop: "8px" }} lg={7} span={24}>
+            <Col style={{ marginTop: "8px" }} xl={8} lg={12} sm={12} span={24}>
               <EnhancedCard
                 loading={!token.info}
                 expand={selectedToken && token.tokenId === selectedToken.tokenId}
