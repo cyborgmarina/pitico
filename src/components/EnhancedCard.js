@@ -39,7 +39,8 @@ const StyledEnhancedCard = styled(Card)`
 
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.04);
   height: 173px;
-  width: 321px;
+  max-width: 321px;
+  width: auto;
   cursor: pointer;
   will-change: width, height, box-shadow;
   transition: all 300ms ease-in-out;
