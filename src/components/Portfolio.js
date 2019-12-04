@@ -99,24 +99,14 @@ export default () => {
                   src="https://unstoppable.cash/wp-content/uploads/2018/03/12-bitcoin-cash-square-crop-small-GRN.png"
                   width="60"
                   height="60"
-                  // style={{
-                  //   marginTop: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
-                  //     ? "-10px"
-                  //     : null
-                  // }}
-                  // unloader={<Jdenticon size="64" value={token.tokenId} />}
                 />
               }
               title={
                 <div
                   style={{
                     float: "right"
-                    // marginLeft: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
-                    //   ? "60px"
-                    //   : null
                   }}
                 >
-                  {/* <span>{token.balance} </span> */}
                   <div style={{ fontSize: "16px", fontWeight: "bold", color: "rgb(62, 63, 66)" }}>
                     BCH
                   </div>
@@ -134,15 +124,11 @@ export default () => {
               }
               description={
                 <div>
-                  {/* <div>{token.info && token.info.name}</div> */}
                   <div
                     style={{
                       color: "rgb(62, 63, 66)",
                       fontSize: "16px",
                       fontWeight: "bold"
-                      // marginLeft: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
-                      //   ? "130px"
-                      //   : "100px"
                     }}
                   >
                     {balances.balance + balances.unconfirmedBalance || "0"}
@@ -186,7 +172,6 @@ export default () => {
                   <span onClick={() => setAction(action !== "transfer" ? "transfer" : null)}>
                     <PlaneIcon />
                     Send
-                    {/* <span style={{marginTop:'-10px', transform:'tranlate(0, 20px)'}}>Send</span> */}
                   </span>,
                   token.info && token.info.hasBaton && (
                     <span onClick={() => setAction(action !== "mint" ? "mint" : null)}>
@@ -270,24 +255,14 @@ export default () => {
                           seed={token.tokenId}
                         />
                       }
-                      // style={{
-                      //   marginTop: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
-                      //     ? "-10px"
-                      //     : null
-                      // }}
-                      // unloader={<Jdenticon size="64" value={token.tokenId} />}
                     />
                   }
                   title={
                     <div
                       style={{
                         float: "right"
-                        // marginLeft: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
-                        //   ? "60px"
-                        //   : null
                       }}
                     >
-                      {/* <span>{token.balance} </span> */}
                       <div
                         style={{ fontSize: "16px", fontWeight: "bold", color: "rgb(62, 63, 66)" }}
                       >
@@ -307,15 +282,11 @@ export default () => {
                   }
                   description={
                     <div>
-                      {/* <div>{token.info && token.info.name}</div> */}
                       <div
                         style={{
                           color: "rgb(62, 63, 66)",
                           fontSize: "16px",
                           fontWeight: "bold"
-                          // marginLeft: imageExists(`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`)
-                          //   ? "130px"
-                          //   : "100px"
                         }}
                       >
                         {token.balance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}

@@ -7,15 +7,9 @@
   font-family: "Khula", sans-serif;
   background-color: #fbfbfd;
 }
-/* #131720 */
 .App-logo {
   width: 100%;
   display: block;
-  /* min-width: 90px; */
-  /* margin-left: 24px;
-  margin-right: 53px;
-  margin-top: 15px;
-  margin-bottom: 46px; */
 }
 
 .logo img {
@@ -25,10 +19,8 @@
   padding-left: 24px;
   padding-right: 34px;
   padding-top: 24px;
-  /* margin-bottom: 46px;  */
 }
 .ant-list-item-meta .ant-list-item-meta-content {
-  /* margin-left: -64px; */
   display: flex;
   justify-content: flex-end;
 }
@@ -67,12 +59,6 @@
   font-weight: 500 !important;
 }
 
-.ant-layout-sider {
-  /* flex: 0 0 256px !important;
-  max-width: 256px !important; */
-  /* min-width: 256px !important; */
-  /* width: 256px !important; */
-}
 .ant-card-actions > li > span:hover,
 .ant-btn:hover,
 .ant-btn:focus {
@@ -106,17 +92,10 @@
   overflow: visible !important;
 }
 
-.ant-modal-body .ant-card-actions {
-  /* border-top: 10px solid rgb(234, 237, 243); */
-}
-
 .ant-radio-group-solid .ant-radio-button-wrapper {
   padding-top: 10px;
   padding-left: 20px;
   margin-top: 0px;
-  /* border: 1px solid rgb(0, 0, 0) !important;
-  box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.81) !important;
-  background: #10131b !important; */
 }
 
 .ant-radio-group-solid .ant-radio-button-wrapper-checked {
@@ -137,25 +116,15 @@
   height: 40px;
 }
 
-/* .ant-radio-group-solid .ant-radio-button-wrapper-checked:not :hover > span{
-  color: red !important;
-
-} */
-
 .ant-radio-group-solid .ant-radio-button-wrapper-checked {
   background: #2b3240 !important;
 }
-
-/* background: #2B3240;
-10131B */
 
 .ant-radio-group.ant-radio-group-solid.ant-radio-group-small {
   font-size: 12px !important;
   font-weight: 600 !important;
   vertical-align: middle;
   border-radius: 19.5px;
-  /* border: 1px solid red;
-  background-color: #10121a; */
   overflow: auto;
   border: 1px solid rgb(0, 0, 0) !important;
   box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.81) !important;
@@ -186,10 +155,6 @@ input.ant-input {
   border-bottom-right-radius: 8px;
   box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.35);
 }
-
-/* .ant-card-actions:hover {
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.35);
-} */
 
 .ant-input-group-addon {
   background-color: #f4f4f4;
@@ -271,4 +236,8 @@ input.ant-input {
 
 .ant-popover-inner-content {
   color: white;
+}
+
+.ant-modal-body .ant-card {
+  max-width: 100%;
 }
