@@ -78,6 +78,7 @@ export default () => {
       <Row justify="center" type="flex">
         <Col lg={8} span={24}>
           <Card
+            style={{ borderRadius: "8px" }}
             title={
               <h2>
                 <Icon type="tool" theme="filled" /> Configure

@@ -7,6 +7,7 @@ export default () => {
     <Row justify="center" type="flex">
       <Col lg={8} span={24}>
         <Card
+          style={{ borderRadius: "8px", boxShadow: "0px 0px 40px 0px rgba(0,0,0,0.35)" }}
           className="audit"
           title={
             <h2>
