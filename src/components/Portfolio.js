@@ -264,7 +264,11 @@ export default () => {
                       }}
                     >
                       <div
-                        style={{ fontSize: "16px", fontWeight: "bold", color: "rgb(62, 63, 66)" }}
+                        style={{
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          color: "rgb(62, 63, 66)"
+                        }}
                       >
                         {token.info && token.info.symbol.toUpperCase()}
                       </div>
@@ -273,7 +277,10 @@ export default () => {
                           color: "rgb(158, 160, 165)",
                           fontSize: "12px",
                           fontWeight: "500",
-                          whiteSpace: "nowrap"
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "210px"
                         }}
                       >
                         {token.info && token.info.name}
