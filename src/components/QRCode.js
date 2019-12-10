@@ -12,6 +12,18 @@ export const StyledRawQRCode = styled(RawQRCode)`
   cursor: pointer;
 `;
 
+const AddrHolder = styled.textarea`
+  font-size: 12px;
+  line-height: 14px;
+  resize: none;
+  width: 209px;
+  border-radius: 5px;
+  margin-top: 12px;
+  color: black;
+  padding: 10px 16px 0px 16px;
+  height: 50px;
+`;
+
 export const QRCode = ({ address, size = 210, onClick = () => null, ...otherProps }) => {
   const [visible, setVisible] = useState(false);
 
@@ -21,9 +33,13 @@ export const QRCode = ({ address, size = 210, onClick = () => null, ...otherProp
     onClick(evt);
   };
 
+  const handleOnCopy = () => {
+    document.getElementById("copyTxtArea").select();
+  };
+
   return (
     <Popover content="copied!" visible={visible}>
-      <CopyToClipboard style={{ overflow: "auto" }} text={address}>
+      <CopyToClipboard style={{ overflow: "auto" }} text={address} onCopy={handleOnCopy}>
         {/* <RawQRCode onClick={handleOnClick} value={address || ""} size={size} {...otherProps} /> */}
         <div style={{ overflow: "auto" }} onClick={handleOnClick}>
           <BrandesQRCode
@@ -39,6 +55,7 @@ export const QRCode = ({ address, size = 210, onClick = () => null, ...otherProp
           />
         </div>
       </CopyToClipboard>
+      <AddrHolder id="copyTxtArea" rows="2" readonly value={address} />
     </Popover>
   );
 };

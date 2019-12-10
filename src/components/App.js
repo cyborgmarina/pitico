@@ -34,10 +34,10 @@ const App = () => {
 
   const handleChangeAddress = e => {
     const radioButton = radio.current;
-    console.log("radioButton :", radioButton);
+    //console.log("radioButton :", radioButton);
     // radioButton.onRadioChange("cashAddress");
     // radioButton.state.value = "cashAddress";
-    console.log("e.target", e.target);
+    //console.log("e.target", e.target);
     setAddress(address === "cashAddress" ? "slpAddress" : "cashAddress");
   };
 
@@ -128,6 +128,7 @@ const App = () => {
                         address={address === "slpAddress" ? wallet.slpAddress : wallet.cashAddress}
                       />
                     </div>
+
                     <Radio.Group
                       defaultValue="slpAddress"
                       // onChange={e => handleChangeAddress(e)}

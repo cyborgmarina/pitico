@@ -5,7 +5,19 @@ import { withRouter } from "react-router-dom";
 import { ButtonQR } from "badger-components-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { WalletContext } from "../utils/context";
-import { Input, Button, notification, Spin, Icon, Row, Col, Card, Form, Typography } from "antd";
+import {
+  Input,
+  Button,
+  notification,
+  Spin,
+  Icon,
+  Row,
+  Col,
+  Card,
+  Form,
+  Typography,
+  InputNumber
+} from "antd";
 import createToken from "../utils/broadcastTransaction";
 import { QRCode } from "./QRCode";
 
@@ -162,6 +174,7 @@ const Create = ({ history }) => {
                 help={!data.dirty && Number(data.amount) <= 0 ? "Should be greater than 0" : ""}
               >
                 <Input
+                  style={{ padding: "0px 20px" }}
                   placeholder="quantity"
                   name="amount"
                   onChange={e => handleChange(e)}
