@@ -5,19 +5,7 @@ import { withRouter } from "react-router-dom";
 import { ButtonQR } from "badger-components-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { WalletContext } from "../utils/context";
-import {
-  Input,
-  Button,
-  notification,
-  Spin,
-  Icon,
-  Row,
-  Col,
-  Card,
-  Form,
-  Typography,
-  InputNumber
-} from "antd";
+import { Input, Button, notification, Spin, Icon, Row, Col, Card, Form, Typography } from "antd";
 import createToken from "../utils/broadcastTransaction";
 import { QRCode } from "./QRCode";
 
