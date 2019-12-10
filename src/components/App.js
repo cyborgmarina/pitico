@@ -114,11 +114,7 @@ const App = () => {
               </Menu.ItemGroup>
 
               {wallet ? (
-                <Menu.ItemGroup
-                  // style={{ position: "absolute", bottom: "43px" }}
-                  key="menu-receive"
-                  title="RECEIVE"
-                >
+                <Menu.ItemGroup key="menu-receive" title="RECEIVE">
                   <div
                     style={{
                       marginLeft: "20px",
