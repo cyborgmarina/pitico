@@ -162,6 +162,7 @@ const Create = ({ history }) => {
                 help={!data.dirty && Number(data.amount) <= 0 ? "Should be greater than 0" : ""}
               >
                 <Input
+                  style={{ padding: "0px 20px" }}
                   placeholder="quantity"
                   name="amount"
                   onChange={e => handleChange(e)}
