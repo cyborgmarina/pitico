@@ -27,10 +27,20 @@ import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import isPiticoTokenHolder from "../utils/isPiticoTokenHolder";
 import debounce from "../utils/debounce";
+import withSLP from "../utils/withSLP";
+import Text from "antd/lib/typography/Text";
+import { getBCHBalanceFromUTXO } from "../utils/sendBch";
+import { payInvoice } from "bitcoin-wallet-api";
 
 const InputGroup = Input.Group;
 const { Meta } = Card;
 const { Option } = Select;
+
+const StyledPayDividends = styled.div`
+  * {
+    color: rgb(62, 63, 66) !important;
+  }
+`;
 
 const StyledButtonWrapper = styled.div`
   display: flex;
@@ -49,41 +59,42 @@ const StyledStat = styled.div`
   font-size: 12px;
 
   .ant-badge sup {
-    background-color: #3b3b4d;
+    background: #fbfcfd;
     color: rgba(255, 255, 255, 0.65);
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.35);
   }
 `;
 
-const PayDividends = ({ token, onClose }) => {
-  const ContextValue = React.useContext(WalletContext);
-  const { wallet, tokens, balances } = ContextValue;
+const PayDividends = () => {
   const [formData, setFormData] = useState({
     dirty: true,
-    value: 0,
-    tokenId: token.tokenId
+    value: "",
+    tokenId: ""
   });
   const [loading, setLoading] = useState(false);
-  const [stats, setStats] = useState({ tokens: 0, holders: 0, eligibles: 0 });
+  const [stats, setStats] = useState({ tokens: 0, holders: 0, eligibles: 0, txFee: 0 });
 
+  const submitEnabled = formData.tokenId && formData.value && Number(formData.value) > DUST;
   useEffect(() => {
-    setLoading(true);
-    getBalancesForToken(token.tokenId)
-      .then(balancesForToken => {
-        setStats({
-          ...stats,
-          tokens: balancesForToken.totalBalance,
-          holders: balancesForToken.length ? balancesForToken.length - 1 : 0,
-          balances: balancesForToken
-        });
-      })
-      .finally(() => setLoading(false));
+    // setLoading(true);
+    // getBalancesForToken(token.tokenId)
+    //   .then(balancesForToken => {
+    //     setStats({
+    //       ...stats,
+    //       tokens: balancesForToken.totalBalance,
+    //       holders: balancesForToken.length ? balancesForToken.length - 1 : 0,
+    //       balances: balancesForToken,
+    //       txFee: 0
+    //     });
+    //   })
+    //   .finally(() => setLoading(false));
   }, []);
 
   const calcElegibles = useCallback(
     debounce(value => {
       if (stats.balances && value && !Number.isNaN(value)) {
         setLoading(true);
-        getElegibleAddresses(wallet, stats.balances, value).then(({ addresses }) => {
+        getElegibleAddresses(stats.balances, value).then(({ addresses }) => {
           setStats({ ...stats, eligibles: addresses.length });
           setLoading(false);
         });
@@ -91,7 +102,7 @@ const PayDividends = ({ token, onClose }) => {
         setStats({ ...stats, eligibles: 0 });
       }
     }),
-    [wallet, stats]
+    [stats]
   );
 
   async function submit() {
@@ -100,42 +111,36 @@ const PayDividends = ({ token, onClose }) => {
       dirty: false
     });
 
-    if (!formData.tokenId || !formData.value || Number(formData.value) < DUST) {
+    if (!submitEnabled) {
       return;
     }
 
     setLoading(true);
     const { value, tokenId } = formData;
+    const { eligibles } = stats;
     try {
-      const link = await sendDividends(wallet, {
+      const url = await sendDividends({
         value,
-        tokenId: token.tokenId
+        tokenId,
+        memo: `Bitcoincom Mint ${value}BCH in dividends to ${eligibles} addresses holding the tokenId ${tokenId}`
       });
 
-      if (!link) {
-        setLoading(false);
-
-        return notification.info({
-          message: "Info",
-          description: (
-            <Paragraph>No token holder with sufficient balance to receive dividends.</Paragraph>
-          ),
-          duration: 0
-        });
+      if (!url) {
+        throw "Unknown error";
       }
 
+      const paymentMemo = await payInvoice({ url }).then(({ memo }) => memo);
       notification.success({
         message: "Success",
         description: (
-          <a href={link} target="_blank">
-            <Paragraph>Transaction successful. Click or tap here for more details</Paragraph>
+          <a href={url} target="_blank">
+            <Paragraph>{paymentMemo}</Paragraph>
           </a>
         ),
         duration: 0
       });
 
       setLoading(false);
-      onClose();
     } catch (e) {
       let message;
 
@@ -150,7 +155,7 @@ const PayDividends = ({ token, onClose }) => {
       } else if (/Insufficient funds/.test(e.message)) {
         message = "Insufficient funds.";
       } else {
-        message = "Service unavailable, try again later";
+        message = e.error || e.message;
       }
 
       notification.error({
@@ -171,41 +176,39 @@ const PayDividends = ({ token, onClose }) => {
     }
   };
 
+  const handleTokenIdChange = e => {
+    const { value, name } = e.target;
+    setFormData(p => ({ ...p, [name]: value }));
+    setLoading(true);
+    getBalancesForToken(value)
+      .then(balancesForToken => {
+        setLoading(false);
+        setStats({
+          ...stats,
+          tokens: balancesForToken.totalBalance,
+          holders: balancesForToken.length ? balancesForToken.length - 1 : 0,
+          balances: balancesForToken,
+          txFee: 0
+        });
+      })
+      .catch(err => {})
+      .finally(() => setLoading(false));
+  };
+
   return (
-    <Row type="flex" className="dividends">
-      <Col span={24}>
-        <Spin spinning={loading}>
-          <Card
-            title={
-              <h2>
-                <Icon type="dollar" /> Pay Dividends
-              </h2>
-            }
-            bordered={false}
-          >
-            {!isPiticoTokenHolder(tokens) ? (
-              <Alert
-                message={
-                  <span>
-                    <Paragraph>
-                      <Icon type="warning" /> EXPERIMENTAL
-                    </Paragraph>
-                    <Paragraph>
-                      This is an experimental feature, available only to Pitico Cash token holders.
-                    </Paragraph>
-                    <Paragraph>
-                      <a href="https://t.me/piticocash" target="_blank">
-                        Join our Telegram Group to get your $PTCH.
-                      </a>
-                    </Paragraph>
-                  </span>
-                }
-                type="warning"
-                closable={false}
-              />
-            ) : null}
-            <br />
-            {isPiticoTokenHolder(tokens) ? (
+    <StyledPayDividends>
+      <Row type="flex" className="dividends">
+        <Col span={24}>
+          <Spin spinning={loading}>
+            <Card
+              title={
+                <h2>
+                  <Icon type="dollar" /> Pay Dividends
+                </h2>
+              }
+              bordered={false}
+            >
+              <br />
               <>
                 <Row type="flex">
                   <Col>
@@ -214,7 +217,7 @@ const PayDividends = ({ token, onClose }) => {
                         <Icon type="gold" />
                         &nbsp;
                         <Badge
-                          count={parseInt(stats.tokens)}
+                          count={new Intl.NumberFormat("en-US").format(stats.tokens)}
                           overflowCount={Number.MAX_VALUE}
                           showZero
                         />
@@ -228,7 +231,11 @@ const PayDividends = ({ token, onClose }) => {
                       <StyledStat>
                         <Icon type="team" />
                         &nbsp;
-                        <Badge count={stats.holders} overflowCount={Number.MAX_VALUE} showZero />
+                        <Badge
+                          count={new Intl.NumberFormat("en-US").format(stats.holders)}
+                          overflowCount={Number.MAX_VALUE}
+                          showZero
+                        />
                         <Paragraph>Holders</Paragraph>
                       </StyledStat>
                     </Tooltip>
@@ -239,7 +246,11 @@ const PayDividends = ({ token, onClose }) => {
                       <StyledStat>
                         <Icon type="usergroup-add" />
                         &nbsp;
-                        <Badge count={stats.eligibles} overflowCount={Number.MAX_VALUE} showZero />
+                        <Badge
+                          count={new Intl.NumberFormat("en-US").format(stats.eligibles)}
+                          overflowCount={Number.MAX_VALUE}
+                          showZero
+                        />
                         <Paragraph>Eligibles</Paragraph>
                       </StyledStat>
                     </Tooltip>
@@ -247,8 +258,19 @@ const PayDividends = ({ token, onClose }) => {
                 </Row>
                 <Row type="flex">
                   <Col span={24}>
-                    <Form style={{ width: "auto" }}>
+                    <Form style={{ width: "auto", marginBottom: "1em" }} noValidate>
+                      <Form.Item style={{ margin: 0 }}>
+                        <Input
+                          placeholder="token id (txid of token genesis transaction)"
+                          name="tokenId"
+                          onChange={e => handleTokenIdChange(e)}
+                          required
+                          value={formData.tokenId}
+                        />
+                      </Form.Item>
+                      <br />
                       <Form.Item
+                        style={{ margin: 0 }}
                         validateStatus={
                           !formData.dirty && Number(formData.value) <= 0 ? "error" : ""
                         }
@@ -259,29 +281,31 @@ const PayDividends = ({ token, onClose }) => {
                         }
                       >
                         <Input
-                          prefix={<Icon type="block" />}
+                          prefix={<Icon type="dollar" />}
+                          step="0.00000001"
                           suffix="BCH"
                           placeholder="e.g: 0.01"
                           name="value"
                           onChange={e => handleChange(e)}
                           required
-                          type="number"
+                          value={formData.value}
                         />
                       </Form.Item>
                     </Form>
                   </Col>
                   <br />
-                  <br />
                   <Col span={24}>
-                    <Button onClick={() => submit()}>Pay Dividends</Button>
+                    <Button disabled={!submitEnabled} onClick={() => submit()}>
+                      Pay Dividends
+                    </Button>
                   </Col>
                 </Row>
               </>
-            ) : null}
-          </Card>
-        </Spin>
-      </Col>
-    </Row>
+            </Card>
+          </Spin>
+        </Col>
+      </Row>
+    </StyledPayDividends>
   );
 };
 

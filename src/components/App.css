@@ -1,16 +1,39 @@
 @import "~antd/dist/antd.less";
-@import url("https://fonts.googleapis.com/css?family=Roboto+Mono&display=swap&.css");
+@import "~@fortawesome/fontawesome-free/css/all.css";
+@import url("https://fonts.googleapis.com/css?family=Khula&display=swap&.css");
 
 .App {
   text-align: center;
-  font-family: "Roboto Mono", monospace;
-  background-color: #171717;
+  font-family: "Khula", sans-serif;
+  background-color: #fbfbfd;
 }
-
 .App-logo {
-  height: 40vmin;
+  width: 100%;
+  display: block;
 }
 
+.logo img {
+  width: 100%;
+  min-width: 193px;
+  display: block;
+  padding-left: 24px;
+  padding-right: 34px;
+  padding-top: 24px;
+}
+.ant-list-item-meta .ant-list-item-meta-content {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#borderedQRCode {
+  border: 20px solid #fff;
+  border-radius: 8px;
+}
+
+#react-qrcode-logo {
+  border: 10px solid #fff;
+  border-radius: 8px;
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -25,41 +48,159 @@
 .App-link {
   color: #09d3ac;
 }
+.ant-menu-item-group-title {
+  color: rgba(255, 255, 255, 0.45) !important;
+  padding-left: 30px;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+}
+
+.ant-menu-item > span {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
 .ant-card-actions > li > span:hover,
 .ant-btn:hover,
 .ant-btn:focus {
   color: #6e6e6e;
   transition: color 0.3s;
+  background-color: white;
 }
 
-.ant-radio-group-solid .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-  background: white;
+.ant-card-actions > li {
+  color: #3e3f42;
+}
+.anticon {
+  color: #3e3f42;
+}
+.ant-list-item-meta-description,
+.ant-list-item-meta-title {
+  color: #3e3f42;
+}
+
+.ant-list-item-meta-description > :first-child {
+  right: 20px !important;
+  position: absolute;
+}
+
+.ant-modal-body .ant-list-item-meta {
+  height: 85px;
+  width: 85px;
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  overflow: visible !important;
+}
+
+.ant-radio-group-solid .ant-radio-button-wrapper {
+  padding-top: 10px;
+  padding-left: 20px;
+  margin-top: 0px;
+}
+
+.ant-radio-group-solid .ant-radio-button-wrapper-checked {
+  border: 1px solid rgb(0, 0, 0) !important;
+  box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.81) !important;
+}
+.identicon {
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  margin-top: -75px;
+  margin-left: -75px;
+  margin-bottom: 20px;
+  box-shadow: 1px 1px 2px 1px #444;
+}
+.ant-list-item-meta {
+  width: 40px;
+  height: 40px;
+}
+
+.ant-radio-group-solid .ant-radio-button-wrapper-checked {
+  background: #2b3240 !important;
+}
+
+.ant-radio-group.ant-radio-group-solid.ant-radio-group-small {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  vertical-align: middle;
+  border-radius: 19.5px;
+  overflow: auto;
+  border: 1px solid rgb(0, 0, 0) !important;
+  box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.81) !important;
+  background: #10131b !important;
+  margin-top: 30px;
+  cursor: pointer;
 }
 
 input.ant-input {
-  border-radius: 0;
-}
-
-input.ant-input {
-  border-radius: 0;
+  background-color: #fff;
   padding: 20px;
+  border: 1px solid #eaedf3;
+  border-radius: 8px;
+  font-weight: bold;
+  color: rgb(62, 63, 66);
+  opacity: 1;
 }
 
-/*
-.ant-input-affix-wrapper .ant-input-prefix, .ant-input-affix-wrapper .ant-input-suffix {
-  transform: none;
-} */
+.ant-card-bordered {
+  border: 1px solid rgb(234, 237, 243);
+  border-radius: 8px;
+}
+
+.ant-card-actions {
+  border-top: 1px solid rgb(234, 237, 243);
+  border-bottom: 1px solid rgb(234, 237, 243);
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.35);
+}
+
+.ant-input-group-addon {
+  background-color: #f4f4f4;
+  border: 1px solid rgb(234, 237, 243);
+
+  * {
+    color: rgb(62, 63, 66) !important;
+  }
+}
+
+.ant-menu-item.ant-menu-item-selected > span {
+  color: #5daa7e;
+}
+
+.ant-menu-item.ant-menu-item-selected {
+  border-radius: 6px;
+  border: 0;
+  overflow: hidden;
+  margin-left: 14px !important;
+  margin-right: 14px !important;
+  text-align: left;
+  padding-left: 12px;
+}
 
 .ant-btn {
-  border-radius: 0;
+  border-radius: 8px;
+  background-color: #fff;
+  color: rgb(62, 63, 66);
+  font-weight: bold;
 }
 
 .ant-card-actions > li:not(:last-child) {
   border-right: 0;
 }
+.ant-list-item-meta-avatar > img {
+  margin-left: -12px;
+  transform: translate(0, -6px);
+}
+
+.ant-list-item-meta-avatar > svg {
+  margin-right: -70px;
+}
 
 .ant-alert-warning {
-  background-color: #30303d;
+  background-color: #20242d;
   border: 1px solid #17171f;
   border-radius: 0;
 }
@@ -92,4 +233,12 @@ input.ant-input {
   a:hover {
     color: #46464a;
   }
+}
+
+.ant-popover-inner-content {
+  color: white;
+}
+
+.ant-modal-body .ant-card {
+  max-width: 100%;
 }

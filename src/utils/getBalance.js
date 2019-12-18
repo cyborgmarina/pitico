@@ -14,7 +14,10 @@ const getBalance = async (SLP, wallet, logs = true) => {
 
     log(`Balance: ${JSON.stringify(bitcoinCashBalance, null, 4)}:`);
 
-    return bitcoinCashBalance;
+    return {
+      ...bitcoinCashBalance,
+      totalBalance: bitcoinCashBalance.balance + bitcoinCashBalance.unconfirmedBalance
+    };
   } catch (err) {
     log(`Error in getBalance: `, err.message);
     throw err;

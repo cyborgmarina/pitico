@@ -13,7 +13,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     .ant-modal-body {
-        padding: 0;
+        padding: 0 !important;
         background-color: transparent;
     }
 
@@ -21,11 +21,26 @@ const GlobalStyle = createGlobalStyle`
         top: 20px !important;
         right: 20px !important;
     }
+
+    .ant-alert {
+      background-color: #FFFFFF !important;
+      border: none !important;
+
+      * {
+        color: rgb(62, 63, 66) !important;
+      }
+    }
 `;
 
 const StyledWrapper = styled.div``;
 
 const StyledEnhancedCard = styled(Card)`
+  border-radius: 8px;
+
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.04);
+  height: 173px;
+  max-width: 321px;
+  width: auto;
   cursor: pointer;
   will-change: width, height, box-shadow;
   transition: all 300ms ease-in-out;
@@ -41,20 +56,32 @@ const StyledEnhancedCard = styled(Card)`
     white-space: nowrap;
   }
 
+  .ant-card-bordered {
+    border: 1px solid rgb(234, 237, 243);
+    border-radius: 8px;
+  }
+
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.35);
+
   &:hover {
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.35);
+    box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.35);
   }
 `;
 
 export const StyledModal = styled(Modal)`
   ${StyledEnhancedCard} {
+    .ant-list-item-meta-description > :first-child {
+      display: none;
+    }
+
     ${props =>
       props.visible
         ? `
-            // max-width: 100vw !important;
-            .ant-card-body > * {
+            .ant-card-body {
+              &> * {
                 overflow: auto;
-                max-height: 90%;
+                max-height: 85%;
+              }
             }
         `
         : ""}
@@ -77,7 +104,7 @@ export const StyledModal = styled(Modal)`
 export const StyledExpandedWrapper = styled.div`
   .ant-card-head,
   .ant-card-body {
-    padding: 0;
+    padding: 0 !important;
   }
 `;
 

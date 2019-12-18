@@ -98,7 +98,7 @@ const Transfer = ({ token, onClose }) => {
           <Card
             title={
               <h2>
-                <Icon type="interaction" theme="filled" /> Transfer
+                <Icon type="interaction" theme="filled" /> Send
               </h2>
             }
             bordered={false}
@@ -140,7 +140,7 @@ const Transfer = ({ token, onClose }) => {
                     />
                   </Form.Item>
                   <div style={{ paddingTop: "12px" }}>
-                    <Button onClick={() => submit()}>Transfer</Button>
+                    <Button onClick={() => submit()}>Send</Button>
                   </div>
                 </Form>
               </Col>

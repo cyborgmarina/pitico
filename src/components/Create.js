@@ -24,58 +24,58 @@ const Create = ({ history }) => {
     amount: ""
   });
 
-  async function handleCreateToken() {
-    setData({
-      ...data,
-      dirty: false
-    });
+  function handleCreateToken() {
+    // setData({
+    //   ...data,
+    //   dirty: false
+    // });
 
-    if (!data.tokenName || !data.tokenSymbol || !data.amount || Number(data.amount) <= 0) {
-      return;
-    }
+    // if (!data.tokenName || !data.tokenSymbol || !data.amount || Number(data.amount) <= 0) {
+    //   return;
+    // }
 
     setLoading(true);
-    const { tokenName, tokenSymbol, documentHash, documentUri, amount } = data;
-    try {
-      const docUri = documentUri || "pitico.cash";
-      const link = await createToken(wallet, {
-        name: tokenName,
-        symbol: tokenSymbol,
-        documentHash,
-        docUri,
-        initialTokenQty: amount
-      });
+    // const { tokenName, tokenSymbol, documentHash, documentUri, amount } = data;
+    // try {
+    //   const docUri = documentUri || "pitico.cash";
+    //   const link = createToken(wallet, {
+    //     name: tokenName,
+    //     symbol: tokenSymbol,
+    //     documentHash,
+    //     docUri,
+    //     initialTokenQty: amount
+    //   });
 
-      notification.success({
-        message: "Success",
-        description: (
-          <a href={link} target="_blank">
-            <Paragraph>Transaction successful. Click or tap here for more details</Paragraph>
-          </a>
-        ),
-        duration: 0
-      });
-    } catch (e) {
-      let message;
-      switch (e.message) {
-        case "Transaction has no inputs":
-          message = "Insufficient balance";
-          break;
-        case "Document hash must be provided as a 64 character hex string":
-          message = e.message;
-          break;
-        default:
-          message = "Unknown Error, try again later";
-          break;
-      }
+    //   notification.success({
+    //     message: "Success",
+    //     description: (
+    //       <a href={link} target="_blank">
+    //         <Paragraph>Transaction successful. Click or tap here for more details</Paragraph>
+    //       </a>
+    //     ),
+    //     duration: 0
+    //   });
+    // } catch (e) {
+    //   let message;
+    //   switch (e.message) {
+    //     case "Transaction has no inputs":
+    //       message = "Insufficient balance";
+    //       break;
+    //     case "Document hash must be provided as a 64 character hex string":
+    //       message = e.message;
+    //       break;
+    //     default:
+    //       message = "Unknown Error, try again later";
+    //       break;
+    //   }
 
-      notification.error({
-        message: "Error",
-        description: message
-      });
-    } finally {
-      setLoading(false);
-    }
+    //   notification.error({
+    //     message: "Error",
+    //     description: message
+    //   });
+    // } finally {
+    //   setLoading(false);
+    // }
   }
 
   const handleChange = e => {
@@ -88,27 +88,14 @@ const Create = ({ history }) => {
       <Col lg={8} span={24}>
         <Spin spinning={loading || loadingContext}>
           <Card
+            style={{ boxShadow: "0px 0px 40px 0px rgba(0,0,0,0.35)", borderRadius: "8px" }}
             title={
               <h2>
                 <Icon type="plus-square" theme="filled" /> Create
               </h2>
             }
-            bordered={false}
+            bordered={true}
           >
-            <div>
-              {!loadingContext && !balances.balance && !balances.unconfirmedBalance ? (
-                <>
-                  <Paragraph>
-                    <QRCode id="borderedQRCode" address={wallet && wallet.cashAddress} />
-                  </Paragraph>
-                  <Paragraph>You currently have 0 BCH.</Paragraph>
-                  <Paragraph>
-                    Deposit some BCH in order to pay for the transaction that will generate the
-                    token
-                  </Paragraph>
-                </>
-              ) : null}
-            </div>
             <Form>
               <Form.Item
                 validateStatus={!data.dirty && !data.tokenSymbol ? "error" : ""}
@@ -161,6 +148,7 @@ const Create = ({ history }) => {
                 help={!data.dirty && Number(data.amount) <= 0 ? "Should be greater than 0" : ""}
               >
                 <Input
+                  style={{ padding: "0px 20px" }}
                   placeholder="quantity"
                   name="amount"
                   onChange={e => handleChange(e)}
