@@ -53,7 +53,7 @@ const Create = ({ history }) => {
             <Paragraph>Transaction successful. Click or tap here for more details</Paragraph>
           </a>
         ),
-        duration: 0
+        duration: 2
       });
     } catch (e) {
       let message;
@@ -71,7 +71,8 @@ const Create = ({ history }) => {
 
       notification.error({
         message: "Error",
-        description: message
+        description: message,
+        duration: 2
       });
     } finally {
       setLoading(false);

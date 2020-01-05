@@ -107,7 +107,7 @@ export const useWallet = () => {
           BCH!
         </Paragraph>
       ),
-      duration: 0
+      duration: 2
     });
   }
 
