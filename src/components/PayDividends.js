@@ -106,7 +106,7 @@ const PayDividends = ({ SLP, token, onClose }) => {
           description: (
             <Paragraph>No token holder with sufficient balance to receive dividends.</Paragraph>
           ),
-          duration: 0
+          duration: 2
         });
       }
 
@@ -117,7 +117,7 @@ const PayDividends = ({ SLP, token, onClose }) => {
             <Paragraph>Transaction successful. Click or tap here for more details</Paragraph>
           </a>
         ),
-        duration: 0
+        duration: 2
       });
 
       setLoading(false);
@@ -141,7 +141,8 @@ const PayDividends = ({ SLP, token, onClose }) => {
 
       notification.error({
         message: "Error",
-        description: message
+        description: message,
+        duration: 2
       });
       console.error(e.message);
       setLoading(false);
