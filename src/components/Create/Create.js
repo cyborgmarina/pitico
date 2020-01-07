@@ -1,15 +1,11 @@
-import React, { useEffect } from "react";
-import "../index.css";
-import styled from "styled-components";
+import React from "react";
 import { withRouter } from "react-router-dom";
-import { ButtonQR } from "badger-components-react";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { WalletContext } from "../utils/context";
+import { WalletContext } from "../../utils/context";
 import { Input, Button, notification, Spin, Icon, Row, Col, Card, Form, Typography } from "antd";
-import createToken from "../utils/broadcastTransaction";
-import { QRCode } from "./QRCode";
+import createToken from "../../utils/broadcastTransaction";
+import { QRCode } from "../Common/QRCode";
 
-const { Paragraph, Text } = Typography;
+const { Paragraph } = Typography;
 
 const Create = ({ history }) => {
   const ContextValue = React.useContext(WalletContext);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Row, Col, Card, Icon, Alert, Typography, Form, Input, Button, Collapse } from "antd";
 import styled from "styled-components";
-import { WalletContext } from "../utils/context";
+import { WalletContext } from "../../utils/context";
 const { Paragraph } = Typography;
 const { Panel } = Collapse;
 

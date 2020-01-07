@@ -1,5 +1,4 @@
 import * as React from "react";
-import "./App.css";
 
 const Identicon = seed => {
   const [hash, setHash] = React.useState([]);
