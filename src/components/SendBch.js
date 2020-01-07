@@ -60,9 +60,7 @@ const SendBCH = ({ onClose }) => {
     } catch (e) {
       let message;
 
-      if (/don't have the minting baton/.test(e.message)) {
-        message = e.message;
-      } else if (/Invalid BCH address/.test(e.message)) {
+      if (/Invalid BCH address/.test(e.message)) {
         message = "Invalid BCH address";
       } else {
         message = `
