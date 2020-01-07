@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
-import { ButtonQR } from "badger-components-react";
 import { WalletContext } from "../utils/context";
 import {
   sendDividends,
@@ -8,49 +7,17 @@ import {
   getElegibleAddresses,
   DUST
 } from "../utils/sendDividends";
-import {
-  Card,
-  Icon,
-  Avatar,
-  Table,
-  Form,
-  Input,
-  Button,
-  Alert,
-  Select,
-  Spin,
-  notification,
-  Badge,
-  Tooltip
-} from "antd";
+import { Card, Icon, Form, Input, Button, Alert, Spin, notification, Badge, Tooltip } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import isPiticoTokenHolder from "../utils/isPiticoTokenHolder";
 import debounce from "../utils/debounce";
-import withSLP from "../utils/withSLP";
-import Text from "antd/lib/typography/Text";
 import { getBCHBalanceFromUTXO } from "../utils/sendBch";
-
-const InputGroup = Input.Group;
-const { Meta } = Card;
-const { Option } = Select;
+import bchLogo from "./bch-logo.png";
 
 const StyledPayDividends = styled.div`
   * {
     color: rgb(62, 63, 66) !important;
-  }
-`;
-
-const StyledButtonWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  ${ButtonQR} {
-    button {
-      display: none;
-    }
   }
 `;
 
@@ -75,13 +42,13 @@ const PayDividends = ({ SLP, token, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({ tokens: 0, holders: 0, eligibles: 0, txFee: 0 });
 
-  const balanceUTXO = balances.balanceUTXO;
+  const totalBalance = balances.totalBalance;
 
   const submitEnabled =
     formData.tokenId &&
     formData.value &&
     Number(formData.value) > DUST &&
-    (balanceUTXO - Number(formData.value) - Number(stats.txFee)).toFixed(8) >= 0;
+    (totalBalance - Number(formData.value) - Number(stats.txFee)).toFixed(8) >= 0;
   useEffect(() => {
     setLoading(true);
     getBalancesForToken(token.tokenId)
@@ -195,8 +162,6 @@ const PayDividends = ({ SLP, token, onClose }) => {
 
     try {
       const bal = await getBCHBalanceFromUTXO(wallet);
-      // const { addresses, txFee } = await getElegibleAddresses(wallet, stats.balances, balanceUTXO);
-      // const value = (balanceUTXO - txFee - DUST).toFixed(8);
       const { txFee } = await getElegibleAddresses(wallet, stats.balances, bal);
       let value = bal - txFee - DUST >= 0 ? (bal - txFee - DUST).toFixed(8) : 0;
       setFormData({
@@ -307,20 +272,15 @@ const PayDividends = ({ SLP, token, onClose }) => {
                           }
                         >
                           <Input
-                            prefix={<Icon type="dollar" />}
+                            prefix={<img src={bchLogo} alt="" width={16} height={16} />}
                             step="0.00000001"
                             suffix="BCH"
-                            placeholder="e.g: 0.01"
                             name="value"
+                            placeholder="value"
                             onChange={e => handleChange(e)}
                             required
                             value={formData.value}
-                            addonAfter={
-                              <Button onClick={onMaxDividend}>
-                                <Icon type="dollar" />
-                                max
-                              </Button>
-                            }
+                            addonAfter={<Button onClick={onMaxDividend}>max</Button>}
                           />
                         </Form.Item>
                       </Form>
@@ -331,7 +291,7 @@ const PayDividends = ({ SLP, token, onClose }) => {
                           <Icon type="dollar" />
                           &nbsp;
                           <Badge
-                            count={balanceUTXO.toFixed(8) || "0"}
+                            count={totalBalance.toFixed(8) || "0"}
                             overflowCount={Number.MAX_VALUE}
                             showZero
                           />

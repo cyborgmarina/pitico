@@ -1,31 +1,15 @@
 import React, { useState } from "react";
 import { WalletContext } from "../utils/context";
 
-import {
-  Card,
-  Icon,
-  Avatar,
-  Table,
-  Form,
-  Input,
-  Button,
-  Alert,
-  Select,
-  Spin,
-  notification
-} from "antd";
+import { Card, Icon, Form, Input, Button, Spin, notification } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
-import Text from "antd/lib/typography/Text";
 import sendToken from "../utils/broadcastTransaction";
-
-const InputGroup = Input.Group;
-const { Meta } = Card;
-const { Option } = Select;
+import { PlaneIcon } from "./common/CustomIcons";
 
 const Transfer = ({ token, onClose }) => {
   const ContextValue = React.useContext(WalletContext);
-  const { wallet, tokens, balances } = ContextValue;
+  const { wallet } = ContextValue;
   const [formData, setFormData] = useState({
     dirty: true,
     quantity: 0,
@@ -98,11 +82,12 @@ const Transfer = ({ token, onClose }) => {
           <Card
             title={
               <h2>
-                <Icon type="interaction" theme="filled" /> Send
+                <PlaneIcon /> Send
               </h2>
             }
             bordered={false}
           >
+            <br />
             <Row type="flex">
               <Col span={24}>
                 <Form style={{ width: "auto" }}>
@@ -133,7 +118,7 @@ const Transfer = ({ token, onClose }) => {
                   >
                     <Input
                       prefix={<Icon type="wallet" />}
-                      placeholder="address"
+                      placeholder="slp address"
                       name="address"
                       onChange={e => handleChange(e)}
                       required

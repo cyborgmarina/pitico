@@ -50,7 +50,7 @@ export const QRCode = ({ address, size = 210, onClick = () => null, ...otherProp
             logoHeight={73}
             value={address || ""}
             size={size}
-            logoImage={address.includes("bitcoin") ? bchLogo : slpLogo}
+            logoImage={address && address.includes("bitcoin") ? bchLogo : slpLogo}
             {...otherProps}
           />
         </div>

@@ -3,25 +3,11 @@ import styled from "styled-components";
 import { ButtonQR } from "badger-components-react";
 import { WalletContext } from "../utils/context";
 import mintToken from "../utils/broadcastTransaction";
-import {
-  Card,
-  Icon,
-  Avatar,
-  Table,
-  Form,
-  Input,
-  Button,
-  Alert,
-  Select,
-  Spin,
-  notification
-} from "antd";
+import { Card, Icon, Form, Input, Button, Select, Spin, notification } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
-import Text from "antd/lib/typography/Text";
+import { HammerIcon } from "./common/CustomIcons";
 
-const InputGroup = Input.Group;
-const { Meta } = Card;
 const { Option } = Select;
 
 const StyledButtonWrapper = styled.div`
@@ -112,11 +98,12 @@ const Mint = ({ token, onClose }) => {
           <Card
             title={
               <h2>
-                <Icon type="printer" theme="filled" /> Mint
+                <HammerIcon /> Mint
               </h2>
             }
             bordered={false}
           >
+            <br />
             <Row justify="center" type="flex">
               <Col>
                 <StyledButtonWrapper>
