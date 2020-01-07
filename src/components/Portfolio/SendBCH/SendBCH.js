@@ -18,7 +18,7 @@ const StyledButtonWrapper = styled.div`
 `;
 
 const SendBCH = ({ onClose }) => {
-  const { wallet, balances, setBalances } = React.useContext(WalletContext);
+  const { wallet, balances } = React.useContext(WalletContext);
   const [formData, setFormData] = useState({
     dirty: true,
     value: "",
@@ -53,11 +53,6 @@ const SendBCH = ({ onClose }) => {
           </a>
         ),
         duration: 2
-      });
-
-      setBalances({
-        ...balances,
-        transient: true
       });
 
       onClose();
