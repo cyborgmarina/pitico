@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { WalletContext } from "../utils/context";
+import { WalletContext } from "../../../utils/context";
 import { Card, Icon, Form, Input, Button, Spin, notification } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
-import { PlaneIcon } from "./common/CustomIcons";
-import { QRCode } from "./QRCode";
-import bchLogo from "./bch-logo.png";
-import { sendBch, calcFee } from "../utils/sendBch";
-import getWalletDetails from "../utils/getWalletDetails";
+import { PlaneIcon } from "../../Common/CustomIcons";
+import { QRCode } from "../../Common/QRCode";
+import bchLogo from "../../../assets/bch-logo.png";
+import { sendBch, calcFee } from "../../../utils/sendBch";
+import getWalletDetails from "../../../utils/getWalletDetails";
 
 const StyledButtonWrapper = styled.div`
   display: flex;
@@ -18,7 +18,7 @@ const StyledButtonWrapper = styled.div`
 `;
 
 const SendBCH = ({ onClose }) => {
-  const { wallet, balances } = React.useContext(WalletContext);
+  const { wallet, balances, setBalances } = React.useContext(WalletContext);
   const [formData, setFormData] = useState({
     dirty: true,
     value: "",
@@ -55,8 +55,12 @@ const SendBCH = ({ onClose }) => {
         duration: 2
       });
 
+      setBalances({
+        ...balances,
+        transient: true
+      });
+
       onClose();
-      setLoading(false);
     } catch (e) {
       let message;
 
@@ -75,8 +79,9 @@ const SendBCH = ({ onClose }) => {
         duration: 2
       });
       console.error(e.message);
-      setLoading(false);
     }
+
+    setLoading(false);
   }
 
   const handleChange = e => {

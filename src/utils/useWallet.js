@@ -85,14 +85,8 @@ export const useWallet = () => {
   const [loading, setLoading] = useState(true);
 
   const previousBalances = usePrevious(balances);
-
-  if (
-    previousBalances &&
-    previousBalances.totalBalance &&
-    balances &&
-    balances.totalBalance &&
-    previousBalances.totalBalance < balances.totalBalance
-  ) {
+  console.info(previousBalances, balances);
+  if (previousBalances && balances && previousBalances.totalBalance < balances.totalBalance) {
     notification.success({
       message: "BCH",
       description: (

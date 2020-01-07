@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
-import { WalletContext } from "../utils/context";
+import { WalletContext } from "../../../utils/context";
 import {
   sendDividends,
   getBalancesForToken,
   getElegibleAddresses,
   DUST
-} from "../utils/sendDividends";
+} from "../../../utils/sendDividends";
 import { Card, Icon, Form, Input, Button, Alert, Spin, notification, Badge, Tooltip } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
-import isPiticoTokenHolder from "../utils/isPiticoTokenHolder";
-import debounce from "../utils/debounce";
-import { getBCHBalanceFromUTXO } from "../utils/sendBch";
-import bchLogo from "./bch-logo.png";
+import isPiticoTokenHolder from "../../../utils/isPiticoTokenHolder";
+import debounce from "../../../utils/debounce";
+import { getBCHBalanceFromUTXO } from "../../../utils/sendBch";
+import bchLogo from "../../../assets/bch-logo.png";
 
 const StyledPayDividends = styled.div`
   * {

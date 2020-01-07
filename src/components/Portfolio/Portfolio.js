@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { Row, Col, Icon, Avatar, Empty, Alert } from "antd";
 import { EnhancedCard } from "./EnhancedCard";
-import { WalletContext } from "../utils/context";
+import { WalletContext } from "../../utils/context";
 import { Meta } from "antd/lib/list/Item";
 import Img from "react-image";
 import Identicon from "./Identicon";
-import Mint from "./Mint";
-import Transfer from "./Transfer";
-import PayDividends from "./PayDividends";
-import SendBCH from "./SendBCH";
-import { PlaneIcon, HammerIcon } from "./common/CustomIcons";
+import Mint from "./Mint/Mint";
+import Transfer from "./Transfer/Transfer";
+import PayDividends from "./PayDividends/PayDividends";
+import SendBCH from "./SendBCH/SendBCH";
+import { PlaneIcon, HammerIcon } from "../Common/CustomIcons";
 import MoreCardOptions from "./MoreCardOptions";
 import PayDividendsOption from "./PayDividendsOption";
 import Paragraph from "antd/lib/typography/Paragraph";
-import { OnBoarding } from "./OnBoarding";
+import { OnBoarding } from "../OnBoarding/OnBoarding";
 
 export default () => {
   const ContextValue = React.useContext(WalletContext);

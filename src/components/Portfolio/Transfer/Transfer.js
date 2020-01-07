@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { WalletContext } from "../utils/context";
+import { WalletContext } from "../../../utils/context";
 
 import { Card, Icon, Form, Input, Button, Spin, notification } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
-import sendToken from "../utils/broadcastTransaction";
-import { PlaneIcon } from "./common/CustomIcons";
+import sendToken from "../../../utils/broadcastTransaction";
+import { PlaneIcon } from "../../Common/CustomIcons";
 
 const Transfer = ({ token, onClose }) => {
   const ContextValue = React.useContext(WalletContext);

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { ButtonQR } from "badger-components-react";
-import { WalletContext } from "../utils/context";
-import mintToken from "../utils/broadcastTransaction";
+import { WalletContext } from "../../../utils/context";
+import mintToken from "../../../utils/broadcastTransaction";
 import { Card, Icon, Form, Input, Button, Select, Spin, notification } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
-import { HammerIcon } from "./common/CustomIcons";
+import { HammerIcon } from "../../Common/CustomIcons";
 
 const { Option } = Select;
 
