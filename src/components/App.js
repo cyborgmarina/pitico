@@ -1,23 +1,19 @@
 import React from "react";
 import "antd/dist/antd.less";
 import "../index.css";
-import { Layout, Menu, Icon, Typography, Radio, List, Skeleton } from "antd";
-import Portfolio from "./Portfolio";
-import { ButtonQR } from "badger-components-react";
-import Create from "./Create";
-import Configure from "./Configure";
-import Audit from "./Audit";
+import { Layout, Menu, Radio } from "antd";
+import Portfolio from "./Portfolio/Portfolio";
+import Create from "./Create/Create";
+import Configure from "./Configure/Configure";
+import Audit from "./Audit/Audit";
 import NotFound from "./NotFound";
 import "./App.css";
 import { WalletContext } from "../utils/context";
-import logo from "./logo.png";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
-import styled from "styled-components";
-import { QRCode } from "./QRCode";
-import Text from "antd/lib/typography/Text";
+import logo from "../assets/logo.png";
+import { BrowserRouter as Router } from "react-router-dom";
+import { QRCode } from "./Common/QRCode";
 
 const { Header, Content, Sider } = Layout;
-const { Paragraph } = Typography;
 
 const App = () => {
   const [collapsed, setCollapesed] = React.useState(window.innerWidth < 768);
@@ -25,7 +21,7 @@ const App = () => {
   const [key, setKey] = React.useState("0");
   const [address, setAddress] = React.useState("slpAddress");
   const ContextValue = React.useContext(WalletContext);
-  const { wallet, balances, loading } = ContextValue;
+  const { wallet } = ContextValue;
   const radio = React.useRef(null);
   const handleChange = e => {
     setKey(e.key);
@@ -33,11 +29,6 @@ const App = () => {
   };
 
   const handleChangeAddress = e => {
-    const radioButton = radio.current;
-    //console.log("radioButton :", radioButton);
-    // radioButton.onRadioChange("cashAddress");
-    // radioButton.state.value = "cashAddress";
-    //console.log("e.target", e.target);
     setAddress(address === "cashAddress" ? "slpAddress" : "cashAddress");
   };
 

@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { getWallet, createWallet } from "./createWallet";
 import getBalance from "./getBalance";
 import getTokenInfo from "./getTokenInfo";
-import { getBCHBalanceFromUTXO } from "./sendBch";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { notification } from "antd";
 
@@ -53,21 +52,17 @@ const updateTokensInfo = async (slpAddress, tokens = [], setTokens) => {
   }
 };
 
-const update = async ({ wallet, tokens, setBalances, setTokens, setLoading, showLoading }) => {
+const update = async ({ wallet, tokens, setBalances, setTokens }) => {
   try {
     if (!wallet) {
       return;
     }
-    setLoading(!!showLoading);
 
     const balance = await getBalance(wallet, false);
-    const balanceUTXO = await getBCHBalanceFromUTXO(wallet);
     setBalances({
-      ...balance,
-      balanceUTXO
+      ...balance
     });
 
-    setLoading(false);
     const tokens = balance.tokens.map(token =>
       tokensCache[token.tokenId]
         ? {
@@ -79,26 +74,19 @@ const update = async ({ wallet, tokens, setBalances, setTokens, setLoading, show
     setTokens(sortTokens(tokens));
     await updateTokensInfo(wallet.slpAddress, tokens, setTokens);
   } catch (error) {
-    setLoading(false);
     console.log("update error", error.message);
   }
 };
 
 export const useWallet = () => {
-  const [wallet, setWallet] = useState(null);
+  const [wallet, setWallet] = useState(getWallet());
   const [balances, setBalances] = useState({});
   const [tokens, setTokens] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const previousBalances = usePrevious(balances);
-
-  if (
-    previousBalances &&
-    previousBalances.totalBalance &&
-    balances &&
-    balances.totalBalance &&
-    previousBalances.totalBalance < balances.totalBalance
-  ) {
+  console.info(previousBalances, balances);
+  if (previousBalances && balances && previousBalances.totalBalance < balances.totalBalance) {
     notification.success({
       message: "BCH",
       description: (
@@ -112,21 +100,20 @@ export const useWallet = () => {
   }
 
   useEffect(() => {
-    const w = getWallet();
-    if (w) {
-      setWallet(w);
-      update({ wallet: w, tokens, setBalances, setTokens, setLoading, showLoading: true });
-    } else {
-      setLoading(false);
-    }
-
-    const routineId = setInterval(() => {
-      update({ wallet: getWallet(), tokens, setBalances, setTokens, setLoading });
-    }, 5000);
-
-    return () => {
-      clearInterval(routineId);
+    const updateRoutine = () => {
+      update({
+        wallet: getWallet(),
+        tokens,
+        setBalances,
+        setTokens,
+        setLoading
+      }).finally(() => {
+        setLoading(false);
+        setTimeout(updateRoutine, 10000);
+      });
     };
+
+    updateRoutine();
   }, []);
 
   return {
@@ -139,7 +126,10 @@ export const useWallet = () => {
     createWallet: importMnemonic => {
       const newWallet = createWallet(importMnemonic);
       setWallet(newWallet);
-      update({ wallet: newWallet, tokens, setBalances, setTokens, setLoading, showLoading: true });
+      setLoading(true);
+      update({ wallet: newWallet, tokens, setBalances, setTokens, setLoading }).finally(() =>
+        setLoading(false)
+      );
     }
   };
 };
