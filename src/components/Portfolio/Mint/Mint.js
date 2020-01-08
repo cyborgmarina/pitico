@@ -1,35 +1,35 @@
 import React, { useState } from "react";
-import { WalletContext } from "../utils/context";
-
-import {
-  Card,
-  Icon,
-  Avatar,
-  Table,
-  Form,
-  Input,
-  Button,
-  Alert,
-  Select,
-  Spin,
-  notification
-} from "antd";
+import styled from "styled-components";
+import { ButtonQR } from "badger-components-react";
+import { WalletContext } from "../../../utils/context";
+import mintToken from "../../../utils/broadcastTransaction";
+import { Card, Icon, Form, Input, Button, Select, Spin, notification } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
-import Text from "antd/lib/typography/Text";
-import sendToken from "../utils/broadcastTransaction";
+import { HammerIcon } from "../../Common/CustomIcons";
 
-const InputGroup = Input.Group;
-const { Meta } = Card;
 const { Option } = Select;
 
-const Transfer = ({ token, onClose }) => {
+const StyledButtonWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  ${ButtonQR} {
+    button {
+      display: none;
+    }
+  }
+`;
+
+const Mint = ({ token, onClose }) => {
   const ContextValue = React.useContext(WalletContext);
   const { wallet, tokens, balances } = ContextValue;
   const [formData, setFormData] = useState({
     dirty: true,
     quantity: 0,
-    address: ""
+    baton: wallet.slpAddress
   });
   const [loading, setLoading] = useState(false);
 
@@ -39,18 +39,18 @@ const Transfer = ({ token, onClose }) => {
       dirty: false
     });
 
-    if (!formData.address || !formData.quantity || Number(formData.quantity) <= 0) {
+    if (!formData.baton || !formData.quantity || Number(formData.quantity) <= 0) {
       return;
     }
 
     setLoading(true);
-    const { quantity, address } = formData;
+    const { quantity, baton } = formData;
 
     try {
-      const link = await sendToken(wallet, {
+      const link = await mintToken(wallet, {
         tokenId: token.tokenId,
-        amount: quantity,
-        tokenReceiverAddress: address
+        additionalTokenQty: quantity,
+        batonReceiverAddress: baton
       });
 
       notification.success({
@@ -70,7 +70,7 @@ const Transfer = ({ token, onClose }) => {
 
       if (/don't have the minting baton/.test(e.message)) {
         message = e.message;
-      } else if (/has no matching Script/.test(e.message)) {
+      } else if (/Invalid BCH address/.test(e.message)) {
         message = "Invalid BCH address";
       } else {
         message = "Unknown Error, try again later";
@@ -99,11 +99,39 @@ const Transfer = ({ token, onClose }) => {
           <Card
             title={
               <h2>
-                <Icon type="interaction" theme="filled" /> Send
+                <HammerIcon /> Mint
               </h2>
             }
             bordered={false}
           >
+            <br />
+            <Row justify="center" type="flex">
+              <Col>
+                <StyledButtonWrapper>
+                  {!balances.balance && !balances.unconfirmedBalance ? (
+                    <>
+                      <br />
+                      <Paragraph>
+                        <ButtonQR
+                          toAddress={wallet.cashAddress}
+                          sizeQR={125}
+                          step={"fresh"}
+                          amountSatoshis={0}
+                        />
+                      </Paragraph>
+                      <Paragraph style={{ overflowWrap: "break-word" }} copyable>
+                        {wallet.cashAddress}
+                      </Paragraph>
+                      <Paragraph>You currently have 0 BCH.</Paragraph>
+                      <Paragraph>
+                        Deposit some BCH in order to pay for the transaction that will mint the
+                        token
+                      </Paragraph>
+                    </>
+                  ) : null}
+                </StyledButtonWrapper>
+              </Col>
+            </Row>
             <Row type="flex">
               <Col span={24}>
                 <Form style={{ width: "auto" }}>
@@ -127,21 +155,34 @@ const Transfer = ({ token, onClose }) => {
                     />
                   </Form.Item>
                   <Form.Item
-                    validateStatus={!formData.dirty && !formData.address ? "error" : ""}
+                    validateStatus={!formData.dirty && Number(formData.baton) <= 0 ? "error" : ""}
                     help={
-                      !formData.dirty && !formData.address ? "Should be a valid slp address" : ""
+                      !formData.dirty && Number(formData.baton) <= 0
+                        ? "Should be a valid slp address"
+                        : ""
                     }
                   >
                     <Input
                       prefix={<Icon type="wallet" />}
-                      placeholder="address"
-                      name="address"
+                      placeholder="baton (slp address)"
+                      name="baton"
                       onChange={e => handleChange(e)}
                       required
+                      value={formData.baton}
+                      addonAfter={
+                        <Select
+                          name="baton"
+                          defaultValue="My Address"
+                          onChange={value => handleChange({ target: { value, name: "baton" } })}
+                        >
+                          <Option value={wallet.slpAddress}>My Address</Option>
+                          <Option value="">Other Address</Option>
+                        </Select>
+                      }
                     />
                   </Form.Item>
                   <div style={{ paddingTop: "12px" }}>
-                    <Button onClick={() => submit()}>Send</Button>
+                    <Button onClick={() => submit()}>Mint</Button>
                   </div>
                 </Form>
               </Col>
@@ -153,4 +194,4 @@ const Transfer = ({ token, onClose }) => {
   );
 };
 
-export default Transfer;
+export default Mint;

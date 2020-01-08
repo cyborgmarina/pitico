@@ -135,7 +135,7 @@
 }
 
 input.ant-input {
-  background-color: #fff;
+  background-color: #fff !important;
   padding: 20px;
   border: 1px solid #eaedf3;
   border-radius: 8px;

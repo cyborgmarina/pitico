@@ -3,9 +3,9 @@ import styled from "styled-components";
 import { withRouter } from "react-router-dom";
 import { ButtonQR } from "badger-components-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { WalletContext } from "../utils/context";
+import { WalletContext } from "../../utils/context";
 import { Input, Button, notification, Spin, Icon, Row, Col, Card, Form, Typography } from "antd";
-import { QRCode } from "./QRCode";
+import { QRCode } from "../Common/QRCode";
 
 const { Paragraph, Text } = Typography;
 

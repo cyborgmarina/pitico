@@ -1,4 +1,5 @@
 import getWalletDetails from "./getWalletDetails";
+import getTokensBchBalance from "./getTokensBchBalance";
 import withSLP from "./withSLP";
 
 const getBalance = async (SLP, wallet, logs = true) => {
@@ -24,6 +25,18 @@ const getBalance = async (SLP, wallet, logs = true) => {
     );
     bitcoinCashPathZeroBalance.tokens = slpTokensPathZeroBalance;
 
+    const bchBalance =
+      bitcoinCashBip44Balance.balance +
+      bitcoinCashBip44Balance.unconfirmedBalance +
+      bitcoinCashPath145Balance.balance +
+      bitcoinCashPath145Balance.unconfirmedBalance +
+      bitcoinCashPathZeroBalance.balance +
+      bitcoinCashPathZeroBalance.unconfirmedBalance;
+    let tokensBchEquivBalance = await getTokensBchBalance(walletDetails.Bip44.slpAddress);
+    tokensBchEquivBalance += await getTokensBchBalance(walletDetails.Path145.slpAddress);
+    tokensBchEquivBalance += await getTokensBchBalance(walletDetails.PathZero.slpAddress);
+    const totalBalance = bchBalance - tokensBchEquivBalance;
+
     log(`Balance: ${JSON.stringify(bitcoinCashBip44Balance, null, 4)}:`);
 
     return {
@@ -33,13 +46,8 @@ const getBalance = async (SLP, wallet, logs = true) => {
         ...bitcoinCashPath145Balance.tokens,
         ...bitcoinCashPathZeroBalance.tokens
       ],
-      totalBalance:
-        bitcoinCashBip44Balance.balance +
-        bitcoinCashBip44Balance.unconfirmedBalance +
-        bitcoinCashPath145Balance.balance +
-        bitcoinCashPath145Balance.unconfirmedBalance +
-        bitcoinCashPathZeroBalance.balance +
-        bitcoinCashPathZeroBalance.unconfirmedBalance
+      totalBalance: totalBalance,
+      transient: false
     };
   } catch (err) {
     log(`Error in getBalance: `, err.message);
