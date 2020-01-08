@@ -22,9 +22,9 @@ export const createWallet = withSLP((SLP, importMnemonic) => {
 
   const walletDetails = getWalletDetails(outObj);
 
-  outObj.cashAddress = walletDetails.cashAddress;
-  outObj.slpAddress = walletDetails.slpAddress;
-  outObj.legacyAddress = walletDetails.legacyAddress;
+  outObj.Bip44.cashAddress = walletDetails.cashAddress;
+  outObj.Bip44.slpAddress = walletDetails.slpAddress;
+  outObj.Bip44.legacyAddress = walletDetails.legacyAddress;
 
   window.localStorage.setItem("wallet", JSON.stringify(outObj));
   return outObj;
