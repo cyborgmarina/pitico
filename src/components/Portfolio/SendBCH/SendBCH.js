@@ -6,9 +6,9 @@ import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { PlaneIcon } from "../../Common/CustomIcons";
 import { QRCode } from "../../Common/QRCode";
-import bchLogo from "../../../assets/bch-logo.png";
 import { sendBch, calcFee } from "../../../utils/sendBch";
 import getWalletDetails from "../../../utils/getWalletDetails";
+import { FormItemWithMaxAddon, FormItemWithQRCodeAddon } from "../EnhancedInputs";
 
 const StyledButtonWrapper = styled.div`
   display: flex;
@@ -57,16 +57,7 @@ const SendBCH = ({ onClose }) => {
 
       onClose();
     } catch (e) {
-      let message;
-
-      if (/Invalid BCH address/.test(e.message)) {
-        message = "Invalid BCH address";
-      } else {
-        message = `
-          Unexpected Error. Cause:
-          ${e.message}
-        `;
-      }
+      const message = e.message;
 
       notification.error({
         message: "Error",
@@ -131,39 +122,37 @@ const SendBCH = ({ onClose }) => {
               <Row type="flex">
                 <Col span={24}>
                   <Form style={{ width: "auto" }}>
-                    <Form.Item
+                    <FormItemWithMaxAddon
                       validateStatus={!formData.dirty && Number(formData.value) <= 0 ? "error" : ""}
                       help={
                         !formData.dirty && Number(formData.value) <= 0
                           ? "Should be greater than 0"
                           : ""
                       }
-                    >
-                      <Input
-                        prefix={<img src={bchLogo} alt="" width={16} height={16} />}
-                        name="value"
-                        placeholder="value"
-                        suffix="BCH"
-                        onChange={e => handleChange(e)}
-                        required
-                        value={formData.value}
-                        addonAfter={<Button onClick={onMax}>max</Button>}
-                      />
-                    </Form.Item>
-                    <Form.Item
+                      onMax={onMax}
+                      inputProps={{
+                        name: "value",
+                        placeholder: "value",
+                        suffix: "BCH",
+                        onChange: e => handleChange(e),
+                        required: true,
+                        value: formData.value
+                      }}
+                    />
+                    <FormItemWithQRCodeAddon
                       validateStatus={!formData.dirty && !formData.address ? "error" : ""}
                       help={
                         !formData.dirty && !formData.address ? "Should be a valid bch address" : ""
                       }
-                    >
-                      <Input
-                        prefix={<Icon type="wallet" />}
-                        placeholder="bch address"
-                        name="address"
-                        onChange={e => handleChange(e)}
-                        required
-                      />
-                    </Form.Item>
+                      onScan={result => setFormData({ ...formData, address: result })}
+                      inputProps={{
+                        placeholder: "bch address",
+                        name: "address",
+                        onChange: e => handleChange(e),
+                        required: true,
+                        value: formData.address
+                      }}
+                    />
                     <div style={{ paddingTop: "12px" }}>
                       <Button onClick={() => submit()}>Send</Button>
                     </div>

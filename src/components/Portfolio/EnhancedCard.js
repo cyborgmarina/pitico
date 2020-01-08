@@ -79,8 +79,9 @@ export const StyledModal = styled(Modal)`
         ? `
             .ant-card-body {
               &> * {
-                overflow: auto;
+                overflow-y: auto;
                 max-height: 85%;
+                width: 100%;
               }
             }
         `
@@ -105,6 +106,11 @@ export const StyledExpandedWrapper = styled.div`
   .ant-card-head,
   .ant-card-body {
     padding: 0 !important;
+
+    & > .ant-row-flex {
+      margin: -8px;
+      padding: 8px;
+    }
   }
 `;
 

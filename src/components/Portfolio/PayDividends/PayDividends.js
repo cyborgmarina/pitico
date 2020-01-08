@@ -14,6 +14,7 @@ import isPiticoTokenHolder from "../../../utils/isPiticoTokenHolder";
 import debounce from "../../../utils/debounce";
 import { getBCHBalanceFromUTXO } from "../../../utils/sendBch";
 import bchLogo from "../../../assets/bch-logo.png";
+import { FormItemWithMaxAddon } from "../EnhancedInputs";
 
 const StyledPayDividends = styled.div`
   * {
@@ -136,7 +137,7 @@ const PayDividends = ({ SLP, token, onClose }) => {
       } else if (/Insufficient funds/.test(e.message)) {
         message = "Insufficient funds.";
       } else {
-        message = e.error || e.message;
+        message = e.message;
       }
 
       notification.error({
@@ -261,29 +262,26 @@ const PayDividends = ({ SLP, token, onClose }) => {
                   <Row type="flex">
                     <Col span={24}>
                       <Form style={{ width: "auto", marginBottom: "1em" }} noValidate>
-                        <Form.Item
+                        <FormItemWithMaxAddon
                           style={{ margin: 0 }}
                           validateStatus={
                             !formData.dirty && Number(formData.value) <= 0 ? "error" : ""
                           }
                           help={
                             !formData.dirty && Number(formData.value) < DUST
-                              ? "BCH dividend must be greater than 0.00005 BCH"
+                              ? "Must be greater than 0"
                               : ""
                           }
-                        >
-                          <Input
-                            prefix={<img src={bchLogo} alt="" width={16} height={16} />}
-                            step="0.00000001"
-                            suffix="BCH"
-                            name="value"
-                            placeholder="value"
-                            onChange={e => handleChange(e)}
-                            required
-                            value={formData.value}
-                            addonAfter={<Button onClick={onMaxDividend}>max</Button>}
-                          />
-                        </Form.Item>
+                          onMax={onMaxDividend}
+                          inputProps={{
+                            suffix: "BCH",
+                            name: "value",
+                            placeholder: "value",
+                            onChange: e => handleChange(e),
+                            required: true,
+                            value: formData.value
+                          }}
+                        />
                       </Form>
                     </Col>
                     <Col>

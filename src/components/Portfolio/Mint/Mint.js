@@ -3,12 +3,11 @@ import styled from "styled-components";
 import { ButtonQR } from "badger-components-react";
 import { WalletContext } from "../../../utils/context";
 import mintToken from "../../../utils/broadcastTransaction";
-import { Card, Icon, Form, Input, Button, Select, Spin, notification } from "antd";
+import { Card, Icon, Form, Input, Button, Spin, notification } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { HammerIcon } from "../../Common/CustomIcons";
-
-const { Option } = Select;
+import { FormItemWithQRCodeAddon } from "../EnhancedInputs";
 
 const StyledButtonWrapper = styled.div`
   display: flex;
@@ -25,7 +24,7 @@ const StyledButtonWrapper = styled.div`
 
 const Mint = ({ token, onClose }) => {
   const ContextValue = React.useContext(WalletContext);
-  const { wallet, tokens, balances } = ContextValue;
+  const { wallet, balances } = ContextValue;
   const [formData, setFormData] = useState({
     dirty: true,
     quantity: 0,
@@ -73,7 +72,7 @@ const Mint = ({ token, onClose }) => {
       } else if (/Invalid BCH address/.test(e.message)) {
         message = "Invalid BCH address";
       } else {
-        message = "Unknown Error, try again later";
+        message = e.message;
       }
 
       notification.error({
@@ -154,33 +153,18 @@ const Mint = ({ token, onClose }) => {
                       type="number"
                     />
                   </Form.Item>
-                  <Form.Item
-                    validateStatus={!formData.dirty && Number(formData.baton) <= 0 ? "error" : ""}
-                    help={
-                      !formData.dirty && Number(formData.baton) <= 0
-                        ? "Should be a valid slp address"
-                        : ""
-                    }
-                  >
-                    <Input
-                      prefix={<Icon type="wallet" />}
-                      placeholder="baton (slp address)"
-                      name="baton"
-                      onChange={e => handleChange(e)}
-                      required
-                      value={formData.baton}
-                      addonAfter={
-                        <Select
-                          name="baton"
-                          defaultValue="My Address"
-                          onChange={value => handleChange({ target: { value, name: "baton" } })}
-                        >
-                          <Option value={wallet.slpAddress}>My Address</Option>
-                          <Option value="">Other Address</Option>
-                        </Select>
-                      }
-                    />
-                  </Form.Item>
+                  <FormItemWithQRCodeAddon
+                    validateStatus={!formData.dirty && !formData.baton ? "error" : ""}
+                    help={!formData.dirty && !formData.baton ? "Should be a valid slp address" : ""}
+                    onScan={result => setFormData({ ...formData, address: result })}
+                    inputProps={{
+                      placeholder: "baton (slp address)",
+                      name: "baton",
+                      onChange: e => handleChange(e),
+                      required: true,
+                      value: formData.baton
+                    }}
+                  />
                   <div style={{ paddingTop: "12px" }}>
                     <Button onClick={() => submit()}>Mint</Button>
                   </div>
