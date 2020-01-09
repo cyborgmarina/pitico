@@ -30,7 +30,7 @@ export default () => {
           <Text>
             Install, build and run Bitcoin.com Mint{" "}
             <a
-              href="https://github.com/SLPVH/pitico#running-locally"
+              href="https://github.com/Bitcoin-com/mint#running-locally"
               rel="noopener noreferrer"
               target="_blank"
             >
