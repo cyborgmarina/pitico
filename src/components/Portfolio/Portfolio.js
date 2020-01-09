@@ -34,10 +34,6 @@ export default () => {
         <Col style={{ marginTop: "8px" }} xl={7} lg={12} span={24}>
           <EnhancedCard
             style={{ marginTop: "8px", textAlign: "left" }}
-            onClick={evt => {
-              setAction(action !== "sendBCH" ? "sendBCH" : null);
-              setSelectedToken(null);
-            }}
             expand={!selectedToken && action === "sendBCH"}
             renderExpanded={() => action === "sendBCH" && <SendBCH onClose={onClose} />}
             onClose={onClose}
