@@ -31,7 +31,7 @@ export default () => {
           <br />
           <Text>
             Check the open source code{" "}
-            <a href="https://github.com/SLPVH/pitico" rel="noopener noreferrer" target="_blank">
+            <a href="https://github.com/Bitcoin-com/mint" rel="noopener noreferrer" target="_blank">
               here
             </a>
             .
