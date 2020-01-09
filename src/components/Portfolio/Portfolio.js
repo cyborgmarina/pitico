@@ -200,6 +200,7 @@ export default () => {
                       src={`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`}
                       unloader={
                         <Identicon
+                          key={token.tokenId}
                           style={{ tranform: "translate(-100px,100px)" }}
                           seed={token.tokenId}
                         />
