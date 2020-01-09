@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Tooltip, Icon, Modal } from "antd";
+import { Tooltip, Icon, Modal, message } from "antd";
 import styled from "styled-components";
 import QrReader from "react-qr-reader";
 
@@ -21,11 +21,16 @@ const StyledModal = styled(Modal)`
 const StyledQrReader = styled(QrReader)`
   width: 100%;
   height: 100%;
+
+  img {
+    background: black;
+  }
 `;
 
 export const ScanQRCode = ({ width, onScan = () => null, ...otherProps }) => {
   const [visible, setVisible] = React.useState(false);
   const [error, setError] = React.useState(false);
+  const ref = React.useRef();
 
   React.useEffect(() => {
     if (!visible) {
@@ -47,24 +52,35 @@ export const ScanQRCode = ({ width, onScan = () => null, ...otherProps }) => {
         footer={null}
       >
         <Tooltip
-          title="You need to allow camera access to use this feature."
+          title={
+            <div onClick={() => (ref.current ? ref.current.openImageDialog() : null)}>
+              You need to allow camera access to use this feature, otherwise click here to manually
+              choose a picture.
+            </div>
+          }
           visible={visible && error}
           placement="bottom"
         >
           {visible ? (
-            <StyledQrReader
-              delay={500}
-              resolution={800}
-              onError={() => {
-                setTimeout(() => setError(true), 500);
-              }}
-              onScan={result => {
-                if (result) {
-                  setVisible(false);
-                  onScan(result);
-                }
-              }}
-            />
+            <div onClick={() => (error && ref.current ? ref.current.openImageDialog() : null)}>
+              <StyledQrReader
+                ref={ref}
+                delay={300}
+                resolution={800}
+                onError={() => {
+                  setTimeout(() => setError(true), 500);
+                }}
+                legacyMode={!!error}
+                onScan={result => {
+                  if (result) {
+                    setVisible(false);
+                    onScan(result);
+                  } else if (error) {
+                    message.error("No QR Code found, please try another image.");
+                  }
+                }}
+              />
+            </div>
           ) : null}
         </Tooltip>
       </StyledModal>
