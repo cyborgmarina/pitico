@@ -105,7 +105,7 @@ export default () => {
         : null}
       {tokens.length
         ? tokens.map(token => (
-            <Col style={{ marginTop: "8px" }} xl={7} lg={12} sm={12} span={24}>
+            <Col style={{ marginTop: "8px" }} xl={7} lg={12} sm={12} span={24} key={token.tokenId}>
               <EnhancedCard
                 loading={!token.info}
                 expand={selectedToken && token.tokenId === selectedToken.tokenId}
@@ -166,6 +166,7 @@ export default () => {
                             ) : (
                               Object.entries(token.info || {}).map(entry => (
                                 <Paragraph
+                                  key={token.tokenId}
                                   small
                                   copyable={{ text: entry[1] }}
                                   ellipsis
@@ -200,6 +201,7 @@ export default () => {
                       src={`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`}
                       unloader={
                         <Identicon
+                          key={token.tokenId}
                           style={{ tranform: "translate(-100px,100px)" }}
                           seed={token.tokenId}
                         />

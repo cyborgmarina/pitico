@@ -18,18 +18,6 @@ export default () => {
         >
           <Title level={4}>Never trust, always verify.</Title>
           <Text>
-            Check our deployment logs{" "}
-            <a
-              href="https://app.netlify.com/sites/pitico/deploys/"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              here
-            </a>
-            .
-          </Text>
-          <br />
-          <Text>
             Check the open source code{" "}
             <a href="https://github.com/Bitcoin-com/mint" rel="noopener noreferrer" target="_blank">
               here
@@ -40,9 +28,9 @@ export default () => {
           <Text>Check and/or change the REST API in Configure. </Text>
           <br />
           <Text>
-            Install, build and run pitico{" "}
+            Install, build and run Bitcoin.com Mint{" "}
             <a
-              href="https://github.com/SLPVH/pitico#running-locally"
+              href="https://github.com/Bitcoin-com/mint#running-locally"
               rel="noopener noreferrer"
               target="_blank"
             >
