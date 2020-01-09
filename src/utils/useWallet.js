@@ -73,9 +73,7 @@ const update = async ({ wallet, tokens, setBalances, setTokens }) => {
     );
     setTokens(sortTokens(tokens));
     await updateTokensInfo(wallet.slpAddress, tokens, setTokens);
-  } catch (error) {
-    console.log("update error", error.message);
-  }
+  } catch (error) {}
 };
 
 export const useWallet = () => {
