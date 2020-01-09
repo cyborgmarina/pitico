@@ -66,6 +66,12 @@ const StyledEnhancedCard = styled(Card)`
   &:hover {
     box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.35);
   }
+
+  .ant-input-group-addon {
+    padding: 0;
+    width: 48px;
+    line-height: 40px;
+  }
 `;
 
 export const StyledModal = styled(Modal)`
@@ -79,8 +85,9 @@ export const StyledModal = styled(Modal)`
         ? `
             .ant-card-body {
               &> * {
-                overflow: auto;
+                overflow-y: auto;
                 max-height: 85%;
+                width: 100%;
               }
             }
         `
@@ -105,6 +112,11 @@ export const StyledExpandedWrapper = styled.div`
   .ant-card-head,
   .ant-card-body {
     padding: 0 !important;
+
+    & > .ant-row-flex {
+      margin: -8px;
+      padding: 8px;
+    }
   }
 `;
 

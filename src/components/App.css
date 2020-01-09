@@ -22,7 +22,6 @@
 }
 .ant-list-item-meta .ant-list-item-meta-content {
   display: flex;
-  justify-content: flex-end;
 }
 
 #borderedQRCode {
@@ -136,7 +135,8 @@
 
 input.ant-input {
   background-color: #fff !important;
-  padding: 20px;
+  height: 42px;
+  box-shadow: none !important;
   border: 1px solid #eaedf3;
   border-radius: 8px;
   font-weight: bold;
@@ -158,11 +158,12 @@ input.ant-input {
 }
 
 .ant-input-group-addon {
-  background-color: #f4f4f4;
+  background-color: #f4f4f4 !important;
   border: 1px solid rgb(234, 237, 243);
+  color: #3e3f42 !important;
 
   * {
-    color: rgb(62, 63, 66) !important;
+    color: #3e3f42 !important;
   }
 }
 
