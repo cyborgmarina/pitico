@@ -166,6 +166,7 @@ export default () => {
                             ) : (
                               Object.entries(token.info || {}).map(entry => (
                                 <Paragraph
+                                  key={token.tokenId}
                                   small
                                   copyable={{ text: entry[1] }}
                                   ellipsis
