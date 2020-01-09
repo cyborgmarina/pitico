@@ -105,7 +105,7 @@ export default () => {
         : null}
       {tokens.length
         ? tokens.map(token => (
-            <Col style={{ marginTop: "8px" }} xl={7} lg={12} sm={12} span={24}>
+            <Col style={{ marginTop: "8px" }} xl={7} lg={12} sm={12} span={24} key={token.tokenId}>
               <EnhancedCard
                 loading={!token.info}
                 expand={selectedToken && token.tokenId === selectedToken.tokenId}
