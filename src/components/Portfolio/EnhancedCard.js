@@ -66,6 +66,12 @@ const StyledEnhancedCard = styled(Card)`
   &:hover {
     box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.35);
   }
+
+  .ant-input-group-addon {
+    padding: 0;
+    width: 48px;
+    line-height: 40px;
+  }
 `;
 
 export const StyledModal = styled(Modal)`

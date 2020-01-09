@@ -4,7 +4,6 @@ import styled from "styled-components";
 import QrReader from "react-qr-reader";
 
 const StyledScanQRCode = styled.span`
-  width: ${props => props.width || "26px"};
   display: block;
 `;
 
