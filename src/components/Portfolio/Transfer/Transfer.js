@@ -6,13 +6,13 @@ import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import sendToken from "../../../utils/broadcastTransaction";
 import { PlaneIcon } from "../../Common/CustomIcons";
+import { FormItemWithMaxAddon, FormItemWithQRCodeAddon } from "../EnhancedInputs";
 
 const Transfer = ({ token, onClose }) => {
-  const ContextValue = React.useContext(WalletContext);
-  const { wallet } = ContextValue;
+  const { wallet } = React.useContext(WalletContext);
   const [formData, setFormData] = useState({
     dirty: true,
-    quantity: 0,
+    quantity: "",
     address: ""
   });
   const [loading, setLoading] = useState(false);
@@ -55,9 +55,9 @@ const Transfer = ({ token, onClose }) => {
       if (/don't have the minting baton/.test(e.message)) {
         message = e.message;
       } else if (/has no matching Script/.test(e.message)) {
-        message = "Invalid BCH address";
+        message = "Invalid address";
       } else {
-        message = "Unknown Error, try again later";
+        message = e.message;
       }
 
       notification.error({
@@ -76,6 +76,10 @@ const Transfer = ({ token, onClose }) => {
     setFormData(p => ({ ...p, [name]: value }));
   };
 
+  const onMax = () => {
+    setFormData({ ...formData, quantity: token.balance });
+  };
+
   return (
     <Row type="flex">
       <Col span={24}>
@@ -92,7 +96,7 @@ const Transfer = ({ token, onClose }) => {
             <Row type="flex">
               <Col span={24}>
                 <Form style={{ width: "auto" }}>
-                  <Form.Item
+                  <FormItemWithMaxAddon
                     validateStatus={
                       !formData.dirty && Number(formData.quantity) <= 0 ? "error" : ""
                     }
@@ -101,30 +105,31 @@ const Transfer = ({ token, onClose }) => {
                         ? "Should be greater than 0"
                         : ""
                     }
-                  >
-                    <Input
-                      prefix={<Icon type="block" />}
-                      placeholder="quantity"
-                      name="quantity"
-                      onChange={e => handleChange(e)}
-                      required
-                      type="number"
-                    />
-                  </Form.Item>
-                  <Form.Item
+                    onMax={onMax}
+                    inputProps={{
+                      prefix: <Icon type="block" />,
+                      placeholder: "quantity",
+                      name: "quantity",
+                      onChange: e => handleChange(e),
+                      required: true,
+                      type: "number",
+                      value: formData.quantity
+                    }}
+                  />
+                  <FormItemWithQRCodeAddon
                     validateStatus={!formData.dirty && !formData.address ? "error" : ""}
                     help={
                       !formData.dirty && !formData.address ? "Should be a valid slp address" : ""
                     }
-                  >
-                    <Input
-                      prefix={<Icon type="wallet" />}
-                      placeholder="slp address"
-                      name="address"
-                      onChange={e => handleChange(e)}
-                      required
-                    />
-                  </Form.Item>
+                    onScan={result => setFormData({ ...formData, address: result })}
+                    inputProps={{
+                      placeholder: "slp address",
+                      name: "address",
+                      onChange: e => handleChange(e),
+                      required: true,
+                      value: formData.address
+                    }}
+                  />
                   <div style={{ paddingTop: "12px" }}>
                     <Button onClick={() => submit()}>Send</Button>
                   </div>

@@ -73,9 +73,7 @@ const update = async ({ wallet, tokens, setBalances, setTokens }) => {
     );
     setTokens(sortTokens(tokens));
     await updateTokensInfo(wallet.slpAddress, tokens, setTokens);
-  } catch (error) {
-    console.log("update error", error.message);
-  }
+  } catch (error) {}
 };
 
 export const useWallet = () => {
@@ -85,7 +83,7 @@ export const useWallet = () => {
   const [loading, setLoading] = useState(true);
 
   const previousBalances = usePrevious(balances);
-  console.info(previousBalances, balances);
+
   if (previousBalances && balances && previousBalances.totalBalance < balances.totalBalance) {
     notification.success({
       message: "BCH",
