@@ -35,6 +35,10 @@ export default () => {
           <EnhancedCard
             style={{ marginTop: "8px", textAlign: "left" }}
             expand={!selectedToken && action === "sendBCH"}
+            onClick={evt => {
+              setAction(action !== "sendBCH" ? "sendBCH" : null);
+              setSelectedToken(null);
+            }}
             renderExpanded={() => action === "sendBCH" && <SendBCH onClose={onClose} />}
             onClose={onClose}
           >
