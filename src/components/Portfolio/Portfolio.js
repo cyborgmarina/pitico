@@ -14,6 +14,7 @@ import MoreCardOptions from "./MoreCardOptions";
 import PayDividendsOption from "./PayDividendsOption";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { OnBoarding } from "../OnBoarding/OnBoarding";
+import bchFlagLogo from "../../assets/4-bitcoin-cash-logo-flag.png";
 
 export default () => {
   const ContextValue = React.useContext(WalletContext);
@@ -43,13 +44,7 @@ export default () => {
             onClose={onClose}
           >
             <Meta
-              avatar={
-                <Img
-                  src="https://unstoppable.cash/wp-content/uploads/2018/03/12-bitcoin-cash-square-crop-small-GRN.png"
-                  width="60"
-                  height="60"
-                />
-              }
+              avatar={<Img src={bchFlagLogo} width="96" height="54" />}
               title={
                 <div
                   style={{
