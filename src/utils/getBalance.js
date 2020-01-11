@@ -1,6 +1,6 @@
 import getWalletDetails from "./getWalletDetails";
-import getTokensBchBalance from "./getTokensBchBalance";
 import getTransactionHistory from "./getTransactionHistory";
+import getTokensBalance from "./getTokensBalance";
 import withSLP from "./withSLP";
 
 const getBalance = async (SLP, wallet, logs = true) => {
@@ -14,43 +14,41 @@ const getBalance = async (SLP, wallet, logs = true) => {
       walletDetails.Path145.cashAddress,
       walletDetails.PathZero.cashAddress
     ]);
-    const slpTokensBalance = await SLP.Utils.balancesForAddress([
+
+    const slpAdresses = [
       walletDetails.Bip44.slpAddress,
       walletDetails.Path145.slpAddress,
       walletDetails.PathZero.slpAddress
-    ]);
-    bitcoinCashBalance.forEach((element, index) => {
-      element.tokens = slpTokensBalance[index];
-    });
+    ];
 
+    const slpTokensBalance = await getTokensBalance(slpAdresses);
+    bitcoinCashBalance.forEach((element, index) => {
+      element.tokens = slpTokensBalance.filter(el => el.address === slpAdresses[index]);
+    });
+    console.log("bitcoinCashBalance :", bitcoinCashBalance);
     const bchBalance = bitcoinCashBalance.reduce((a, b) => a + b.balance + b.unconfirmedBalance, 0);
     console.log("bitcoinCashBalance :", bitcoinCashBalance);
-    let tokensBchEquivBalance = await getTokensBchBalance(walletDetails.Bip44.slpAddress);
-    tokensBchEquivBalance += await getTokensBchBalance(walletDetails.Path145.slpAddress);
-    tokensBchEquivBalance += await getTokensBchBalance(walletDetails.PathZero.slpAddress);
+    const tokensBchEquivBalance =
+      slpTokensBalance.map(el => el.satoshisBalance).reduce((a, b) => a + b, 0) * 1e-8;
     const totalBalance = bchBalance - tokensBchEquivBalance;
 
     log(`Balance: ${JSON.stringify(bitcoinCashBalance[0], null, 4)}:`);
-    const history = await getTransactionHistory(
-      [
-        walletDetails.Bip44.cashAddress,
-        walletDetails.Path145.cashAddress,
-        walletDetails.PathZero.cashAddress
-      ],
-      [
-        bitcoinCashBalance[0].transactions,
-        bitcoinCashBalance[1].transactions,
-        bitcoinCashBalance[2].transactions
-      ]
-    );
-    console.log("history :", history);
+    // const history = await getTransactionHistory(
+    //   [
+    //     walletDetails.Bip44.cashAddress,
+    //     walletDetails.Path145.cashAddress,
+    //     walletDetails.PathZero.cashAddress
+    //   ],
+    //   [
+    //     bitcoinCashBalance[0].transactions,
+    //     bitcoinCashBalance[1].transactions,
+    //     bitcoinCashBalance[2].transactions
+    //   ]
+    // );
+    // console.log("history :", history);
     return {
       ...bitcoinCashBalance[0],
-      tokens: [
-        ...bitcoinCashBalance[0].tokens,
-        ...bitcoinCashBalance[1].tokens,
-        ...bitcoinCashBalance[2].tokens
-      ],
+      tokens: slpTokensBalance,
       totalBalance: totalBalance,
       transient: false
     };

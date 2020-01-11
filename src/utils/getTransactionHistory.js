@@ -32,6 +32,8 @@ const getTransactionHistory = async (SLP, cashAdresses, transactions) => {
       return a;
     }, []);
 
+    console.log("nonZeroIndexes :", nonZeroIndexes);
+
     const queryResults = Array.from({ length: nonZeroIndexes.length });
     const slpDbInstance = SLP.SLPDB;
 

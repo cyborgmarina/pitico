@@ -23,11 +23,11 @@ const usePrevious = value => {
 
 const sortTokens = tokens => tokens.sort((a, b) => (a.tokenId > b.tokenId ? 1 : -1));
 
-const updateTokensInfo = async (slpAddress, tokens = [], setTokens) => {
+const updateTokensInfo = async (slpAdresses, tokens = [], setTokens) => {
   let infos = [];
 
   try {
-    infos = await getTokenInfo(slpAddress, tokens.map(token => token.tokenId));
+    infos = await getTokenInfo(slpAdresses, tokens.map(token => token.tokenId));
   } catch (err) {
     console.log(err.message);
   }
@@ -72,7 +72,7 @@ const update = async ({ wallet, tokens, setBalances, setTokens }) => {
         : token
     );
     setTokens(sortTokens(tokens));
-    await updateTokensInfo(wallet.slpAddress, tokens, setTokens);
+    await updateTokensInfo(wallet.slpAdresses, tokens, setTokens);
   } catch (error) {}
 };
 

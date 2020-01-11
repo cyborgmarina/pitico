@@ -18,7 +18,7 @@ import { OnBoarding } from "../OnBoarding/OnBoarding";
 export default () => {
   const ContextValue = React.useContext(WalletContext);
   const { wallet, tokens, loading, balances } = ContextValue;
-
+  console.log("tokens :", tokens);
   const [selectedToken, setSelectedToken] = useState(null);
   const [action, setAction] = useState(null);
   const SLP_TOKEN_ICONS_URL = "https://tokens.bch.sx/64";
@@ -100,8 +100,15 @@ export default () => {
           ))
         : null}
       {tokens.length
-        ? tokens.map(token => (
-            <Col style={{ marginTop: "8px" }} xl={7} lg={12} sm={12} span={24} key={token.tokenId}>
+        ? tokens.map((token, i) => (
+            <Col
+              style={{ marginTop: "8px" }}
+              xl={7}
+              lg={12}
+              sm={12}
+              span={24}
+              key={`${token.tokenId}-${i}`}
+            >
               <EnhancedCard
                 loading={!token.info}
                 expand={selectedToken && token.tokenId === selectedToken.tokenId}
