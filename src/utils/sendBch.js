@@ -14,7 +14,8 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
     const value = values.reduce((previous, current) => new Big(current).plus(previous), new Big(0));
     const SEND_ADDR = wallet.cashAddress;
 
-    const utxos = await getBCHUtxos(SEND_ADDR);
+    const allUtxos = await getBCHUtxos(SEND_ADDR);
+    const utxos = [];
     let transactionBuilder;
 
     // instance of transaction builder
@@ -23,22 +24,32 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
 
     const satoshisToSend = SLP.BitcoinCash.toSatoshi(value.toPrecision(8));
     let originalAmount = new Big(0);
-    for (let i = 0; i < utxos.length; i++) {
-      const utxo = utxos[i];
+    let txFee = 0;
+    for (let i = 0; i < allUtxos.length; i++) {
+      const utxo = allUtxos[i];
       originalAmount = originalAmount.plus(utxo.satoshis);
       const vout = utxo.vout;
       const txid = utxo.txid;
       // add input with txid and index of vout
       transactionBuilder.addInput(txid, vout);
-    }
+      utxos.push(utxo);
 
-    // get byte count to calculate fee
-    const byteCount = SLP.BitcoinCash.getByteCount(
-      { P2PKH: utxos.length },
-      { P2PKH: addresses.length + 1 }
-    );
-    const satoshisPerByte = SATOSHIS_PER_BYTE;
-    const txFee = Math.floor(satoshisPerByte * byteCount);
+      const byteCount = SLP.BitcoinCash.getByteCount(
+        { P2PKH: utxos.length },
+        { P2PKH: addresses.length + 1 }
+      );
+      const satoshisPerByte = SATOSHIS_PER_BYTE;
+      txFee = Math.floor(satoshisPerByte * byteCount);
+
+      if (
+        originalAmount
+          .minus(satoshisToSend)
+          .minus(txFee)
+          .gte(0)
+      ) {
+        break;
+      }
+    }
 
     // amount to send back to the sending address.
     const remainder = Math.floor(originalAmount.minus(satoshisToSend).minus(txFee));
@@ -110,7 +121,7 @@ export const getBalanceFromUtxos = withSLP((SLP, utxos) => {
   return SLP.BitcoinCash.toBitcoinCash(Math.floor(satoshis));
 });
 
-export const calcFee = withSLP(async (SLP, utxos) => {
+export const calcFee = withSLP((SLP, utxos) => {
   const byteCount = SLP.BitcoinCash.getByteCount({ P2PKH: utxos.length }, { P2PKH: 2 });
   const satoshisPerByte = SATOSHIS_PER_BYTE;
   const txFee = SLP.BitcoinCash.toBitcoinCash(Math.floor(satoshisPerByte * byteCount));

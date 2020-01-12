@@ -185,10 +185,11 @@ const PayDividends = ({ SLP, token, onClose }) => {
         value
       });
       await calcElegibles(value);
-      setLoading(false);
     } catch (err) {
       message.error("Unable to calculate the max value due to network errors");
     }
+
+    setLoading(false);
   };
 
   return (
