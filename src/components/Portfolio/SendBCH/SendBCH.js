@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { WalletContext } from "../../../utils/context";
-import { Card, Icon, Form, Input, Button, Spin, notification } from "antd";
+import { Card, Icon, Form, Input, Button, Spin, notification, message } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { PlaneIcon } from "../../Common/CustomIcons";
 import { QRCode } from "../../Common/QRCode";
-import { sendBch, calcFee } from "../../../utils/sendBch";
+import { sendBch, calcFee, getBCHUtxos, getBalanceFromUtxos } from "../../../utils/sendBch";
 import getWalletDetails from "../../../utils/getWalletDetails";
 import { FormItemWithMaxAddon, FormItemWithQRCodeAddon } from "../EnhancedInputs";
+import { retry } from "../../../utils/retry";
 
 const StyledButtonWrapper = styled.div`
   display: flex;
@@ -79,14 +80,17 @@ const SendBCH = ({ onClose }) => {
   const onMax = async () => {
     setLoading(true);
     try {
-      const txFee = await calcFee({ wallet });
-      let value =
-        balances.totalBalance - txFee >= 0 ? (balances.totalBalance - txFee).toFixed(8) : 0;
+      const utxos = await retry(() => getBCHUtxos(wallet.cashAddress));
+      const totalBalance = getBalanceFromUtxos(utxos);
+      const txFee = await calcFee(utxos);
+      let value = totalBalance - txFee >= 0 ? (totalBalance - txFee).toFixed(8) : 0;
       setFormData({
         ...formData,
         value
       });
-    } catch (err) {}
+    } catch (err) {
+      message.error("Unable to calculate the max value due to network errors");
+    }
     setLoading(false);
   };
 

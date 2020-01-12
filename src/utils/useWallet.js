@@ -1,25 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import Paragraph from "antd/lib/typography/Paragraph";
+import { notification } from "antd";
+import Big from "big.js";
 import { getWallet, createWallet } from "./createWallet";
 import getBalance from "./getBalance";
 import getTokenInfo from "./getTokenInfo";
-import Paragraph from "antd/lib/typography/Paragraph";
-import { notification } from "antd";
+import usePrevious from "./usePrevious";
 
 const tokensCache = {};
-
-const usePrevious = value => {
-  // The ref object is a generic container whose current property is mutable ...
-  // ... and can hold any value, similar to an instance property on a class
-  const ref = useRef();
-
-  // Store current value in ref
-  useEffect(() => {
-    ref.current = value;
-  }, [value]); // Only re-run if value changes
-
-  // Return previous value (happens before update in useEffect above)
-  return ref.current;
-};
 
 const sortTokens = tokens => tokens.sort((a, b) => (a.tokenId > b.tokenId ? 1 : -1));
 
@@ -74,7 +62,13 @@ export const useWallet = () => {
 
   const previousBalances = usePrevious(balances);
 
-  if (previousBalances && balances && previousBalances.totalBalance < balances.totalBalance) {
+  if (
+    previousBalances &&
+    balances &&
+    "totalBalance" in previousBalances &&
+    "totalBalance" in balances &&
+    new Big(balances.totalBalance).minus(previousBalances.totalBalance).gt(0)
+  ) {
     notification.success({
       message: "BCH",
       description: (

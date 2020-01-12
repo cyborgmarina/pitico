@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import RawQRCode from "qrcode.react";
 import slpLogo from "../../assets/slp-oval.png";
-import bchLogo from "../../assets/bch-logo.png";
+import bchLogo from "../../assets/bch-logo-3.png";
 import { QRCode as BrandesQRCode } from "react-qrcode-logo";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Popover } from "antd";
@@ -45,8 +45,8 @@ export const QRCode = ({ address, size = 210, onClick = () => null, ...otherProp
             id="borderedQRCode"
             // style={{ border: "20px solid #fff", borderRadius: "8px" }}
 
-            logoWidth={73}
-            logoHeight={73}
+            logoWidth={64}
+            logoHeight={64}
             value={address || ""}
             size={size}
             logoImage={address && address.includes("bitcoin") ? bchLogo : slpLogo}

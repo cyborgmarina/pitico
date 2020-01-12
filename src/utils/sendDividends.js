@@ -4,7 +4,7 @@
 import Big from "big.js";
 import { Utils } from "slpjs";
 import withSLP from "./withSLP";
-import { sendBch } from "./sendBch";
+import { sendBch, SATOSHIS_PER_BYTE } from "./sendBch";
 import getWalletDetails from "./getWalletDetails";
 
 export const DUST = 0.00005;
@@ -56,7 +56,7 @@ export const getElegibleAddresses = withSLP(async (SLP, wallet, balances, value)
   }
 
   const byteCount = SLP.BitcoinCash.getByteCount({ P2PKH: 1 }, { P2PKH: addresses.length + 1 });
-  const satoshisPerByte = 1.2;
+  const satoshisPerByte = SATOSHIS_PER_BYTE;
   const txFee = SLP.BitcoinCash.toBitcoinCash(Math.floor(satoshisPerByte * byteCount)).toFixed(8);
 
   return {
