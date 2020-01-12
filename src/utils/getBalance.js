@@ -48,6 +48,7 @@ const getBalance = async (SLP, wallet, logs = true) => {
     // console.log("history :", history);
     return {
       ...bitcoinCashBalance[0],
+      bitcoinCashBalance,
       tokens: slpTokensBalance,
       totalBalance: totalBalance,
       transient: false

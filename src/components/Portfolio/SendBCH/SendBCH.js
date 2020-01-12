@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { WalletContext } from "../../../utils/context";
-import { Card, Icon, Form, Input, Button, Spin, notification } from "antd";
+import { Card, Icon, Radio, Form, Input, Button, Spin, notification } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { PlaneIcon } from "../../Common/CustomIcons";
@@ -9,6 +9,7 @@ import { QRCode } from "../../Common/QRCode";
 import { sendBch, calcFee } from "../../../utils/sendBch";
 import getWalletDetails from "../../../utils/getWalletDetails";
 import { FormItemWithMaxAddon, FormItemWithQRCodeAddon } from "../EnhancedInputs";
+import getTransactionHistory from "../../../utils/getTransactionHistory";
 
 const StyledButtonWrapper = styled.div`
   display: flex;
@@ -25,6 +26,8 @@ const SendBCH = ({ onClose }) => {
     address: ""
   });
   const [loading, setLoading] = useState(false);
+  const [action, setAction] = useState("send");
+  const [history, setHistory] = useState(null);
 
   async function submit() {
     setFormData({
@@ -90,20 +93,84 @@ const SendBCH = ({ onClose }) => {
     setLoading(false);
   };
 
+  const getBchHistory = async () => {
+    setLoading(true);
+    try {
+      const resp = await getTransactionHistory(wallet.cashAdresses, [
+        balances.bitcoinCashBalance[0].transactions,
+        balances.bitcoinCashBalance[1].transactions,
+        balances.bitcoinCashBalance[2].transactions
+      ]);
+      console.log("history :", resp);
+      setHistory(resp);
+    } catch (err) {
+      const message = err.message;
+
+      notification.error({
+        message: "Error",
+        description: message,
+        duration: 2
+      });
+      console.error(err.message);
+    }
+
+    setLoading(false);
+  };
+
+  const handleChangeAction = () => {
+    if (action == "send") {
+      setAction("history");
+      getBchHistory();
+    } else {
+      setAction("send");
+    }
+  };
+
   return (
     <Row type="flex">
       <Col span={24}>
         <Spin spinning={loading}>
           <Card
             title={
-              <h2>
-                <PlaneIcon /> Send
-              </h2>
+              <Radio.Group
+                defaultValue="send"
+                onChange={() => handleChangeAction()}
+                value={action}
+                style={{ width: "100%", textAlign: "center", marginTop: 0 }}
+                size="small"
+                buttonStyle="solid"
+              >
+                <Radio.Button
+                  style={{
+                    borderRadius: "19.5px",
+                    height: "40px",
+                    width: "50%",
+                    fontSize: "16px"
+                  }}
+                  value="send"
+                  onClick={() => handleChangeAction()}
+                >
+                  <PlaneIcon style={{ color: "#fff" }} /> Send
+                </Radio.Button>
+                <Radio.Button
+                  style={{
+                    borderRadius: "19.5px",
+                    height: "40px",
+                    width: "50%",
+                    fontSize: "16px"
+                  }}
+                  value="history"
+                  onClick={() => handleChangeAction()}
+                >
+                  <Icon style={{ color: "#fff" }} type="history" /> History
+                </Radio.Button>
+              </Radio.Group>
             }
             bordered={false}
           >
             <br />
-            {!balances.balance && !balances.unconfirmedBalance ? (
+
+            {!balances.balance && !balances.unconfirmedBalance && action === "send" ? (
               <Row justify="center" type="flex">
                 <Col>
                   <StyledButtonWrapper>
@@ -119,46 +186,64 @@ const SendBCH = ({ onClose }) => {
                 </Col>
               </Row>
             ) : (
-              <Row type="flex">
-                <Col span={24}>
-                  <Form style={{ width: "auto" }}>
-                    <FormItemWithMaxAddon
-                      validateStatus={!formData.dirty && Number(formData.value) <= 0 ? "error" : ""}
-                      help={
-                        !formData.dirty && Number(formData.value) <= 0
-                          ? "Should be greater than 0"
-                          : ""
-                      }
-                      onMax={onMax}
-                      inputProps={{
-                        name: "value",
-                        placeholder: "value",
-                        suffix: "BCH",
-                        onChange: e => handleChange(e),
-                        required: true,
-                        value: formData.value
-                      }}
-                    />
-                    <FormItemWithQRCodeAddon
-                      validateStatus={!formData.dirty && !formData.address ? "error" : ""}
-                      help={
-                        !formData.dirty && !formData.address ? "Should be a valid bch address" : ""
-                      }
-                      onScan={result => setFormData({ ...formData, address: result })}
-                      inputProps={{
-                        placeholder: "bch address",
-                        name: "address",
-                        onChange: e => handleChange(e),
-                        required: true,
-                        value: formData.address
-                      }}
-                    />
-                    <div style={{ paddingTop: "12px" }}>
-                      <Button onClick={() => submit()}>Send</Button>
-                    </div>
-                  </Form>
-                </Col>
-              </Row>
+              (action === "send" && (
+                <Row type="flex">
+                  <Col span={24}>
+                    <Form style={{ width: "auto" }}>
+                      <FormItemWithMaxAddon
+                        validateStatus={
+                          !formData.dirty && Number(formData.value) <= 0 ? "error" : ""
+                        }
+                        help={
+                          !formData.dirty && Number(formData.value) <= 0
+                            ? "Should be greater than 0"
+                            : ""
+                        }
+                        onMax={onMax}
+                        inputProps={{
+                          name: "value",
+                          placeholder: "value",
+                          suffix: "BCH",
+                          onChange: e => handleChange(e),
+                          required: true,
+                          value: formData.value
+                        }}
+                      />
+                      <FormItemWithQRCodeAddon
+                        validateStatus={!formData.dirty && !formData.address ? "error" : ""}
+                        help={
+                          !formData.dirty && !formData.address
+                            ? "Should be a valid bch address"
+                            : ""
+                        }
+                        onScan={result => setFormData({ ...formData, address: result })}
+                        inputProps={{
+                          placeholder: "bch address",
+                          name: "address",
+                          onChange: e => handleChange(e),
+                          required: true,
+                          value: formData.address
+                        }}
+                      />
+                      <div style={{ paddingTop: "12px" }}>
+                        <Button onClick={() => submit()}>Send</Button>
+                      </div>
+                    </Form>
+                  </Col>
+                </Row>
+              )) ||
+              (!loading && action === "history" && (history || {}).bchTransactions && (
+                <>
+                  {history.bchTransactions.map(el => (
+                    <>
+                      <h3>{el.transactionBalance > 0 ? "Received" : "Sent"}</h3>
+                      <p>{el.txid}</p>
+                      <p>{el.transactionBalance}</p> <p>{el.date.toLocaleString()}</p>{" "}
+                      <p>{el.confirmations}</p>
+                    </>
+                  ))}
+                </>
+              ))
             )}
           </Card>
         </Spin>
