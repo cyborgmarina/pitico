@@ -16,6 +16,7 @@ const Create = ({ history }) => {
     tokenName: "",
     tokenSymbol: "",
     documentHash: "",
+    decimals: "",
     documentUri: "",
     amount: ""
   });
@@ -31,13 +32,14 @@ const Create = ({ history }) => {
     }
 
     setLoading(true);
-    const { tokenName, tokenSymbol, documentHash, documentUri, amount } = data;
+    const { tokenName, tokenSymbol, documentHash, documentUri, amount, decimals } = data;
     try {
-      const docUri = documentUri || "pitico.cash";
+      const docUri = documentUri || "developer.bitcoin.com";
       const link = await createToken(wallet, {
         name: tokenName,
         symbol: tokenSymbol,
         documentHash,
+        decimals,
         docUri,
         initialTokenQty: amount
       });
@@ -148,12 +150,23 @@ const Create = ({ history }) => {
               </Form.Item>
               <Form.Item>
                 <Input
-                  placeholder="token website e.g.: pitico.cash"
+                  placeholder="token website e.g.: developer.bitcoin.com"
                   name="documentUri"
                   onChange={e => handleChange(e)}
                   required
                 />
               </Form.Item>
+              <Form.Item>
+                <Input
+                  style={{ padding: "0px 20px" }}
+                  placeholder="decimals"
+                  name="decimals"
+                  onChange={e => handleChange(e)}
+                  required
+                  type="number"
+                />
+              </Form.Item>
+
               <Form.Item
                 validateStatus={!data.dirty && Number(data.amount) <= 0 ? "error" : ""}
                 help={!data.dirty && Number(data.amount) <= 0 ? "Should be greater than 0" : ""}

@@ -22,8 +22,8 @@ const broadcastTransaction = async (SLPInstance, wallet, { ...args }) => {
     switch (TRANSACTION_TYPE) {
       case "IS_CREATING":
         config.batonReceiverAddress = slpAddress;
-        config.decimals = 0;
-        config.documentUri = config.documentUri || "developer.bitcoin.com";
+        config.decimals = config.decimals || 0;
+        config.documentUri = config.docUri;
         config.tokenReceiverAddress = slpAddress;
         createTransaction = async config => SLPInstance.TokenType1.create(config);
         break;
