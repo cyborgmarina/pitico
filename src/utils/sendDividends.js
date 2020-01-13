@@ -1,7 +1,5 @@
-/*
-  Get the token information based on the id.
-*/
-import Big from "big.js";
+/* eslint-disable no-loop-func */
+
 import { Utils } from "slpjs";
 import withSLP from "./withSLP";
 import { sendBch, SATOSHIS_PER_BYTE } from "./sendBch";
@@ -33,7 +31,6 @@ export const getElegibleAddresses = withSLP(async (SLP, wallet, balances, value)
     const tokenBalanceSum = elegibleBalances.reduce((p, c) => c.tokenBalance + p, 0);
 
     const newElegibleBalances = elegibleBalances.filter(elegibleBalance => {
-      // const address = Utils.toCashAddress(elegibleBalance.slpAddress);
       const elegibleValue = Number(
         ((elegibleBalance.tokenBalance / tokenBalanceSum) * value).toFixed(8)
       );

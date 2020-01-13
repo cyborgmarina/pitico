@@ -1,17 +1,10 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { withRouter } from "react-router-dom";
-import { ButtonQR } from "badger-components-react";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import React, { useState } from "react";
 import { WalletContext } from "../../utils/context";
-import { Input, Button, notification, Spin, Icon, Row, Col, Card, Form, Typography } from "antd";
-import { QRCode } from "../Common/QRCode";
-
-const { Paragraph, Text } = Typography;
+import { Input, Button, Icon, Row, Col, Card, Form } from "antd";
 
 export const OnBoarding = ({ history }) => {
   const ContextValue = React.useContext(WalletContext);
-  const { wallet, tokens, balance, createWallet } = ContextValue;
+  const { createWallet } = ContextValue;
   const [formData, setFormData] = useState({
     dirty: true,
     mnemonic: ""

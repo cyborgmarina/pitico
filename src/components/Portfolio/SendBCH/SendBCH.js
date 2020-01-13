@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { WalletContext } from "../../../utils/context";
-import { Card, Icon, Form, Input, Button, Spin, notification, message } from "antd";
+import { Card, Form, Button, Spin, notification, message } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { PlaneIcon } from "../../Common/CustomIcons";
@@ -49,7 +49,7 @@ const SendBCH = ({ onClose }) => {
       notification.success({
         message: "Success",
         description: (
-          <a href={link} target="_blank">
+          <a href={link} target="_blank" rel="noopener noreferrer">
             <Paragraph>Transaction successful. Click or tap here for more details</Paragraph>
           </a>
         ),

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useEffect, useState } from "react";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { notification } from "antd";

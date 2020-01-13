@@ -1,6 +1,5 @@
 import Big from "big.js";
 import withSLP from "./withSLP";
-import { DUST } from "./sendDividends";
 
 export const SATOSHIS_PER_BYTE = 1.01;
 const NETWORK = process.env.REACT_APP_NETWORK;

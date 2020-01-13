@@ -54,7 +54,7 @@ export const QRCode = ({ address, size = 210, onClick = () => null, ...otherProp
           />
         </div>
       </CopyToClipboard>
-      <AddrHolder id="copyTxtArea" rows="2" readonly value={address} />
+      <AddrHolder id="copyTxtArea" rows="2" readOnly value={address} />
     </Popover>
   );
 };

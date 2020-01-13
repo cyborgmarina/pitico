@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Popover, Button } from "antd";
+import { Popover } from "antd";
 
 export default ({ children, hoverContent, clickContent }) => {
   const [hovered, setHovered] = useState(false);
@@ -33,7 +33,9 @@ export default ({ children, hoverContent, clickContent }) => {
         content={
           <div>
             {clickContent}
-            <a onClick={hide}>Close</a>
+            <a href="." onClick={hide}>
+              Close
+            </a>
           </div>
         }
         trigger="click"
