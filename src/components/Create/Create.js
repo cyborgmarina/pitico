@@ -103,7 +103,7 @@ const Create = ({ history }) => {
             style={{ boxShadow: "0px 0px 40px 0px rgba(0,0,0,0.35)", borderRadius: "8px" }}
             title={
               <h2>
-                <Icon type="plus-square" theme="filled" /> Create
+                <Icon type="plus-square" theme="filled" /> Create Token
               </h2>
             }
             bordered={true}
