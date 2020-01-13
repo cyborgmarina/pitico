@@ -2,7 +2,6 @@ import withSLP from "./withSLP";
 
 const getTransactionHistory = async (SLP, cashAdresses, transactions) => {
   try {
-    console.log("transactions :", transactions);
     const query = (cashAddress, qty) => ({
       v: 3,
       q: {
@@ -32,8 +31,6 @@ const getTransactionHistory = async (SLP, cashAdresses, transactions) => {
       return a;
     }, []);
 
-    console.log("nonZeroIndexes :", nonZeroIndexes);
-
     const queryResults = Array.from({ length: nonZeroIndexes.length });
     const slpDbInstance = SLP.SLPDB;
 
@@ -44,12 +41,11 @@ const getTransactionHistory = async (SLP, cashAdresses, transactions) => {
 
     const tokensTxIds = queryResults.map(el => el.c.concat(el.u).map(tx => tx.txid));
 
-    console.log("tokensTxIds :", tokensTxIds);
     const bchTxIds = Array.from({ length: nonZeroIndexes.length });
     nonZeroIndexes.forEach((e, i) => {
       bchTxIds[i] = transactions[e].filter(el => !tokensTxIds[e].includes(el));
     });
-    console.log("bchTxIds :", bchTxIds);
+
     let bchTransactions = [];
 
     for (let i = 0; i < nonZeroIndexes.length; i++) {
@@ -73,7 +69,6 @@ const getTransactionHistory = async (SLP, cashAdresses, transactions) => {
         ];
     }
 
-    console.log("4 - bchTransactions :", bchTransactions);
     return {
       bchTransactions: bchTransactions
         .reduce((a, b) => a.concat(b), [])
@@ -88,8 +83,7 @@ const getTransactionHistory = async (SLP, cashAdresses, transactions) => {
       wallets: nonZeroIndexes.map(el => cashAdresses[el])
     };
   } catch (e) {
-    console.log("exp :", e);
-    return null;
+    throw e;
   }
 };
 

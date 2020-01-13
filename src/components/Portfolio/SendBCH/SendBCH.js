@@ -28,6 +28,7 @@ const SendBCH = ({ onClose }) => {
   const [loading, setLoading] = useState(false);
   const [action, setAction] = useState("send");
   const [history, setHistory] = useState(null);
+  const [bchToDollar, setBchToDollar] = useState(null);
 
   async function submit() {
     setFormData({
@@ -101,7 +102,13 @@ const SendBCH = ({ onClose }) => {
         balances.bitcoinCashBalance[1].transactions,
         balances.bitcoinCashBalance[2].transactions
       ]);
-      console.log("history :", resp);
+      await fetch("https://markets.api.bitcoin.com/live/bitcoin")
+        .then(response => {
+          return response.json();
+        })
+        .then(myJson => {
+          setBchToDollar(myJson.data.BCH);
+        });
       setHistory(resp);
     } catch (err) {
       const message = err.message;
@@ -235,12 +242,38 @@ const SendBCH = ({ onClose }) => {
               (!loading && action === "history" && (history || {}).bchTransactions && (
                 <>
                   {history.bchTransactions.map(el => (
-                    <>
-                      <h3>{el.transactionBalance > 0 ? "Received" : "Sent"}</h3>
-                      <p>{el.txid}</p>
-                      <p>{el.transactionBalance}</p> <p>{el.date.toLocaleString()}</p>{" "}
-                      <p>{el.confirmations}</p>
-                    </>
+                    <div
+                      style={{
+                        background: el.transactionBalance > 0 ? "#D4EFFC" : " #ffd59a",
+                        color: "black",
+                        borderRadius: "12px",
+                        marginBottom: "18px",
+                        padding: "8px",
+                        boxShadow: "6px 6px #888888",
+                        width: "97%"
+                      }}
+                    >
+                      <p>{el.transactionBalance > 0 ? "Received" : "Sent"}</p>
+                      <p>{el.date.toLocaleString()}</p>
+
+                      <p>{`${el.transactionBalance > 0 ? "+" : ""}${el.transactionBalance} BCH`}</p>
+                      <p>{`${el.transactionBalance > 0 ? "+$" : "-$"}${
+                        (Math.abs(el.transactionBalance) / bchToDollar).toFixed(2).toString() ===
+                        "0.00"
+                          ? 0.01
+                          : (Math.abs(el.transactionBalance) / bchToDollar).toFixed(2)
+                      } USD`}</p>
+                      <a href={`https://explorer.bitcoin.com/bch/tx/${el.txid}`} target="_blank">
+                        <Paragraph
+                          small
+                          ellipsis
+                          style={{ whiteSpace: "nowrap", color: "black", maxWidth: "90%" }}
+                        >
+                          {el.txid}
+                        </Paragraph>
+                      </a>
+                      <p>{`Confirmations: ${el.confirmations}`}</p>
+                    </div>
                   ))}
                 </>
               ))

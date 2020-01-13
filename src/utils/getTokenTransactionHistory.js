@@ -1,6 +1,6 @@
 import withSLP from "./withSLP";
 
-const getTokenTransactionHistory = async (SLP, slpAddress, tokenId) => {
+const getTokenTransactionHistory = async (SLP, slpAdresses, tokenId) => {
   try {
     const query = {
       v: 3,
@@ -9,10 +9,10 @@ const getTokenTransactionHistory = async (SLP, slpAddress, tokenId) => {
         find: {
           $or: [
             {
-              "in.e.a": slpAddress
+              "in.e.a": { $in: slpAdresses }
             },
             {
-              "out.e.a": slpAddress
+              "out.e.a": { $in: slpAdresses }
             }
           ],
           "slp.detail.tokenIdHex": tokenId
@@ -28,16 +28,22 @@ const getTokenTransactionHistory = async (SLP, slpAddress, tokenId) => {
     };
 
     const calculateTransactionBalance = outputs => {
-      if (outputs.length === 1 && outputs[0].address === slpAddress) return outputs[0].amount;
-      if (outputs.length > 1 && outputs[outputs.length - 1].address === slpAddress)
+      if (outputs.length === 1 && slpAdresses.includes(outputs[0].address))
+        return +outputs[0].amount;
+      if (outputs.length === 1 && !slpAdresses.includes(outputs[0].address))
+        return +outputs[0].amount * -1;
+      if (outputs.length > 1 && slpAdresses.includes(outputs[outputs.length - 1].address))
         return (
           outputs
             .slice(0, outputs.length - 1)
-            .map(element => element.amount)
+            .map(element => +element.amount)
             .reduce((a, b) => a + b, 0) * -1
         );
-      if (outputs.length > 1 && outputs.findIndex(element => element.address === slpAddress))
-        return outputs.find(element => element.address === slpAddress).amount;
+      if (
+        outputs.length > 1 &&
+        outputs.findIndex(element => slpAdresses.includes(element.address)) !== -1
+      )
+        return +outputs.find(element => slpAdresses.includes(element.address)).amount;
     };
 
     const slpDbInstance = SLP.SLPDB;
@@ -51,7 +57,8 @@ const getTokenTransactionHistory = async (SLP, slpAddress, tokenId) => {
         txid: el.txid,
         detail: el.tokenDetails.detail,
         balance: calculateTransactionBalance(el.tokenDetails.detail.outputs),
-        date: new Date(Number(el.blk.t) * 1000)
+        date: new Date(Number(el.blk.t) * 1000),
+        confirmed: true
       }));
     }
 
@@ -60,12 +67,14 @@ const getTokenTransactionHistory = async (SLP, slpAddress, tokenId) => {
         txid: el.txid,
         detail: el.tokenDetails.detail,
         balance: calculateTransactionBalance(el.tokenDetails.detail.outputs),
-        date: null
+        date: new Date(),
+        confirmed: false
       }));
     }
-    return tokenTransactionHistory;
+    const { confirmed, unconfirmed } = tokenTransactionHistory;
+    return unconfirmed.concat(confirmed);
   } catch (e) {
-    return [];
+    throw e;
   }
 };
 

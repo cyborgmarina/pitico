@@ -20,7 +20,7 @@ const getWalletDetails = (SLPInstance, wallet) => {
 
   const changes = arrayArg(hdNodeAccount => pathToAccount(hdNodeAccount, "0/0"), hdNodeAccounts);
   const cashAdresses = arrayArg(change => SLPInstance.HDNode.toCashAddress(change), changes);
-  console.log("cashAdresses :", cashAdresses);
+
   const slpAdresses = arrayArg(
     cashAddress => SLPInstance.Address.toSLPAddress(cashAddress),
     cashAdresses
