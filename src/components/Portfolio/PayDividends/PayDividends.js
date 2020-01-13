@@ -9,13 +9,14 @@ import {
   getElegibleAddresses,
   DUST
 } from "../../../utils/sendDividends";
-import { Card, Icon, Form, Button, Alert, Spin, notification, Badge, Tooltip } from "antd";
+import { Card, Icon, Form, Button, Alert, Spin, notification, Badge, Tooltip, message } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import isPiticoTokenHolder from "../../../utils/isPiticoTokenHolder";
 import debounce from "../../../utils/debounce";
-import { getBCHBalanceFromUTXO } from "../../../utils/sendBch";
+import { getBalanceFromUtxos, getBCHUtxos } from "../../../utils/sendBch";
 import { FormItemWithMaxAddon } from "../EnhancedInputs";
+import { retry } from "../../../utils/retry";
 
 const StyledPayDividends = styled.div`
   * {
@@ -164,16 +165,20 @@ const PayDividends = ({ SLP, token, onClose }) => {
     setLoading(true);
 
     try {
-      const bal = await getBCHBalanceFromUTXO(wallet);
-      const { txFee } = await getElegibleAddresses(wallet, stats.balances, bal);
-      let value = bal - txFee - DUST >= 0 ? (bal - txFee - DUST).toFixed(8) : 0;
+      const utxos = await retry(() => getBCHUtxos(wallet.cashAddress));
+      const totalBalance = getBalanceFromUtxos(utxos);
+      const { txFee } = await getElegibleAddresses(wallet, stats.balances, totalBalance);
+      let value = totalBalance - txFee >= 0 ? (totalBalance - txFee).toFixed(8) : 0;
       setFormData({
         ...formData,
-        value: value
+        value
       });
       await calcElegibles(value);
-      setLoading(false);
-    } catch (err) {}
+    } catch (err) {
+      message.error("Unable to calculate the max value due to network errors");
+    }
+
+    setLoading(false);
   };
 
   return (
