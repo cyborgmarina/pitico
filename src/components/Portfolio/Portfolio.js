@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Icon, Avatar, Empty, Alert } from "antd";
+import { Row, Col, Icon, Avatar, Empty, Alert, notification, Radio, Spin } from "antd";
 import { EnhancedCard } from "./EnhancedCard";
 import { WalletContext } from "../../utils/context";
 import { Meta } from "antd/lib/list/Item";
@@ -14,19 +14,54 @@ import MoreCardOptions from "./MoreCardOptions";
 import PayDividendsOption from "./PayDividendsOption";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { OnBoarding } from "../OnBoarding/OnBoarding";
+import getTokenTransactionHistory from "../../utils/getTokenTransactionHistory";
 import bchFlagLogo from "../../assets/4-bitcoin-cash-logo-flag.png";
 
 export default () => {
   const ContextValue = React.useContext(WalletContext);
   const { wallet, tokens, loading, balances } = ContextValue;
-  console.log("tokens :", tokens);
   const [selectedToken, setSelectedToken] = useState(null);
   const [action, setAction] = useState(null);
   const SLP_TOKEN_ICONS_URL = "https://tokens.bch.sx/64";
 
+  const [loadingTokenHistory, setLoadingTokenHistory] = useState(false);
+  const [tokenCardAction, setTokenCardAction] = useState("details");
+  const [history, setHistory] = useState(null);
+
+  const getTokenHistory = async tokenId => {
+    setLoadingTokenHistory(true);
+    try {
+      const resp = await getTokenTransactionHistory(wallet.slpAdresses, tokenId);
+
+      setHistory(resp);
+    } catch (err) {
+      const message = err.message;
+
+      notification.error({
+        message: "Error",
+        description: message,
+        duration: 2
+      });
+      console.error(err.message);
+    }
+
+    setLoadingTokenHistory(false);
+  };
+
+  const handleChangeAction = tokenId => {
+    if (tokenCardAction == "details") {
+      setTokenCardAction("history");
+      getTokenHistory(tokenId);
+    } else {
+      setTokenCardAction("details");
+    }
+  };
   const onClose = () => {
     setSelectedToken(null);
     setAction(null);
+    setLoadingTokenHistory(false);
+    setTokenCardAction("details");
+    setHistory(null);
   };
 
   return (
@@ -148,8 +183,50 @@ export default () => {
                   </span>
                 ]}
                 renderExpanded={() => (
-                  <>
-                    {selectedToken && action === null && token.tokenId === selectedToken.tokenId ? (
+                  <Spin spinning={loadingTokenHistory}>
+                    <Radio.Group
+                      defaultValue="details"
+                      onChange={() => handleChangeAction(selectedToken.tokenId)}
+                      value={tokenCardAction}
+                      style={{
+                        width: "100%",
+                        textAlign: "center",
+                        marginTop: "0px",
+                        marginBottom: "18px"
+                      }}
+                      size="small"
+                      buttonStyle="solid"
+                    >
+                      <Radio.Button
+                        style={{
+                          borderRadius: "19.5px",
+                          height: "40px",
+                          width: "50%",
+                          fontSize: "16px"
+                        }}
+                        value="details"
+                        onClick={() => handleChangeAction(selectedToken.tokenId)}
+                      >
+                        <Icon style={{ color: "#fff" }} type="info-circle" /> Details
+                      </Radio.Button>
+                      <Radio.Button
+                        style={{
+                          borderRadius: "19.5px",
+                          height: "40px",
+                          width: "50%",
+                          fontSize: "16px"
+                        }}
+                        value="history"
+                        onClick={() => handleChangeAction(selectedToken.tokenId)}
+                      >
+                        <Icon style={{ color: "#fff" }} type="history" /> History
+                      </Radio.Button>
+                    </Radio.Group>
+                    {!loadingTokenHistory &&
+                    selectedToken &&
+                    action === null &&
+                    token.tokenId === selectedToken.tokenId &&
+                    tokenCardAction === "details" ? (
                       <Alert
                         message={
                           <div>
@@ -185,6 +262,53 @@ export default () => {
                       />
                     ) : null}
 
+                    {!loadingTokenHistory &&
+                    selectedToken &&
+                    action === null &&
+                    token.tokenId === selectedToken.tokenId &&
+                    tokenCardAction === "history" ? (
+                      <>
+                        {history.map(el => (
+                          <div
+                            style={{
+                              background: el.balance > 0 ? "#D4EFFC" : " #ffd59a",
+                              color: "black",
+                              borderRadius: "12px",
+                              marginBottom: "18px",
+                              padding: "8px",
+                              boxShadow: "6px 6px #888888",
+                              width: "97%"
+                            }}
+                          >
+                            <p>
+                              {el.balance > 0
+                                ? el.detail.transactionType === "GENESIS"
+                                  ? "Genesis"
+                                  : "Received"
+                                : "Sent"}
+                            </p>
+                            <p>{el.date.toLocaleString()}</p>
+
+                            <p>{`${el.balance > 0 ? "+" : ""}${el.balance} ${el.detail.symbol}`}</p>
+
+                            <a
+                              href={`https://explorer.bitcoin.com/bch/tx/${el.txid}`}
+                              target="_blank"
+                            >
+                              <Paragraph
+                                small
+                                ellipsis
+                                style={{ whiteSpace: "nowrap", color: "black", maxWidth: "90%" }}
+                              >
+                                {el.txid}
+                              </Paragraph>
+                            </a>
+                            <p>{`Confirmed: ${el.confirmed ? "Yes" : "No"}`}</p>
+                          </div>
+                        ))}
+                      </>
+                    ) : null}
+
                     {selectedToken && action === "mint" ? (
                       <Mint token={selectedToken} onClose={onClose} />
                     ) : null}
@@ -194,7 +318,7 @@ export default () => {
                     {selectedToken && action === "dividends" ? (
                       <PayDividends token={selectedToken} onClose={onClose} />
                     ) : null}
-                  </>
+                  </Spin>
                 )}
               >
                 <Meta

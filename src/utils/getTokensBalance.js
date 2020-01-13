@@ -5,36 +5,99 @@ const getTokensBalance = async (SLP, slpAdresses) => {
     const query = {
       v: 3,
       q: {
-        db: ["a"],
-        find: {
-          address: { $in: slpAdresses },
-          token_balance: { $gte: 0 }
-        },
-        limit: 10000
-      },
-      r: {
-        f:
-          "[.[] | { tokenId: .tokenDetails.tokenIdHex, address: .address,  satoshisBalance: .satoshis_balance, balance: .token_balance }]"
+        aggregate: [
+          {
+            $match: {
+              "graphTxn.outputs": {
+                $elemMatch: {
+                  address: { $in: slpAdresses },
+                  status: "UNSPENT",
+                  slpAmount: { $gte: 0 }
+                }
+              }
+            }
+          },
+          { $unwind: "$graphTxn.outputs" },
+          {
+            $project: {
+              amount: "$graphTxn.outputs.slpAmount",
+              address: "$graphTxn.outputs.address",
+              txid: "$graphTxn.txid",
+              vout: "$graphTxn.outputs.vout",
+              tokenId: "$tokenDetails.tokenIdHex",
+              out: "$graphTxn.outputs",
+              isTokenBalance: {
+                $cond: [
+                  {
+                    $and: [
+                      { $in: ["$graphTxn.outputs.address", slpAdresses] },
+                      { $eq: ["$graphTxn.outputs.status", "UNSPENT"] },
+                      { $gte: ["$graphTxn.outputs.slpAmount", 0] }
+                    ]
+                  },
+                  "$graphTxn.outputs.slpAmount",
+                  0
+                ]
+              },
+              isSatoshiBalance: {
+                $cond: [
+                  {
+                    $and: [
+                      { $in: ["$graphTxn.outputs.address", slpAdresses] },
+                      { $eq: ["$graphTxn.outputs.status", "UNSPENT"] },
+                      { $gte: ["$graphTxn.outputs.slpAmount", 0] }
+                    ]
+                  },
+                  "$graphTxn.outputs.bchSatoshis",
+                  0
+                ]
+              }
+            }
+          },
+          {
+            $group: {
+              _id: "$tokenId",
+              tokenId: { $first: "$tokenId" },
+              balance: { $sum: "$isTokenBalance" },
+              satoshisBalance: { $sum: "$isSatoshiBalance" },
+              adresses: { $addToSet: "$address" },
+              outputs: { $addToSet: "$out" }
+            }
+          }
+        ]
       }
     };
 
     const slpDbInstance = SLP.SLPDB;
     const queryResult = await slpDbInstance.get(query);
-    return queryResult.a.reduce((a, e) => {
-      const tokenId = e.tokenId,
-        found = a.find(el => el.tokenId === tokenId);
-      if (found) {
-        found.satoshisBalance += e.satoshisBalance;
-        found.balance = (+found.balance + +e.balance).toString();
-        found.address = [found.address, e.address].reduce(
-          (acc, element) => acc.concat(element),
-          []
-        );
-      } else a.push(e);
-      return a;
-    }, []);
+    const result = queryResult.g;
+
+    const totalTokensBalance = result.map(el => {
+      const adresses = el.adresses.filter(e => slpAdresses.includes(e));
+      el.tokenBalanceByAddress = Array.from({ length: adresses.length });
+      adresses.forEach((slpAddress, index) => {
+        const balanceByAddress = el.outputs.reduce((prev, cur) => {
+          if (cur.address === slpAddress) return prev + +cur.slpAmount;
+          return prev;
+        }, 0);
+
+        const satoshisBalanceByAddress = el.outputs.reduce((prev, cur) => {
+          if (cur.address === slpAddress) return prev + cur.satoshisBalance;
+          return prev;
+        }, 0);
+        el.tokenBalanceByAddress[index] = {
+          slpAddress,
+          balanceByAddress,
+          satoshisBalanceByAddress
+        };
+      });
+      el.adresses = adresses;
+      return el;
+    });
+
+    return totalTokensBalance;
   } catch (e) {
-    return null;
+    throw e;
   }
 };
 
