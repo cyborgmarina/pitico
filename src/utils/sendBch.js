@@ -1,6 +1,5 @@
 import Big from "big.js";
 import withSLP from "./withSLP";
-import { DUST } from "./sendDividends";
 
 export const SATOSHIS_PER_BYTE = 1.01;
 const NETWORK = process.env.REACT_APP_NETWORK;
@@ -94,25 +93,6 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
   }
 });
 
-// Generate a change address from a Mnemonic of a private key.
-const changeAddrFromMnemonic = withSLP((SLP, mnemonic) => {
-  // root seed buffer
-  const rootSeed = SLP.Mnemonic.toSeed(mnemonic);
-
-  // master HDNode
-  let masterHDNode;
-  if (NETWORK === `mainnet`) masterHDNode = SLP.HDNode.fromSeed(rootSeed);
-  else masterHDNode = SLP.HDNode.fromSeed(rootSeed, "testnet");
-
-  // HDNode of BIP44 account
-  const account = SLP.HDNode.derivePath(masterHDNode, "m/44'/245'/0'");
-
-  // derive the first external change address HDNode which is going to spend utxo
-  const change = SLP.HDNode.derivePath(account, "0/0");
-
-  return change;
-});
-
 // Get the balance in BCH of a BCH address.
 export const getBCHBalanceFromUTXO = withSLP(async (SLP, wallet) => {
   try {
@@ -128,40 +108,6 @@ export const getBCHBalanceFromUTXO = withSLP(async (SLP, wallet) => {
     throw err;
   }
 });
-
-// Get the balance in BCH of a BCH address.
-const getBCHBalance = withSLP(async (SLP, addr, verbose) => {
-  try {
-    const result = await SLP.Address.details(addr);
-
-    if (verbose) console.log(result);
-
-    const bchBalance = result;
-
-    return bchBalance.balance + bchBalance.unconfirmedBalance;
-  } catch (err) {
-    console.error(`Error in getBCHBalance: `, err);
-    console.log(`addr: ${addr}`);
-    throw err;
-  }
-});
-
-// Returns the utxo with the biggest balance from an array of utxos.
-const findBiggestUtxo = utxos => {
-  let largestAmount = 0;
-  let largestIndex = 0;
-
-  for (var i = 0; i < utxos.length; i++) {
-    const thisUtxo = utxos[i];
-
-    if (thisUtxo.satoshis > largestAmount) {
-      largestAmount = thisUtxo.satoshis;
-      largestIndex = i;
-    }
-  }
-
-  return utxos[largestIndex];
-};
 
 export const calcFee = withSLP(async (SLP, { wallet }) => {
   const u = await SLP.Address.utxo(wallet.cashAddress);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { WalletContext } from "../../../utils/context";
 
-import { Card, Icon, Form, Input, Button, Spin, notification } from "antd";
+import { Card, Icon, Form, Button, Spin, notification } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import sendToken from "../../../utils/broadcastTransaction";
@@ -40,7 +40,7 @@ const Transfer = ({ token, onClose }) => {
       notification.success({
         message: "Success",
         description: (
-          <a href={link} target="_blank">
+          <a href={link} target="_blank" rel="noopener noreferrer">
             <Paragraph>Transaction successful. Click or tap here for more details</Paragraph>
           </a>
         ),

@@ -86,8 +86,8 @@ export default () => {
       )}
       {loading
         ? Array.from({ length: 20 }).map((v, i) => (
-            <Col style={{ marginTop: "8px" }} xl={7} lg={12} span={24}>
-              <EnhancedCard loading key={i} bordered={false}>
+            <Col key={i} style={{ marginTop: "8px" }} xl={7} lg={12} span={24}>
+              <EnhancedCard loading bordered={false}>
                 <Meta
                   avatar={
                     <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
@@ -101,7 +101,14 @@ export default () => {
         : null}
       {tokens.length
         ? tokens.map(token => (
-            <Col style={{ marginTop: "8px" }} xl={7} lg={12} sm={12} span={24} key={token.tokenId}>
+            <Col
+              style={{ marginTop: "8px" }}
+              xl={7}
+              lg={12}
+              sm={12}
+              span={24}
+              key={`col-${token.tokenId}`}
+            >
               <EnhancedCard
                 loading={!token.info}
                 expand={selectedToken && token.tokenId === selectedToken.tokenId}
@@ -110,7 +117,7 @@ export default () => {
                     !selectedToken || token.tokenId !== selectedToken.tokenId ? token : null
                   )
                 }
-                key={token.tokenId}
+                key={`card-${token.tokenId}`}
                 style={{ marginTop: "8px", textAlign: "left" }}
                 onClose={onClose}
                 actions={[
@@ -162,7 +169,7 @@ export default () => {
                             ) : (
                               Object.entries(token.info || {}).map(entry => (
                                 <Paragraph
-                                  key={token.tokenId}
+                                  key={`paragraph-${token.tokenId}-${entry[0]}`}
                                   small
                                   copyable={{ text: entry[1] }}
                                   ellipsis
@@ -197,7 +204,7 @@ export default () => {
                       src={`${SLP_TOKEN_ICONS_URL}/${token.tokenId}.png`}
                       unloader={
                         <Identicon
-                          key={token.tokenId}
+                          key={`identicon-${token.tokenId}`}
                           style={{ tranform: "translate(-100px,100px)" }}
                           seed={token.tokenId}
                         />

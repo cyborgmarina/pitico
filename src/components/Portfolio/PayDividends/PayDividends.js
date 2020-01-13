@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import { WalletContext } from "../../../utils/context";
@@ -7,13 +9,12 @@ import {
   getElegibleAddresses,
   DUST
 } from "../../../utils/sendDividends";
-import { Card, Icon, Form, Input, Button, Alert, Spin, notification, Badge, Tooltip } from "antd";
+import { Card, Icon, Form, Button, Alert, Spin, notification, Badge, Tooltip } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import isPiticoTokenHolder from "../../../utils/isPiticoTokenHolder";
 import debounce from "../../../utils/debounce";
 import { getBCHBalanceFromUTXO } from "../../../utils/sendBch";
-import bchLogo from "../../../assets/bch-logo.png";
 import { FormItemWithMaxAddon } from "../EnhancedInputs";
 
 const StyledPayDividends = styled.div`
@@ -92,7 +93,7 @@ const PayDividends = ({ SLP, token, onClose }) => {
     }
 
     setLoading(true);
-    const { value, tokenId } = formData;
+    const { value } = formData;
     try {
       const link = await sendDividends(wallet, {
         value,
@@ -114,7 +115,7 @@ const PayDividends = ({ SLP, token, onClose }) => {
       notification.success({
         message: "Success",
         description: (
-          <a href={link} target="_blank">
+          <a href={link} target="_blank" rel="noopener noreferrer">
             <Paragraph>Transaction successful. Click or tap here for more details</Paragraph>
           </a>
         ),
@@ -200,7 +201,7 @@ const PayDividends = ({ SLP, token, onClose }) => {
                         holders.
                       </Paragraph>
                       <Paragraph>
-                        <a href="https://t.me/piticocash" target="_blank">
+                        <a href="https://t.me/piticocash" target="_blank" rel="noopener noreferrer">
                           Join our Telegram Group to get your $PTCH.
                         </a>
                       </Paragraph>

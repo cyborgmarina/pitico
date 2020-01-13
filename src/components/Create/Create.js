@@ -45,7 +45,7 @@ const Create = ({ history }) => {
       notification.success({
         message: "Success",
         description: (
-          <a href={link} target="_blank">
+          <a href={link} target="_blank" rel="noopener noreferrer">
             <Paragraph>Transaction successful. Click or tap here for more details</Paragraph>
           </a>
         ),

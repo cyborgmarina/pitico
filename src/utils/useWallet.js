@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useEffect, useState, useRef } from "react";
 import { getWallet, createWallet } from "./createWallet";
 import getBalance from "./getBalance";

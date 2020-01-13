@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Card, Icon, Alert, Typography, Form, Input, Button, Collapse } from "antd";
+import { Row, Col, Card, Icon, Typography } from "antd";
 const { Text, Title } = Typography;
 
 export default () => {
