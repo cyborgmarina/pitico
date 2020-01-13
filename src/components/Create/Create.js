@@ -16,6 +16,7 @@ const Create = ({ history }) => {
     tokenName: "",
     tokenSymbol: "",
     documentHash: "",
+    decimals: "",
     documentUri: "",
     amount: ""
   });
@@ -26,18 +27,32 @@ const Create = ({ history }) => {
       dirty: false
     });
 
-    if (!data.tokenName || !data.tokenSymbol || !data.amount || Number(data.amount) <= 0) {
+    // blank entry for decimals should be 0
+    if (data.decimals === "") {
+      data.decimals = 0;
+    }
+
+    if (
+      !data.tokenName ||
+      !data.tokenSymbol ||
+      !data.amount ||
+      Number(data.amount) <= 0 ||
+      (data.decimals !== "" && data.decimals < 0) ||
+      (data.decimals !== "" && data.decimals > 9) ||
+      (data.decimals !== "" && data.decimals % 1 !== 0)
+    ) {
       return;
     }
 
     setLoading(true);
-    const { tokenName, tokenSymbol, documentHash, documentUri, amount } = data;
+    const { tokenName, tokenSymbol, documentHash, documentUri, amount, decimals } = data;
     try {
-      const docUri = documentUri || "pitico.cash";
+      const docUri = documentUri || "developer.bitcoin.com";
       const link = await createToken(wallet, {
         name: tokenName,
         symbol: tokenSymbol,
         documentHash,
+        decimals,
         docUri,
         initialTokenQty: amount
       });
@@ -45,7 +60,7 @@ const Create = ({ history }) => {
       notification.success({
         message: "Success",
         description: (
-          <a href={link} target="_blank">
+          <a href={link} target="_blank" rel="noopener noreferrer">
             <Paragraph>Transaction successful. Click or tap here for more details</Paragraph>
           </a>
         ),
@@ -88,7 +103,7 @@ const Create = ({ history }) => {
             style={{ boxShadow: "0px 0px 40px 0px rgba(0,0,0,0.35)", borderRadius: "8px" }}
             title={
               <h2>
-                <Icon type="plus-square" theme="filled" /> Create
+                <Icon type="plus-square" theme="filled" /> Create Token
               </h2>
             }
             bordered={true}
@@ -148,12 +163,39 @@ const Create = ({ history }) => {
               </Form.Item>
               <Form.Item>
                 <Input
-                  placeholder="token website e.g.: pitico.cash"
+                  placeholder="token website e.g.: developer.bitcoin.com"
                   name="documentUri"
                   onChange={e => handleChange(e)}
                   required
                 />
               </Form.Item>
+              <Form.Item
+                validateStatus={
+                  (!data.dirty && data.decimals < 0) || (!data.dirty && data.decimals > 9)
+                    ? "error"
+                    : ""
+                }
+                help={
+                  (!data.dirty && data.decimals < 0) ||
+                  (!data.dirty && data.decimals > 9) ||
+                  (!data.dirty && data.decimals % 1 !== 0)
+                    ? "Must be an integer between 0 and 9"
+                    : ""
+                }
+              >
+                <Input
+                  style={{ padding: "0px 20px" }}
+                  placeholder="decimals"
+                  name="decimals"
+                  onChange={e => handleChange(e)}
+                  required
+                  type="number"
+                  min="0"
+                  max="9"
+                  step="1"
+                />
+              </Form.Item>
+
               <Form.Item
                 validateStatus={!data.dirty && Number(data.amount) <= 0 ? "error" : ""}
                 help={!data.dirty && Number(data.amount) <= 0 ? "Should be greater than 0" : ""}

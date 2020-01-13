@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { WalletContext } from "../../../utils/context";
 
-import { Card, Icon, Form, Input, Button, Spin, notification } from "antd";
+import { Card, Icon, Form, Button, Spin, notification } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import sendToken from "../../../utils/broadcastTransaction";
@@ -40,7 +40,7 @@ const Transfer = ({ token, onClose }) => {
       notification.success({
         message: "Success",
         description: (
-          <a href={link} target="_blank">
+          <a href={link} target="_blank" rel="noopener noreferrer">
             <Paragraph>Transaction successful. Click or tap here for more details</Paragraph>
           </a>
         ),
@@ -96,6 +96,21 @@ const Transfer = ({ token, onClose }) => {
             <Row type="flex">
               <Col span={24}>
                 <Form style={{ width: "auto" }}>
+                  <FormItemWithQRCodeAddon
+                    validateStatus={!formData.dirty && !formData.address ? "error" : ""}
+                    help={
+                      !formData.dirty && !formData.address ? "Should be a valid slp address" : ""
+                    }
+                    onScan={result => setFormData({ ...formData, address: result })}
+                    inputProps={{
+                      placeholder: "SLP Address",
+                      name: "address",
+                      onChange: e => handleChange(e),
+                      required: true,
+                      value: formData.address
+                    }}
+                  />
+
                   <FormItemWithMaxAddon
                     validateStatus={
                       !formData.dirty && Number(formData.quantity) <= 0 ? "error" : ""
@@ -108,26 +123,12 @@ const Transfer = ({ token, onClose }) => {
                     onMax={onMax}
                     inputProps={{
                       prefix: <Icon type="block" />,
-                      placeholder: "quantity",
+                      placeholder: "Amount",
                       name: "quantity",
                       onChange: e => handleChange(e),
                       required: true,
                       type: "number",
                       value: formData.quantity
-                    }}
-                  />
-                  <FormItemWithQRCodeAddon
-                    validateStatus={!formData.dirty && !formData.address ? "error" : ""}
-                    help={
-                      !formData.dirty && !formData.address ? "Should be a valid slp address" : ""
-                    }
-                    onScan={result => setFormData({ ...formData, address: result })}
-                    inputProps={{
-                      placeholder: "slp address",
-                      name: "address",
-                      onChange: e => handleChange(e),
-                      required: true,
-                      value: formData.address
                     }}
                   />
                   <div style={{ paddingTop: "12px" }}>

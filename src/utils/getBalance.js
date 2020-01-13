@@ -1,5 +1,5 @@
 import getWalletDetails from "./getWalletDetails";
-import getTransactionHistory from "./getTransactionHistory";
+// import getTransactionHistory from "./getTransactionHistory";
 import getTokensBalance from "./getTokensBalance";
 import withSLP from "./withSLP";
 

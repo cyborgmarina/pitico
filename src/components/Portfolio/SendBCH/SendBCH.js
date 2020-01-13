@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { WalletContext } from "../../../utils/context";
-import { Card, Icon, Radio, Form, Input, Button, Spin, notification } from "antd";
+import { Card, Icon, Radio, Form, Button, Spin, notification, message } from "antd";
 import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { PlaneIcon } from "../../Common/CustomIcons";
 import { QRCode } from "../../Common/QRCode";
-import { sendBch, calcFee } from "../../../utils/sendBch";
+import { sendBch, calcFee, getBCHUtxos, getBalanceFromUtxos } from "../../../utils/sendBch";
 import getWalletDetails from "../../../utils/getWalletDetails";
 import { FormItemWithMaxAddon, FormItemWithQRCodeAddon } from "../EnhancedInputs";
 import getTransactionHistory from "../../../utils/getTransactionHistory";
+import { retry } from "../../../utils/retry";
 
 const StyledButtonWrapper = styled.div`
   display: flex;
@@ -52,7 +53,7 @@ const SendBCH = ({ onClose }) => {
       notification.success({
         message: "Success",
         description: (
-          <a href={link} target="_blank">
+          <a href={link} target="_blank" rel="noopener noreferrer">
             <Paragraph>Transaction successful. Click or tap here for more details</Paragraph>
           </a>
         ),
@@ -83,14 +84,17 @@ const SendBCH = ({ onClose }) => {
   const onMax = async () => {
     setLoading(true);
     try {
-      const txFee = await calcFee({ wallet });
-      let value =
-        balances.totalBalance - txFee >= 0 ? (balances.totalBalance - txFee).toFixed(8) : 0;
+      const utxos = await retry(() => getBCHUtxos(wallet.cashAddress));
+      const totalBalance = getBalanceFromUtxos(utxos);
+      const txFee = await calcFee(utxos);
+      let value = totalBalance - txFee >= 0 ? (totalBalance - txFee).toFixed(8) : 0;
       setFormData({
         ...formData,
         value
       });
-    } catch (err) {}
+    } catch (err) {
+      message.error("Unable to calculate the max value due to network errors");
+    }
     setLoading(false);
   };
 
@@ -125,7 +129,7 @@ const SendBCH = ({ onClose }) => {
   };
 
   const handleChangeAction = () => {
-    if (action == "send") {
+    if (action === "send") {
       setAction("history");
       getBchHistory();
     } else {
