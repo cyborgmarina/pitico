@@ -1,6 +1,5 @@
 import Big from "big.js";
 import withSLP from "./withSLP";
-import { DUST } from "./sendDividends";
 
 export const SATOSHIS_PER_BYTE = 1.01;
 const NETWORK = process.env.REACT_APP_NETWORK;
@@ -14,7 +13,8 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
     const value = values.reduce((previous, current) => new Big(current).plus(previous), new Big(0));
     const SEND_ADDR = wallet.cashAddress;
 
-    const u = await SLP.Address.utxo(SEND_ADDR);
+    const allUtxos = await getBCHUtxos(SEND_ADDR);
+    const utxos = [];
     let transactionBuilder;
 
     // instance of transaction builder
@@ -23,22 +23,32 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
 
     const satoshisToSend = SLP.BitcoinCash.toSatoshi(value.toPrecision(8));
     let originalAmount = new Big(0);
-    for (let i = 0; i < u.utxos.length; i++) {
-      const utxo = u.utxos[i];
+    let txFee = 0;
+    for (let i = 0; i < allUtxos.length; i++) {
+      const utxo = allUtxos[i];
       originalAmount = originalAmount.plus(utxo.satoshis);
       const vout = utxo.vout;
       const txid = utxo.txid;
       // add input with txid and index of vout
       transactionBuilder.addInput(txid, vout);
-    }
+      utxos.push(utxo);
 
-    // get byte count to calculate fee
-    const byteCount = SLP.BitcoinCash.getByteCount(
-      { P2PKH: u.utxos.length },
-      { P2PKH: addresses.length + 1 }
-    );
-    const satoshisPerByte = SATOSHIS_PER_BYTE;
-    const txFee = Math.floor(satoshisPerByte * byteCount);
+      const byteCount = SLP.BitcoinCash.getByteCount(
+        { P2PKH: utxos.length },
+        { P2PKH: addresses.length + 1 }
+      );
+      const satoshisPerByte = SATOSHIS_PER_BYTE;
+      txFee = Math.floor(satoshisPerByte * byteCount);
+
+      if (
+        originalAmount
+          .minus(satoshisToSend)
+          .minus(txFee)
+          .gte(0)
+      ) {
+        break;
+      }
+    }
 
     // amount to send back to the sending address.
     const remainder = Math.floor(originalAmount.minus(satoshisToSend).minus(txFee));
@@ -61,8 +71,8 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
     const keyPair = SLP.HDNode.toKeyPair(wallet.change);
 
     // Sign the transactions with the HD node.
-    for (let i = 0; i < u.utxos.length; i++) {
-      const utxo = u.utxos[i];
+    for (let i = 0; i < utxos.length; i++) {
+      const utxo = utxos[i];
       transactionBuilder.sign(
         i,
         keyPair,
@@ -94,78 +104,24 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
   }
 });
 
-// Generate a change address from a Mnemonic of a private key.
-const changeAddrFromMnemonic = withSLP((SLP, mnemonic) => {
-  // root seed buffer
-  const rootSeed = SLP.Mnemonic.toSeed(mnemonic);
-
-  // master HDNode
-  let masterHDNode;
-  if (NETWORK === `mainnet`) masterHDNode = SLP.HDNode.fromSeed(rootSeed);
-  else masterHDNode = SLP.HDNode.fromSeed(rootSeed, "testnet");
-
-  // HDNode of BIP44 account
-  const account = SLP.HDNode.derivePath(masterHDNode, "m/44'/245'/0'");
-
-  // derive the first external change address HDNode which is going to spend utxo
-  const change = SLP.HDNode.derivePath(account, "0/0");
-
-  return change;
+export const getBCHUtxos = withSLP(async (SLP, cashAddress) => {
+  const u = await SLP.Address.utxo(cashAddress);
+  const isTokenUtxoArray = await SLP.Utils.isTokenUtxo(u.utxos);
+  return u.utxos.filter((utxo, index) => !isTokenUtxoArray[index]);
 });
 
 // Get the balance in BCH of a BCH address.
-export const getBCHBalanceFromUTXO = withSLP(async (SLP, wallet) => {
-  try {
-    const u = await SLP.Address.utxo(wallet.cashAddress);
-    let satoshis = new Big(0);
-    for (let i = 0; i < u.utxos.length; i++) {
-      const utxo = u.utxos[i];
-      satoshis = satoshis.plus(utxo.satoshis);
-    }
-    return SLP.BitcoinCash.toBitcoinCash(Math.floor(satoshis));
-  } catch (err) {
-    console.error(`Error in getBCHBalanceFromUTXO: `, err);
-    throw err;
+export const getBalanceFromUtxos = withSLP((SLP, utxos) => {
+  let satoshis = new Big(0);
+  for (let i = 0; i < utxos.length; i++) {
+    const utxo = utxos[i];
+    satoshis = satoshis.plus(utxo.satoshis);
   }
+  return SLP.BitcoinCash.toBitcoinCash(Math.floor(satoshis));
 });
 
-// Get the balance in BCH of a BCH address.
-const getBCHBalance = withSLP(async (SLP, addr, verbose) => {
-  try {
-    const result = await SLP.Address.details(addr);
-
-    if (verbose) console.log(result);
-
-    const bchBalance = result;
-
-    return bchBalance.balance + bchBalance.unconfirmedBalance;
-  } catch (err) {
-    console.error(`Error in getBCHBalance: `, err);
-    console.log(`addr: ${addr}`);
-    throw err;
-  }
-});
-
-// Returns the utxo with the biggest balance from an array of utxos.
-const findBiggestUtxo = utxos => {
-  let largestAmount = 0;
-  let largestIndex = 0;
-
-  for (var i = 0; i < utxos.length; i++) {
-    const thisUtxo = utxos[i];
-
-    if (thisUtxo.satoshis > largestAmount) {
-      largestAmount = thisUtxo.satoshis;
-      largestIndex = i;
-    }
-  }
-
-  return utxos[largestIndex];
-};
-
-export const calcFee = withSLP(async (SLP, { wallet }) => {
-  const u = await SLP.Address.utxo(wallet.cashAddress);
-  const byteCount = SLP.BitcoinCash.getByteCount({ P2PKH: u.utxos.length }, { P2PKH: 2 });
+export const calcFee = withSLP((SLP, utxos) => {
+  const byteCount = SLP.BitcoinCash.getByteCount({ P2PKH: utxos.length }, { P2PKH: 2 });
   const satoshisPerByte = SATOSHIS_PER_BYTE;
   const txFee = SLP.BitcoinCash.toBitcoinCash(Math.floor(satoshisPerByte * byteCount));
   return txFee;

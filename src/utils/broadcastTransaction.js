@@ -10,7 +10,7 @@ const broadcastTransaction = async (SLPInstance, wallet, { ...args }) => {
       (args.initialTokenQty && args.symbol && args.name && "IS_CREATING") ||
       (args.amount && args.tokenId && args.tokenReceiverAddress && "IS_SENDING");
 
-    const Bip44 = getWalletDetails(wallet);
+    const { Bip44 } = getWalletDetails(wallet);
     const { cashAddress, slpAddress, fundingWif, fundingAddress } = Bip44;
 
     const config = args;
@@ -23,8 +23,8 @@ const broadcastTransaction = async (SLPInstance, wallet, { ...args }) => {
     switch (TRANSACTION_TYPE) {
       case "IS_CREATING":
         config.batonReceiverAddress = slpAddress;
-        config.decimals = 0;
-        config.documentUri = config.documentUri || "developer.bitcoin.com";
+        config.decimals = config.decimals || 0;
+        config.documentUri = config.docUri;
         config.tokenReceiverAddress = slpAddress;
         createTransaction = async config => SLPInstance.TokenType1.create(config);
         break;

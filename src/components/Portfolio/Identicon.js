@@ -12,11 +12,7 @@ const Identicon = seed => {
   const size = 100;
   let content = null;
   let fill = "";
-  function getRandomInt() {
-    const min = 3;
-    const max = 9;
-    return Math.floor(Math.random() * (max - min)) + min;
-  }
+
   const generate = (n, offset, r, cx, cy) =>
     Array.from(Array(n))
       .map(
@@ -66,7 +62,7 @@ const Identicon = seed => {
           )}
           fill="none"
           stroke={color}
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           strokeWidth={2}
         />
       ) : (
@@ -75,7 +71,7 @@ const Identicon = seed => {
           cy="0"
           r={(size * 2) / 10}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -93,7 +89,7 @@ const Identicon = seed => {
             0
           )}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -103,7 +99,7 @@ const Identicon = seed => {
           cy="0"
           r={(size * 3) / 10}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -121,7 +117,7 @@ const Identicon = seed => {
             0
           )}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -131,7 +127,7 @@ const Identicon = seed => {
           cy="0"
           r={(size * 1) / 2}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -149,7 +145,7 @@ const Identicon = seed => {
             50
           )}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -159,7 +155,7 @@ const Identicon = seed => {
           cy="-50"
           r={(size * 1) / 2}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -177,7 +173,7 @@ const Identicon = seed => {
             -50
           )}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -187,7 +183,7 @@ const Identicon = seed => {
           cy="50"
           r={(size * 1) / 2}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -205,7 +201,7 @@ const Identicon = seed => {
             0
           )}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -215,7 +211,7 @@ const Identicon = seed => {
           cy="0"
           r={(size * 1) / 2}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -233,7 +229,7 @@ const Identicon = seed => {
             0
           )}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -243,7 +239,7 @@ const Identicon = seed => {
           cy="0"
           r={(size * 1) / 10}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -261,7 +257,7 @@ const Identicon = seed => {
             0
           )}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -271,7 +267,7 @@ const Identicon = seed => {
           cy="0"
           r={(size * 1) / 10}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -289,7 +285,7 @@ const Identicon = seed => {
             40
           )}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -299,7 +295,7 @@ const Identicon = seed => {
           cy="-40"
           r={(size * 1) / 10}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -316,7 +312,7 @@ const Identicon = seed => {
             -40
           )}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -326,7 +322,7 @@ const Identicon = seed => {
           cy="40"
           r={(size * 1) / 10}
           fill="none"
-          stroke-linejoin="round"
+          strokeLinejoin="round"
           stroke={color}
           strokeWidth={2}
         />
@@ -334,15 +330,13 @@ const Identicon = seed => {
     );
   }
 
-  // scale(2, 1)
-
   return (
     <svg
       className="identicon"
       id={hash}
       viewBox={`0 0 ${size} ${size}`}
       stroke="#111"
-      stroke-width="1"
+      strokeWidth="1"
       style={{ backgroundColor: fill, transform: "scale(0.3)" }}
     >
       <g transform="translate(50,50)">{content}</g>
