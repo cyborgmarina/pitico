@@ -27,7 +27,20 @@ const Create = ({ history }) => {
       dirty: false
     });
 
-    if (!data.tokenName || !data.tokenSymbol || !data.amount || Number(data.amount) <= 0) {
+    // blank entry for decimals should be 0
+    if (data.decimals === "") {
+      data.decimals = 0;
+    }
+
+    if (
+      !data.tokenName ||
+      !data.tokenSymbol ||
+      !data.amount ||
+      Number(data.amount) <= 0 ||
+      (data.decimals !== "" && data.decimals < 0) ||
+      (data.decimals !== "" && data.decimals > 9) ||
+      (data.decimals !== "" && data.decimals % 1 !== 0)
+    ) {
       return;
     }
 
@@ -156,7 +169,20 @@ const Create = ({ history }) => {
                   required
                 />
               </Form.Item>
-              <Form.Item>
+              <Form.Item
+                validateStatus={
+                  (!data.dirty && data.decimals < 0) || (!data.dirty && data.decimals > 9)
+                    ? "error"
+                    : ""
+                }
+                help={
+                  (!data.dirty && data.decimals < 0) ||
+                  (!data.dirty && data.decimals > 9) ||
+                  (!data.dirty && data.decimals % 1 !== 0)
+                    ? "Must be an integer between 0 and 9"
+                    : ""
+                }
+              >
                 <Input
                   style={{ padding: "0px 20px" }}
                   placeholder="decimals"
@@ -164,6 +190,9 @@ const Create = ({ history }) => {
                   onChange={e => handleChange(e)}
                   required
                   type="number"
+                  min="0"
+                  max="9"
+                  step="1"
                 />
               </Form.Item>
 
