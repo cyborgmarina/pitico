@@ -134,6 +134,18 @@ const Mint = ({ token, onClose }) => {
             <Row type="flex">
               <Col span={24}>
                 <Form style={{ width: "auto" }}>
+                  <FormItemWithQRCodeAddon
+                    validateStatus={!formData.dirty && !formData.baton ? "error" : ""}
+                    help={!formData.dirty && !formData.baton ? "Should be a valid slp address" : ""}
+                    onScan={result => setFormData({ ...formData, address: result })}
+                    inputProps={{
+                      placeholder: "Baton (slp address)",
+                      name: "baton",
+                      onChange: e => handleChange(e),
+                      required: true,
+                      value: formData.baton
+                    }}
+                  />
                   <Form.Item
                     validateStatus={
                       !formData.dirty && Number(formData.quantity) <= 0 ? "error" : ""
@@ -146,25 +158,13 @@ const Mint = ({ token, onClose }) => {
                   >
                     <Input
                       prefix={<Icon type="block" />}
-                      placeholder="quantity"
+                      placeholder="Amount"
                       name="quantity"
                       onChange={e => handleChange(e)}
                       required
                       type="number"
                     />
                   </Form.Item>
-                  <FormItemWithQRCodeAddon
-                    validateStatus={!formData.dirty && !formData.baton ? "error" : ""}
-                    help={!formData.dirty && !formData.baton ? "Should be a valid slp address" : ""}
-                    onScan={result => setFormData({ ...formData, address: result })}
-                    inputProps={{
-                      placeholder: "baton (slp address)",
-                      name: "baton",
-                      onChange: e => handleChange(e),
-                      required: true,
-                      value: formData.baton
-                    }}
-                  />
                   <div style={{ paddingTop: "12px" }}>
                     <Button onClick={() => submit()}>Mint</Button>
                   </div>
