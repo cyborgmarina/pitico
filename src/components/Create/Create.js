@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import { WalletContext } from "../../utils/context";
 import { Input, Button, notification, Spin, Icon, Row, Col, Card, Form, Typography } from "antd";
 import createToken from "../../utils/broadcastTransaction";
+import StyledCreate from "../Common/StyledPage";
 import { QRCode } from "../Common/QRCode";
 
 const { Paragraph } = Typography;
@@ -96,127 +97,128 @@ const Create = ({ history }) => {
     setData(p => ({ ...p, [name]: value }));
   };
   return (
-    <Row justify="center" type="flex">
-      <Col lg={8} span={24}>
-        <Spin spinning={loading || loadingContext}>
-          <Card
-            style={{ boxShadow: "0px 0px 40px 0px rgba(0,0,0,0.35)", borderRadius: "8px" }}
-            title={
-              <h2>
-                <Icon type="plus-square" theme="filled" /> Create Token
-              </h2>
-            }
-            bordered={true}
-          >
-            <div>
-              {!loadingContext && !balances.balance && !balances.unconfirmedBalance ? (
-                <>
-                  <Paragraph>
-                    <QRCode id="borderedQRCode" address={wallet && wallet.cashAddress} />
-                  </Paragraph>
-                  <Paragraph>You currently have 0 BCH.</Paragraph>
-                  <Paragraph>
-                    Deposit some BCH in order to pay for the transaction that will generate the
-                    token
-                  </Paragraph>
-                </>
-              ) : null}
-            </div>
-            <Form>
-              <Form.Item
-                validateStatus={!data.dirty && !data.tokenSymbol ? "error" : ""}
-                help={
-                  !data.dirty && !data.tokenSymbol
-                    ? "Should be combination of numbers & alphabets"
-                    : ""
-                }
-              >
-                <Input
-                  placeholder="token symbol e.g.: PTC"
-                  name="tokenSymbol"
-                  onChange={e => handleChange(e)}
-                  required
-                />
-              </Form.Item>
-              <Form.Item
-                validateStatus={!data.dirty && Number(data.tokenName) <= 0 ? "error" : ""}
-                help={
-                  !data.dirty && Number(data.tokenName) <= 0
-                    ? "Should be combination of numbers & alphabets"
-                    : ""
-                }
-              >
-                <Input
-                  placeholder="token name"
-                  name="tokenName"
-                  onChange={e => handleChange(e)}
-                  required
-                />
-              </Form.Item>
-              <Form.Item>
-                <Input
-                  placeholder="white paper/document hash"
-                  name="documentHash"
-                  onChange={e => handleChange(e)}
-                  required
-                />
-              </Form.Item>
-              <Form.Item>
-                <Input
-                  placeholder="token website e.g.: developer.bitcoin.com"
-                  name="documentUri"
-                  onChange={e => handleChange(e)}
-                  required
-                />
-              </Form.Item>
-              <Form.Item
-                validateStatus={
-                  (!data.dirty && data.decimals < 0) || (!data.dirty && data.decimals > 9)
-                    ? "error"
-                    : ""
-                }
-                help={
-                  (!data.dirty && data.decimals < 0) ||
-                  (!data.dirty && data.decimals > 9) ||
-                  (!data.dirty && data.decimals % 1 !== 0)
-                    ? "Must be an integer between 0 and 9"
-                    : ""
-                }
-              >
-                <Input
-                  style={{ padding: "0px 20px" }}
-                  placeholder="decimals"
-                  name="decimals"
-                  onChange={e => handleChange(e)}
-                  required
-                  type="number"
-                  min="0"
-                  max="9"
-                  step="1"
-                />
-              </Form.Item>
-
-              <Form.Item
-                validateStatus={!data.dirty && Number(data.amount) <= 0 ? "error" : ""}
-                help={!data.dirty && Number(data.amount) <= 0 ? "Should be greater than 0" : ""}
-              >
-                <Input
-                  style={{ padding: "0px 20px" }}
-                  placeholder="quantity"
-                  name="amount"
-                  onChange={e => handleChange(e)}
-                  required
-                  type="number"
-                />
-              </Form.Item>
-              <div style={{ paddingTop: "12px" }}>
-                <Button onClick={() => handleCreateToken()}>Create Token</Button>
+    <StyledCreate>
+      <Row justify="center" type="flex">
+        <Col lg={8} span={24}>
+          <Spin spinning={loading || loadingContext}>
+            <Card
+              title={
+                <h2>
+                  <Icon type="plus-square" theme="filled" /> Create Token
+                </h2>
+              }
+              bordered={true}
+            >
+              <div>
+                {!loadingContext && !balances.balance && !balances.unconfirmedBalance ? (
+                  <>
+                    <Paragraph>
+                      <QRCode id="borderedQRCode" address={wallet && wallet.cashAddress} />
+                    </Paragraph>
+                    <Paragraph>You currently have 0 BCH.</Paragraph>
+                    <Paragraph>
+                      Deposit some BCH in order to pay for the transaction that will generate the
+                      token
+                    </Paragraph>
+                  </>
+                ) : null}
               </div>
-            </Form>
-          </Card>
-        </Spin>
-      </Col>
-    </Row>
+              <Form>
+                <Form.Item
+                  validateStatus={!data.dirty && !data.tokenSymbol ? "error" : ""}
+                  help={
+                    !data.dirty && !data.tokenSymbol
+                      ? "Should be combination of numbers & alphabets"
+                      : ""
+                  }
+                >
+                  <Input
+                    placeholder="token symbol e.g.: PTC"
+                    name="tokenSymbol"
+                    onChange={e => handleChange(e)}
+                    required
+                  />
+                </Form.Item>
+                <Form.Item
+                  validateStatus={!data.dirty && Number(data.tokenName) <= 0 ? "error" : ""}
+                  help={
+                    !data.dirty && Number(data.tokenName) <= 0
+                      ? "Should be combination of numbers & alphabets"
+                      : ""
+                  }
+                >
+                  <Input
+                    placeholder="token name"
+                    name="tokenName"
+                    onChange={e => handleChange(e)}
+                    required
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Input
+                    placeholder="white paper/document hash"
+                    name="documentHash"
+                    onChange={e => handleChange(e)}
+                    required
+                  />
+                </Form.Item>
+                <Form.Item>
+                  <Input
+                    placeholder="token website e.g.: developer.bitcoin.com"
+                    name="documentUri"
+                    onChange={e => handleChange(e)}
+                    required
+                  />
+                </Form.Item>
+                <Form.Item
+                  validateStatus={
+                    (!data.dirty && data.decimals < 0) || (!data.dirty && data.decimals > 9)
+                      ? "error"
+                      : ""
+                  }
+                  help={
+                    (!data.dirty && data.decimals < 0) ||
+                    (!data.dirty && data.decimals > 9) ||
+                    (!data.dirty && data.decimals % 1 !== 0)
+                      ? "Must be an integer between 0 and 9"
+                      : ""
+                  }
+                >
+                  <Input
+                    style={{ padding: "0px 20px" }}
+                    placeholder="decimals"
+                    name="decimals"
+                    onChange={e => handleChange(e)}
+                    required
+                    type="number"
+                    min="0"
+                    max="9"
+                    step="1"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  validateStatus={!data.dirty && Number(data.amount) <= 0 ? "error" : ""}
+                  help={!data.dirty && Number(data.amount) <= 0 ? "Should be greater than 0" : ""}
+                >
+                  <Input
+                    style={{ padding: "0px 20px" }}
+                    placeholder="quantity"
+                    name="amount"
+                    onChange={e => handleChange(e)}
+                    required
+                    type="number"
+                  />
+                </Form.Item>
+                <div style={{ paddingTop: "12px" }}>
+                  <Button onClick={() => handleCreateToken()}>Create Token</Button>
+                </div>
+              </Form>
+            </Card>
+          </Spin>
+        </Col>
+      </Row>
+    </StyledCreate>
   );
 };
 

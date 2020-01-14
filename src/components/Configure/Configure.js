@@ -1,52 +1,9 @@
 import React, { useState } from "react";
 import { Row, Col, Card, Icon, Alert, Typography, Form, Input, Button, Collapse } from "antd";
-import styled from "styled-components";
+import StyledConfigure from "../Common/StyledPage";
 import { WalletContext } from "../../utils/context";
 const { Paragraph } = Typography;
 const { Panel } = Collapse;
-
-const StyledConfigure = styled.div`
-  .ant-card {
-    background: #ffffff;
-    box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.35);
-    overflow: hidden;
-
-    * {
-      color: rgb(62, 63, 66);
-    }
-
-    .ant-card-head {
-      color: #6e6e6e !important;
-      background: #fbfcfd;
-      border-bottom: 1px solid #eaedf3;
-    }
-
-    .ant-alert {
-      background: #fbfcfd;
-      border: 1px solid #eaedf3;
-    }
-  }
-  .ant-card-body {
-    border: none;
-  }
-  .ant-collapse {
-    background: #fbfcfd;
-    border: 1px solid #eaedf3;
-
-    .ant-collapse-content {
-      border: 1px solid #eaedf3;
-      border-top: none;
-    }
-
-    .ant-collapse-item {
-      border-bottom: 1px solid #eaedf3;
-    }
-
-    * {
-      color: rgb(62, 63, 66) !important;
-    }
-  }
-`;
 
 export default () => {
   const ContextValue = React.useContext(WalletContext);
