@@ -45,7 +45,7 @@ const SendBCH = ({ onClose }) => {
     const { address, value } = formData;
 
     try {
-      const link = await sendBch((getWalletDetails(wallet) || {}).Bip44, {
+      const link = await sendBch(getWalletDetails(wallet).Bip44, {
         addresses: [address],
         values: [value]
       });
