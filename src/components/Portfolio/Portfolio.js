@@ -252,7 +252,7 @@ export default () => {
                           fontWeight: "bold"
                         }}
                       >
-                        {token.balance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}
+                        {token.balance.toString()}
                       </div>
                     </div>
                   }
