@@ -13,6 +13,7 @@ const GlobalStyle = createGlobalStyle`
     }
 
     .ant-modal-body {
+	font-family: "Gilroy", sans-serif;
         padding: 0 !important;
         background-color: transparent;
     }
@@ -36,7 +37,8 @@ const StyledWrapper = styled.div``;
 
 const StyledEnhancedCard = styled(Card)`
   border-radius: 8px;
-
+  background: #fff;
+  border: 1px solid #eaedf3;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.04);
   height: 173px;
   max-width: 321px;
@@ -53,18 +55,36 @@ const StyledEnhancedCard = styled(Card)`
   }
 
   .ant-card-actions {
+    box-shadow: none;
+    border-bottom: 0;
     white-space: nowrap;
+    padding-left: 23px;
+    padding-right: 23px;
+
+    li {
+      text-align: left;
+    }
+
+    li:last-child > span {
+      text-align: ${p => {
+        if (p.token) {
+          if (p.token.info && p.token.info.hasBaton) {
+            return "left";
+          }
+          return "right";
+        }
+        return "left";
+      }};
+    }
   }
 
   .ant-card-bordered {
-    border: 1px solid rgb(234, 237, 243);
+    border: 1px solid #eaedf3;
     border-radius: 8px;
   }
 
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.35);
-
   &:hover {
-    box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.35);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   }
 
   .ant-input-group-addon {
@@ -72,9 +92,19 @@ const StyledEnhancedCard = styled(Card)`
     width: 48px;
     line-height: 40px;
   }
+
+  .anticon {
+    margin-right: 3px;
+    vertical-align: sub;
+  }
 `;
 
 export const StyledModal = styled(Modal)`
+  .anticon {
+    vertical-align: middle;
+  }
+  font-family: "Gilroy", sans-serif;
+
   ${StyledEnhancedCard} {
     .ant-list-item-meta-description > :first-child {
       display: none;

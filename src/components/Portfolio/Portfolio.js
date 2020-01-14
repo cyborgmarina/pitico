@@ -64,13 +64,42 @@ export default () => {
     setHistory(null);
   };
 
+  const renderActions = (action, setAction, token) => {
+    const hasBaton = token.info && token.info.hasBaton;
+    let actions = [
+      <span onClick={() => setAction(action !== "transfer" ? "transfer" : null)}>
+        <PlaneIcon />
+        Send
+      </span>,
+      <span onClick={() => setAction(action !== "dividends" ? "dividends" : null)}>
+        <Icon style={{ fontSize: "18px" }} type="dollar-circle" theme="filled" />
+        {hasBaton ? "Dividends" : "Pay Dividends"}
+      </span>
+    ];
+    if (hasBaton) {
+      actions.push(actions[1]);
+      actions[1] = (
+        <span onClick={() => setAction(action !== "mint" ? "mint" : null)}>
+          <HammerIcon /> Mint
+        </span>
+      );
+    }
+    return actions;
+  };
+
   return (
-    <Row type="flex" gutter={8} style={{ position: "relative" }}>
+    <Row type="flex" gutter={32} style={{ position: "relative" }}>
       {!loading && wallet && (
-        <Col style={{ marginTop: "8px" }} xl={7} lg={12} span={24}>
+        <Col style={{ marginTop: "8px" }} xl={8} lg={12} span={24}>
           <EnhancedCard
             style={{ marginTop: "8px", textAlign: "left" }}
             expand={!selectedToken && action === "sendBCH"}
+            actions={[
+              <span onClick={() => setAction(action !== "sendBCH" ? "sendBCH" : null)}>
+                <PlaneIcon />
+                Send
+              </span>
+            ]}
             onClick={evt => {
               setAction(action !== "sendBCH" ? "sendBCH" : null);
               setSelectedToken(null);
@@ -120,7 +149,7 @@ export default () => {
       )}
       {loading
         ? Array.from({ length: 20 }).map((v, i) => (
-            <Col key={i} style={{ marginTop: "8px" }} xl={7} lg={12} span={24}>
+            <Col key={i} style={{ marginTop: "8px" }} xl={8} lg={12} span={24}>
               <EnhancedCard loading bordered={false}>
                 <Meta
                   avatar={
@@ -137,13 +166,14 @@ export default () => {
         ? tokens.map(token => (
             <Col
               style={{ marginTop: "8px" }}
-              xl={7}
+              xl={8}
               lg={12}
               sm={12}
               span={24}
               key={`col-${token.tokenId}`}
             >
               <EnhancedCard
+                token={token}
                 loading={!token.info}
                 expand={selectedToken && token.tokenId === selectedToken.tokenId}
                 onClick={() =>
@@ -154,34 +184,7 @@ export default () => {
                 key={`card-${token.tokenId}`}
                 style={{ marginTop: "8px", textAlign: "left" }}
                 onClose={onClose}
-                actions={[
-                  <span onClick={() => setAction(action !== "transfer" ? "transfer" : null)}>
-                    <PlaneIcon />
-                    Send
-                  </span>,
-                  token.info && token.info.hasBaton && (
-                    <span onClick={() => setAction(action !== "mint" ? "mint" : null)}>
-                      <HammerIcon /> Mint
-                    </span>
-                  ),
-                  <span>
-                    <MoreCardOptions
-                      hoverContent={
-                        <PayDividendsOption
-                          onClick={evt => setAction(action !== "dividends" ? "dividends" : null)}
-                        />
-                      }
-                    >
-                      <span>
-                        <Icon
-                          style={{ fontSize: "22px", color: "rgb(158, 160, 165)" }}
-                          type="ellipsis"
-                          key="ellipsis"
-                        />
-                      </span>
-                    </MoreCardOptions>
-                  </span>
-                ]}
+                actions={renderActions(action, setAction, token)}
                 renderExpanded={() => (
                   <Spin spinning={loadingTokenHistory}>
                     <Radio.Group
@@ -373,7 +376,7 @@ export default () => {
                           fontWeight: "bold"
                         }}
                       >
-                        {token.balance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}
+                        {token.balance.toString()}
                       </div>
                     </div>
                   }

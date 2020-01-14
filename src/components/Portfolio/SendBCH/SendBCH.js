@@ -199,6 +199,22 @@ const SendBCH = ({ onClose }) => {
                 <Row type="flex">
                   <Col span={24}>
                     <Form style={{ width: "auto" }}>
+                      <FormItemWithQRCodeAddon
+                        validateStatus={!formData.dirty && !formData.address ? "error" : ""}
+                        help={
+                          !formData.dirty && !formData.address
+                            ? "Should be a valid bch address"
+                            : ""
+                        }
+                        onScan={result => setFormData({ ...formData, address: result })}
+                        inputProps={{
+                          placeholder: "BCH Address",
+                          name: "address",
+                          onChange: e => handleChange(e),
+                          required: true,
+                          value: formData.address
+                        }}
+                      />
                       <FormItemWithMaxAddon
                         validateStatus={
                           !formData.dirty && Number(formData.value) <= 0 ? "error" : ""
@@ -211,27 +227,11 @@ const SendBCH = ({ onClose }) => {
                         onMax={onMax}
                         inputProps={{
                           name: "value",
-                          placeholder: "value",
+                          placeholder: "Amount",
                           suffix: "BCH",
                           onChange: e => handleChange(e),
                           required: true,
                           value: formData.value
-                        }}
-                      />
-                      <FormItemWithQRCodeAddon
-                        validateStatus={!formData.dirty && !formData.address ? "error" : ""}
-                        help={
-                          !formData.dirty && !formData.address
-                            ? "Should be a valid bch address"
-                            : ""
-                        }
-                        onScan={result => setFormData({ ...formData, address: result })}
-                        inputProps={{
-                          placeholder: "bch address",
-                          name: "address",
-                          onChange: e => handleChange(e),
-                          required: true,
-                          value: formData.address
                         }}
                       />
                       <div style={{ paddingTop: "12px" }}>
