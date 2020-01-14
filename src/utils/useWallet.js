@@ -53,7 +53,7 @@ const update = async ({ wallet, tokens, setBalances, setTokens }) => {
         : token
     );
     setTokens(sortTokens(tokens));
-    await updateTokensInfo(wallet.slpAdresses, tokens, setTokens);
+    await updateTokensInfo(wallet.slpAdresses.slice(0, 1), tokens, setTokens);
   } catch (error) {}
 };
 

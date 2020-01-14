@@ -83,7 +83,8 @@ const getTransactionHistory = async (SLP, cashAdresses, transactions) => {
       wallets: nonZeroIndexes.map(el => cashAdresses[el])
     };
   } catch (e) {
-    throw e;
+    console.log("error :", e);
+    return [];
   }
 };
 

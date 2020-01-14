@@ -9,17 +9,9 @@ const getBalance = async (SLP, wallet, logs = true) => {
   try {
     const walletDetails = getWalletDetails(wallet);
 
-    const bitcoinCashBalance = await SLP.Address.details([
-      walletDetails.Bip44.cashAddress,
-      walletDetails.Path145.cashAddress,
-      walletDetails.PathZero.cashAddress
-    ]);
+    const bitcoinCashBalance = await SLP.Address.details([walletDetails.Bip44.cashAddress]);
 
-    const slpAdresses = [
-      walletDetails.Bip44.slpAddress,
-      walletDetails.Path145.slpAddress,
-      walletDetails.PathZero.slpAddress
-    ];
+    const slpAdresses = [walletDetails.Bip44.slpAddress];
 
     const slpTokensBalance = await getTokensBalance(slpAdresses);
 

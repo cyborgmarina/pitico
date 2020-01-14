@@ -97,7 +97,8 @@ const getTokensBalance = async (SLP, slpAdresses) => {
 
     return totalTokensBalance;
   } catch (e) {
-    throw e;
+    console.log("error :", e);
+    return [];
   }
 };
 

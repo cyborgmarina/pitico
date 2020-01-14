@@ -101,10 +101,8 @@ const SendBCH = ({ onClose }) => {
   const getBchHistory = async () => {
     setLoading(true);
     try {
-      const resp = await getTransactionHistory(wallet.cashAdresses, [
-        balances.bitcoinCashBalance[0].transactions,
-        balances.bitcoinCashBalance[1].transactions,
-        balances.bitcoinCashBalance[2].transactions
+      const resp = await getTransactionHistory(wallet.cashAdresses.slice(0, 1), [
+        balances.bitcoinCashBalance[0].transactions
       ]);
       await fetch("https://markets.api.bitcoin.com/live/bitcoin")
         .then(response => {

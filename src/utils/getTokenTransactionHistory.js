@@ -74,7 +74,8 @@ const getTokenTransactionHistory = async (SLP, slpAdresses, tokenId) => {
     const { confirmed, unconfirmed } = tokenTransactionHistory;
     return unconfirmed.concat(confirmed);
   } catch (e) {
-    throw e;
+    console.log("error :", e);
+    return [];
   }
 };
 
