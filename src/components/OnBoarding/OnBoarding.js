@@ -43,7 +43,9 @@ export const OnBoarding = ({ history }) => {
             bordered={false}
           >
             <div style={{}}>
-              <Button onClick={() => createWallet()}>Create</Button>
+              <Button className="bitcoincom-mint-create-wallet" onClick={() => createWallet()}>
+                Create
+              </Button>
             </div>
           </Card>
         </Col>
@@ -73,7 +75,9 @@ export const OnBoarding = ({ history }) => {
                 <em>Only 245' path is currently supported for wallet imports.</em>
               </p>
               <div style={{ paddingTop: "12px" }}>
-                <Button onClick={() => submit()}>Import</Button>
+                <Button className="bitcoincom-mint-import-wallet" onClick={() => submit()}>
+                  Import
+                </Button>
               </div>
             </Form>
           </Card>
