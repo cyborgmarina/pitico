@@ -8,12 +8,12 @@ export const generateWalletData = mnemonic => {
   outObj.cashAddress = walletDetails.Bip44.cashAddress;
   outObj.slpAddress = walletDetails.Bip44.slpAddress;
   outObj.legacyAddress = walletDetails.Bip44.legacyAddress;
-  outObj.slpAdresses = [
+  outObj.slpAddresses = [
     walletDetails.Bip44.slpAddress,
     walletDetails.Path145.slpAddress,
     walletDetails.PathZero.slpAddress
   ];
-  outObj.cashAdresses = [
+  outObj.cashAddresses = [
     walletDetails.Bip44.cashAddress,
     walletDetails.Path145.cashAddress,
     walletDetails.PathZero.cashAddress
@@ -25,7 +25,7 @@ export const getWallet = () => {
   let wallet;
   try {
     wallet = JSON.parse(window.localStorage.getItem("wallet") || undefined);
-    if (!(wallet || {}).slpAdresses && (wallet || {}).mnemonic)
+    if (!(wallet || {}).slpAddresses && (wallet || {}).mnemonic)
       window.localStorage.setItem("wallet", JSON.stringify(generateWalletData(wallet.mnemonic)));
   } catch (error) {}
   return wallet;

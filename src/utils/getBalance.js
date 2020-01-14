@@ -11,22 +11,22 @@ const getBalance = async (SLP, wallet, logs = true) => {
 
     const bitcoinCashBalance = await SLP.Address.details([walletDetails.Bip44.cashAddress]);
 
-    const slpAdresses = [walletDetails.Bip44.slpAddress];
+    const slpAddresses = [walletDetails.Bip44.slpAddress];
 
-    const slpTokensBalance = await getTokensBalance(slpAdresses);
+    const slpTokensBalance = await getTokensBalance(slpAddresses);
 
     bitcoinCashBalance.forEach((element, index) => {
       element.tokens = slpTokensBalance
-        .filter(el => el.adresses.includes(slpAdresses[index]))
+        .filter(el => el.addresses.includes(slpAddresses[index]))
         .map(token => ({
           ...token,
           balance: (
-            token.tokenBalanceByAddress.find(b => b.slpAddress === slpAdresses[index]) || {}
+            token.tokenBalanceByAddress.find(b => b.slpAddress === slpAddresses[index]) || {}
           ).balanceByAddress,
           satoshisBalance: (
-            token.tokenBalanceByAddress.find(b => b.slpAddress === slpAdresses[index]) || {}
+            token.tokenBalanceByAddress.find(b => b.slpAddress === slpAddresses[index]) || {}
           ).satoshisBalanceByAddress,
-          address: slpAdresses[index]
+          address: slpAddresses[index]
         }));
     });
 

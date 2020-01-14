@@ -1,6 +1,6 @@
 import withSLP from "./withSLP";
 
-const getTokenTransactionHistory = async (SLP, slpAdresses, tokenId) => {
+const getTokenTransactionHistory = async (SLP, slpAddresses, tokenId) => {
   try {
     const query = {
       v: 3,
@@ -9,10 +9,10 @@ const getTokenTransactionHistory = async (SLP, slpAdresses, tokenId) => {
         find: {
           $or: [
             {
-              "in.e.a": { $in: slpAdresses }
+              "in.e.a": { $in: slpAddresses }
             },
             {
-              "out.e.a": { $in: slpAdresses }
+              "out.e.a": { $in: slpAddresses }
             }
           ],
           "slp.detail.tokenIdHex": tokenId
@@ -28,11 +28,11 @@ const getTokenTransactionHistory = async (SLP, slpAdresses, tokenId) => {
     };
 
     const calculateTransactionBalance = outputs => {
-      if (outputs.length === 1 && slpAdresses.includes(outputs[0].address))
+      if (outputs.length === 1 && slpAddresses.includes(outputs[0].address))
         return +outputs[0].amount;
-      if (outputs.length === 1 && !slpAdresses.includes(outputs[0].address))
+      if (outputs.length === 1 && !slpAddresses.includes(outputs[0].address))
         return +outputs[0].amount * -1;
-      if (outputs.length > 1 && slpAdresses.includes(outputs[outputs.length - 1].address))
+      if (outputs.length > 1 && slpAddresses.includes(outputs[outputs.length - 1].address))
         return (
           outputs
             .slice(0, outputs.length - 1)
@@ -41,9 +41,9 @@ const getTokenTransactionHistory = async (SLP, slpAdresses, tokenId) => {
         );
       if (
         outputs.length > 1 &&
-        outputs.findIndex(element => slpAdresses.includes(element.address)) !== -1
+        outputs.findIndex(element => slpAddresses.includes(element.address)) !== -1
       )
-        return +outputs.find(element => slpAdresses.includes(element.address)).amount;
+        return +outputs.find(element => slpAddresses.includes(element.address)).amount;
     };
 
     const slpDbInstance = SLP.SLPDB;

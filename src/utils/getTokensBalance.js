@@ -1,6 +1,6 @@
 import withSLP from "./withSLP";
 
-const getTokensBalance = async (SLP, slpAdresses) => {
+const getTokensBalance = async (SLP, slpAddresses) => {
   try {
     const query = {
       v: 3,
@@ -10,7 +10,7 @@ const getTokensBalance = async (SLP, slpAdresses) => {
             $match: {
               "graphTxn.outputs": {
                 $elemMatch: {
-                  address: { $in: slpAdresses },
+                  address: { $in: slpAddresses },
                   status: "UNSPENT",
                   slpAmount: { $gte: 0 }
                 }
@@ -30,7 +30,7 @@ const getTokensBalance = async (SLP, slpAdresses) => {
                 $cond: [
                   {
                     $and: [
-                      { $in: ["$graphTxn.outputs.address", slpAdresses] },
+                      { $in: ["$graphTxn.outputs.address", slpAddresses] },
                       { $eq: ["$graphTxn.outputs.status", "UNSPENT"] },
                       { $gte: ["$graphTxn.outputs.slpAmount", 0] }
                     ]
@@ -43,7 +43,7 @@ const getTokensBalance = async (SLP, slpAdresses) => {
                 $cond: [
                   {
                     $and: [
-                      { $in: ["$graphTxn.outputs.address", slpAdresses] },
+                      { $in: ["$graphTxn.outputs.address", slpAddresses] },
                       { $eq: ["$graphTxn.outputs.status", "UNSPENT"] },
                       { $gte: ["$graphTxn.outputs.slpAmount", 0] }
                     ]
@@ -60,7 +60,7 @@ const getTokensBalance = async (SLP, slpAdresses) => {
               tokenId: { $first: "$tokenId" },
               balance: { $sum: "$isTokenBalance" },
               satoshisBalance: { $sum: "$isSatoshiBalance" },
-              adresses: { $addToSet: "$address" },
+              addresses: { $addToSet: "$address" },
               outputs: { $addToSet: "$out" }
             }
           }
@@ -73,9 +73,9 @@ const getTokensBalance = async (SLP, slpAdresses) => {
     const result = queryResult.g;
 
     const totalTokensBalance = result.map(el => {
-      const adresses = el.adresses.filter(e => slpAdresses.includes(e));
-      el.tokenBalanceByAddress = Array.from({ length: adresses.length });
-      adresses.forEach((slpAddress, index) => {
+      const addresses = el.addresses.filter(e => slpAddresses.includes(e));
+      el.tokenBalanceByAddress = Array.from({ length: addresses.length });
+      addresses.forEach((slpAddress, index) => {
         const balanceByAddress = el.outputs.reduce((prev, cur) => {
           if (cur.address === slpAddress) return prev + +cur.slpAmount;
           return prev;
@@ -91,7 +91,7 @@ const getTokensBalance = async (SLP, slpAdresses) => {
           satoshisBalanceByAddress
         };
       });
-      el.adresses = adresses;
+      el.addresses = addresses;
       return el;
     });
 

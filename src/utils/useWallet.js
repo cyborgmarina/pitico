@@ -13,11 +13,11 @@ const tokensCache = {};
 
 const sortTokens = tokens => tokens.sort((a, b) => (a.tokenId > b.tokenId ? 1 : -1));
 
-const updateTokensInfo = async (slpAdresses, tokens = [], setTokens) => {
+const updateTokensInfo = async (slpAddresses, tokens = [], setTokens) => {
   let infos = [];
 
   try {
-    infos = await getTokenInfo(slpAdresses, tokens.map(token => token.tokenId));
+    infos = await getTokenInfo(slpAddresses, tokens.map(token => token.tokenId));
     infos.forEach(info => {
       let index = tokens.findIndex(token => token.tokenId === info.tokenIdHex);
       if (index !== -1) {
@@ -53,7 +53,7 @@ const update = async ({ wallet, tokens, setBalances, setTokens }) => {
         : token
     );
     setTokens(sortTokens(tokens));
-    await updateTokensInfo(wallet.slpAdresses.slice(0, 1), tokens, setTokens);
+    await updateTokensInfo(wallet.slpAddresses.slice(0, 1), tokens, setTokens);
   } catch (error) {}
 };
 

@@ -1,6 +1,6 @@
 import withSLP from "./withSLP";
 
-const getTransactionHistory = async (SLP, cashAdresses, transactions) => {
+const getTransactionHistory = async (SLP, cashAddresses, transactions) => {
   try {
     const query = (cashAddress, qty) => ({
       v: 3,
@@ -36,7 +36,7 @@ const getTransactionHistory = async (SLP, cashAdresses, transactions) => {
 
     for (let i = 0; i < nonZeroIndexes.length; i++) {
       const el = nonZeroIndexes[i];
-      queryResults[i] = await slpDbInstance.get(query(cashAdresses[el], transactions[el].length));
+      queryResults[i] = await slpDbInstance.get(query(cashAddresses[el], transactions[el].length));
     }
 
     const tokensTxIds = queryResults.map(el => el.c.concat(el.u).map(tx => tx.txid));
@@ -78,9 +78,9 @@ const getTransactionHistory = async (SLP, cashAdresses, transactions) => {
           date: new Date(el.time * 1000),
           confirmations: el.confirmations,
           transactionBalance:
-            (cashAdresses.includes(el.vin[0].cashAddress) ? -1 : 1) * el.vout[0].value
+            (cashAddresses.includes(el.vin[0].cashAddress) ? -1 : 1) * el.vout[0].value
         })),
-      wallets: nonZeroIndexes.map(el => cashAdresses[el])
+      wallets: nonZeroIndexes.map(el => cashAddresses[el])
     };
   } catch (e) {
     console.log("error :", e);

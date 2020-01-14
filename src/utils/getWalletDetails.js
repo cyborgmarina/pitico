@@ -19,11 +19,11 @@ const getWalletDetails = (SLPInstance, wallet) => {
   ]);
 
   const changes = arrayArg(hdNodeAccount => pathToAccount(hdNodeAccount, "0/0"), hdNodeAccounts);
-  const cashAdresses = arrayArg(change => SLPInstance.HDNode.toCashAddress(change), changes);
+  const cashAddresses = arrayArg(change => SLPInstance.HDNode.toCashAddress(change), changes);
 
-  const slpAdresses = arrayArg(
+  const slpAddresses = arrayArg(
     cashAddress => SLPInstance.Address.toSLPAddress(cashAddress),
-    cashAdresses
+    cashAddresses
   );
 
   const walletDataByAddress = (cashAddress, slpAddress, change) => ({
@@ -36,9 +36,9 @@ const getWalletDetails = (SLPInstance, wallet) => {
   });
 
   return {
-    Bip44: walletDataByAddress(cashAdresses[0], slpAdresses[0], changes[0]),
-    Path145: walletDataByAddress(cashAdresses[1], slpAdresses[1], changes[1]),
-    PathZero: walletDataByAddress(cashAdresses[2], slpAdresses[2], changes[2])
+    Bip44: walletDataByAddress(cashAddresses[0], slpAddresses[0], changes[0]),
+    Path145: walletDataByAddress(cashAddresses[1], slpAddresses[1], changes[1]),
+    PathZero: walletDataByAddress(cashAddresses[2], slpAddresses[2], changes[2])
   };
 };
 

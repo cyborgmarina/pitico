@@ -31,7 +31,7 @@ export default () => {
   const getTokenHistory = async tokenId => {
     setLoadingTokenHistory(true);
     try {
-      const resp = await getTokenTransactionHistory(wallet.slpAdresses.slice(0, 1), tokenId);
+      const resp = await getTokenTransactionHistory(wallet.slpAddresses.slice(0, 1), tokenId);
 
       setHistory(resp);
     } catch (err) {
