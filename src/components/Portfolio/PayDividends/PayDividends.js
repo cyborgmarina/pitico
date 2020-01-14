@@ -189,7 +189,7 @@ const PayDividends = ({ SLP, token, onClose }) => {
             <Card
               title={
                 <h2>
-                  <Icon type="dollar" /> Pay Dividends
+                  <Icon type="dollar-circle" theme="filled" /> Pay Dividends
                 </h2>
               }
               bordered={false}
