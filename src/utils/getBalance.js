@@ -15,26 +15,26 @@ const getBalance = async (SLP, wallet, logs = true) => {
       walletDetails.PathZero.cashAddress
     ]);
 
-    const slpAdresses = [
+    const slpAddresses = [
       walletDetails.Bip44.slpAddress,
       walletDetails.Path145.slpAddress,
       walletDetails.PathZero.slpAddress
     ];
 
-    const slpTokensBalance = await getTokensBalance(slpAdresses);
+    const slpTokensBalance = await getTokensBalance(slpAddresses);
 
     bitcoinCashBalance.forEach((element, index) => {
       element.tokens = slpTokensBalance
-        .filter(el => el.adresses.includes(slpAdresses[index]))
+        .filter(el => el.adresses.includes(slpAddresses[index]))
         .map(token => ({
           ...token,
           balance: (
-            token.tokenBalanceByAddress.find(b => b.slpAddress === slpAdresses[index]) || {}
+            token.tokenBalanceByAddress.find(b => b.slpAddress === slpAddresses[index]) || {}
           ).balanceByAddress,
           satoshisBalance: (
-            token.tokenBalanceByAddress.find(b => b.slpAddress === slpAdresses[index]) || {}
+            token.tokenBalanceByAddress.find(b => b.slpAddress === slpAddresses[index]) || {}
           ).satoshisBalanceByAddress,
-          address: slpAdresses[index]
+          address: slpAddresses[index]
         }));
     });
 
@@ -50,7 +50,7 @@ const getBalance = async (SLP, wallet, logs = true) => {
       ...bitcoinCashBalance[0],
       bitcoinCashBalance,
       tokens: slpTokensBalance,
-      totalBalance: totalBalance,
+      totalBalance,
       transient: false
     };
   } catch (err) {

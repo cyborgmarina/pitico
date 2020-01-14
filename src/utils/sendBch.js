@@ -4,7 +4,7 @@ import withSLP from "./withSLP";
 export const SATOSHIS_PER_BYTE = 1.01;
 const NETWORK = process.env.REACT_APP_NETWORK;
 
-export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
+export const sendBch = withSLP(async (SLP, wallet, utxos, { addresses, values }) => {
   try {
     if (!values.length) {
       return null;
@@ -13,8 +13,7 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
     const value = values.reduce((previous, current) => new Big(current).plus(previous), new Big(0));
     const SEND_ADDR = wallet.cashAddress;
 
-    const allUtxos = await getBCHUtxos(SEND_ADDR);
-    const utxos = [];
+    const inputUtxos = [];
     let transactionBuilder;
 
     // instance of transaction builder
@@ -24,17 +23,17 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
     const satoshisToSend = SLP.BitcoinCash.toSatoshi(value.toPrecision(8));
     let originalAmount = new Big(0);
     let txFee = 0;
-    for (let i = 0; i < allUtxos.length; i++) {
-      const utxo = allUtxos[i];
+    for (let i = 0; i < utxos.length; i++) {
+      const utxo = utxos[i];
       originalAmount = originalAmount.plus(utxo.satoshis);
       const vout = utxo.vout;
       const txid = utxo.txid;
       // add input with txid and index of vout
       transactionBuilder.addInput(txid, vout);
-      utxos.push(utxo);
+      inputUtxos.push(utxo);
 
       const byteCount = SLP.BitcoinCash.getByteCount(
-        { P2PKH: utxos.length },
+        { P2PKH: inputUtxos.length },
         { P2PKH: addresses.length + 1 }
       );
       const satoshisPerByte = SATOSHIS_PER_BYTE;
@@ -67,15 +66,12 @@ export const sendBch = withSLP(async (SLP, wallet, { addresses, values }) => {
       transactionBuilder.addOutput(SEND_ADDR, remainder);
     }
 
-    // Generate a keypair from the change address.
-    const keyPair = SLP.HDNode.toKeyPair(wallet.change);
-
     // Sign the transactions with the HD node.
-    for (let i = 0; i < utxos.length; i++) {
-      const utxo = utxos[i];
+    for (let i = 0; i < inputUtxos.length; i++) {
+      const utxo = inputUtxos[i];
       transactionBuilder.sign(
         i,
-        keyPair,
+        SLP.ECPair.fromWIF(utxo.wif),
         undefined,
         transactionBuilder.hashTypes.SIGHASH_ALL,
         utxo.satoshis

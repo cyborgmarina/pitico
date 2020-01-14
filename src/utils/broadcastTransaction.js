@@ -1,7 +1,7 @@
 import getWalletDetails from "./getWalletDetails";
 import withSLP from "./withSLP";
 
-const broadcastTransaction = async (SLPInstance, wallet, { ...args }) => {
+const broadcastTransaction = async (SLPInstance, wallet, slpBalancesAndUtxo, { ...args }) => {
   try {
     const NETWORK = process.env.REACT_APP_NETWORK;
 
@@ -11,26 +11,27 @@ const broadcastTransaction = async (SLPInstance, wallet, { ...args }) => {
       (args.amount && args.tokenId && args.tokenReceiverAddress && "IS_SENDING");
 
     const { Bip44 } = getWalletDetails(wallet);
-    const { cashAddress, slpAddress, fundingWif, fundingAddress } = Bip44;
+
+    const FundingAccount = slpBalancesAndUtxo[0].account; // account with the highest balance
 
     const config = args;
-    config.bchChangeReceiverAddress = cashAddress;
-    config.fundingWif = fundingWif;
-    config.fundingAddress = fundingAddress;
+    config.bchChangeReceiverAddress = Bip44.cashAddress;
+    config.fundingWif = FundingAccount.fundingWif;
+    config.fundingAddress = FundingAccount.fundingAddress;
 
     let createTransaction;
 
     switch (TRANSACTION_TYPE) {
       case "IS_CREATING":
-        config.batonReceiverAddress = slpAddress;
+        config.batonReceiverAddress = Bip44.slpAddress;
         config.decimals = config.decimals || 0;
         config.documentUri = config.docUri;
-        config.tokenReceiverAddress = slpAddress;
+        config.tokenReceiverAddress = Bip44.slpAddress;
         createTransaction = async config => SLPInstance.TokenType1.create(config);
         break;
       case "IS_MINTING":
-        config.batonReceiverAddress = config.batonReceiverAddress || slpAddress;
-        config.tokenReceiverAddress = slpAddress;
+        config.batonReceiverAddress = config.batonReceiverAddress || Bip44.slpAddress;
+        config.tokenReceiverAddress = Bip44.slpAddress;
         createTransaction = async config => SLPInstance.TokenType1.mint(config);
         break;
       case "IS_SENDING":

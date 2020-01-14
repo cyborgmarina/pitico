@@ -1,6 +1,6 @@
 /* eslint-disable no-loop-func */
 
-import { Utils } from "slpjs";
+import { Utils } from "slp-sdk/node_modules/slpjs";
 import withSLP from "./withSLP";
 import { sendBch, SATOSHIS_PER_BYTE } from "./sendBch";
 import getWalletDetails from "./getWalletDetails";

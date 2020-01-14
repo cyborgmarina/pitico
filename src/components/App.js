@@ -151,24 +151,6 @@ const App = () => {
                         Bitcoin Cash
                       </Radio.Button>
                     </Radio.Group>
-                    {/* {!loading ? (
-                  <List
-                    style={{ marginTop: 16 }}
-                    loading={loading}
-                    itemLayout="horizontal"
-                    dataSource={[
-                      {
-                        title: "BCH",
-                        description: balances.balance + balances.unconfirmedBalance || "0"
-                      }
-                    ]}
-                    renderItem={item => (
-                      <List.Item>
-                        <List.Item.Meta title={item.title} description={item.description} />
-                      </List.Item>
-                    )}
-                  />
-                ) : null} */}
                   </div>
                 </Menu.ItemGroup>
               ) : null}

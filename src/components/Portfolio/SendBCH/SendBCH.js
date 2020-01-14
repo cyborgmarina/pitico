@@ -6,11 +6,10 @@ import { Row, Col } from "antd";
 import Paragraph from "antd/lib/typography/Paragraph";
 import { PlaneIcon } from "../../Common/CustomIcons";
 import { QRCode } from "../../Common/QRCode";
-import { sendBch, calcFee, getBCHUtxos, getBalanceFromUtxos } from "../../../utils/sendBch";
+import { sendBch, calcFee } from "../../../utils/sendBch";
 import getWalletDetails from "../../../utils/getWalletDetails";
 import { FormItemWithMaxAddon, FormItemWithQRCodeAddon } from "../EnhancedInputs";
 import getTransactionHistory from "../../../utils/getTransactionHistory";
-import { retry } from "../../../utils/retry";
 
 const StyledButtonWrapper = styled.div`
   display: flex;
@@ -20,7 +19,7 @@ const StyledButtonWrapper = styled.div`
 `;
 
 const SendBCH = ({ onClose }) => {
-  const { wallet, balances } = React.useContext(WalletContext);
+  const { wallet, balances, utxos } = React.useContext(WalletContext);
   const [formData, setFormData] = useState({
     dirty: true,
     value: "",
@@ -45,7 +44,7 @@ const SendBCH = ({ onClose }) => {
     const { address, value } = formData;
 
     try {
-      const link = await sendBch((getWalletDetails(wallet) || {}).Bip44, {
+      const link = await sendBch((getWalletDetails(wallet) || {}).Bip44, utxos, {
         addresses: [address],
         values: [value]
       });
@@ -82,12 +81,10 @@ const SendBCH = ({ onClose }) => {
   };
 
   const onMax = async () => {
-    setLoading(true);
     try {
-      const utxos = await retry(() => getBCHUtxos(wallet.cashAddress));
-      const totalBalance = getBalanceFromUtxos(utxos);
-      const txFee = await calcFee(utxos);
-      let value = totalBalance - txFee >= 0 ? (totalBalance - txFee).toFixed(8) : 0;
+      const txFee = calcFee(utxos);
+      let value =
+        balances.totalBalance - txFee >= 0 ? (balances.totalBalance - txFee).toFixed(8) : 0;
       setFormData({
         ...formData,
         value
@@ -95,13 +92,12 @@ const SendBCH = ({ onClose }) => {
     } catch (err) {
       message.error("Unable to calculate the max value due to network errors");
     }
-    setLoading(false);
   };
 
   const getBchHistory = async () => {
     setLoading(true);
     try {
-      const resp = await getTransactionHistory(wallet.cashAdresses, [
+      const resp = await getTransactionHistory(wallet.cashAddresses, [
         balances.bitcoinCashBalance[0].transactions,
         balances.bitcoinCashBalance[1].transactions,
         balances.bitcoinCashBalance[2].transactions
@@ -181,7 +177,7 @@ const SendBCH = ({ onClose }) => {
           >
             <br />
 
-            {!balances.balance && !balances.unconfirmedBalance && action === "send" ? (
+            {!balances.totalBalance && action === "send" ? (
               <Row justify="center" type="flex">
                 <Col>
                   <StyledButtonWrapper>
@@ -267,7 +263,11 @@ const SendBCH = ({ onClose }) => {
                           ? 0.01
                           : (Math.abs(el.transactionBalance) / bchToDollar).toFixed(2)
                       } USD`}</p>
-                      <a href={`https://explorer.bitcoin.com/bch/tx/${el.txid}`} target="_blank">
+                      <a
+                        href={`https://explorer.bitcoin.com/bch/tx/${el.txid}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <Paragraph
                           small
                           ellipsis

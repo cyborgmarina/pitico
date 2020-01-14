@@ -24,7 +24,7 @@ const StyledButtonWrapper = styled.div`
 
 const Mint = ({ token, onClose }) => {
   const ContextValue = React.useContext(WalletContext);
-  const { wallet, balances } = ContextValue;
+  const { wallet, balances, slpBalancesAndUtxo } = ContextValue;
   const [formData, setFormData] = useState({
     dirty: true,
     quantity: 0,
@@ -46,7 +46,7 @@ const Mint = ({ token, onClose }) => {
     const { quantity, baton } = formData;
 
     try {
-      const link = await mintToken(wallet, {
+      const link = await mintToken(wallet, slpBalancesAndUtxo, {
         tokenId: token.tokenId,
         additionalTokenQty: quantity,
         batonReceiverAddress: baton
@@ -107,7 +107,7 @@ const Mint = ({ token, onClose }) => {
             <Row justify="center" type="flex">
               <Col>
                 <StyledButtonWrapper>
-                  {!balances.balance && !balances.unconfirmedBalance ? (
+                  {!balances.totalBalance ? (
                     <>
                       <br />
                       <Paragraph>

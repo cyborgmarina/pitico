@@ -31,7 +31,7 @@ export default () => {
   const getTokenHistory = async tokenId => {
     setLoadingTokenHistory(true);
     try {
-      const resp = await getTokenTransactionHistory(wallet.slpAdresses, tokenId);
+      const resp = await getTokenTransactionHistory(wallet.slpAddresses, tokenId);
 
       setHistory(resp);
     } catch (err) {
@@ -49,7 +49,7 @@ export default () => {
   };
 
   const handleChangeAction = tokenId => {
-    if (tokenCardAction == "details") {
+    if (tokenCardAction === "details") {
       setTokenCardAction("history");
       getTokenHistory(tokenId);
     } else {
@@ -159,7 +159,7 @@ export default () => {
                     <PlaneIcon />
                     Send
                   </span>,
-                  token.info && token.info.hasBaton && (
+                  token.info && token.info.containsBaton && (
                     <span onClick={() => setAction(action !== "mint" ? "mint" : null)}>
                       <HammerIcon /> Mint
                     </span>
@@ -247,11 +247,11 @@ export default () => {
                                 <Paragraph
                                   key={`paragraph-${token.tokenId}-${entry[0]}`}
                                   small
-                                  copyable={{ text: entry[1] }}
+                                  copyable={{ text: String(entry[1]) }}
                                   ellipsis
                                   style={{ whiteSpace: "nowrap", maxWidth: "100%" }}
                                 >
-                                  {entry[0]}: {entry[1]}
+                                  {entry[0]}: {String(entry[1])}
                                 </Paragraph>
                               ))
                             )}
@@ -294,6 +294,7 @@ export default () => {
                             <a
                               href={`https://explorer.bitcoin.com/bch/tx/${el.txid}`}
                               target="_blank"
+                              rel="noopener noreferrer"
                             >
                               <Paragraph
                                 small
@@ -373,7 +374,9 @@ export default () => {
                           fontWeight: "bold"
                         }}
                       >
-                        {token.balance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}
+                        {token.balance >= 0
+                          ? token.balance.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+                          : ""}
                       </div>
                     </div>
                   }
