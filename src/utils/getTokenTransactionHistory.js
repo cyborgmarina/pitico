@@ -52,7 +52,7 @@ const getTokenTransactionHistory = async (SLP, slpAddresses, tokenId) => {
       confirmed: [],
       unconfirmed: []
     };
-    console.log("queryResults :", queryResults);
+
     if (queryResults.c.length) {
       tokenTransactionHistory.confirmed = queryResults.c.map(el => ({
         txid: el.txid,
@@ -73,7 +73,7 @@ const getTokenTransactionHistory = async (SLP, slpAddresses, tokenId) => {
       }));
     }
     const { confirmed, unconfirmed } = tokenTransactionHistory;
-    console.log("tokenTransactionHistory :", tokenTransactionHistory);
+
     return unconfirmed.concat(confirmed);
   } catch (e) {
     console.log("error :", e);
