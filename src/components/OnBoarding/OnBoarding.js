@@ -30,50 +30,88 @@ export const OnBoarding = ({ history }) => {
   };
 
   return (
-    <Row gutter={8} justify="center" type="flex">
-      <Col lg={8} span={24} style={{ marginTop: 8 }}>
-        <Card
-          title={
-            <h2>
-              <Icon type="plus-square" theme="filled" /> New Wallet
-            </h2>
-          }
-          style={{ height: "100%" }}
-          bordered={false}
-        >
-          <div style={{}}>
-            <Button onClick={() => createWallet()}>Create</Button>
-          </div>
-        </Card>
-      </Col>
-      <Col lg={8} span={24} style={{ marginTop: 8 }}>
-        <Card
-          title={
-            <h2>
-              <Icon type="import" /> Import Wallet
-            </h2>
-          }
-          bordered={false}
-        >
-          <Form style={{ width: "auto" }}>
-            <Form.Item
-              validateStatus={!formData.dirty && !formData.mnemonic ? "error" : ""}
-              help={!formData.dirty && !formData.mnemonic ? "Should not be empty" : ""}
-            >
-              <Input
-                prefix={<Icon type="lock" />}
-                placeholder="mnemonic"
-                name="mnemonic"
-                onChange={e => handleChange(e)}
-                required
-              />
-            </Form.Item>
-            <div style={{ paddingTop: "12px" }}>
-              <Button onClick={() => submit()}>Import</Button>
+    <React.Fragment>
+      <Row gutter={8} justify="center" type="flex">
+        <Col lg={8} span={24} style={{ marginTop: 8 }}>
+          <Card
+            title={
+              <h2>
+                <Icon type="plus-square" theme="filled" /> New Wallet
+              </h2>
+            }
+            style={{ height: "100%" }}
+            bordered={false}
+          >
+            <div style={{}}>
+              <Button onClick={() => createWallet()}>Create</Button>
             </div>
-          </Form>
-        </Card>
-      </Col>
-    </Row>
+          </Card>
+        </Col>
+        <Col lg={8} span={24} style={{ marginTop: 8 }}>
+          <Card
+            title={
+              <h2>
+                <Icon type="import" /> Import Wallet
+              </h2>
+            }
+            bordered={false}
+          >
+            <Form style={{ width: "auto" }}>
+              <Form.Item
+                validateStatus={!formData.dirty && !formData.mnemonic ? "error" : ""}
+                help={!formData.dirty && !formData.mnemonic ? "Should not be empty" : ""}
+              >
+                <Input
+                  prefix={<Icon type="lock" />}
+                  placeholder="mnemonic"
+                  name="mnemonic"
+                  onChange={e => handleChange(e)}
+                  required
+                />
+              </Form.Item>
+              <p>
+                <em>Only 245' path is currently supported for wallet imports.</em>
+              </p>
+              <div style={{ paddingTop: "12px" }}>
+                <Button onClick={() => submit()}>Import</Button>
+              </div>
+            </Form>
+          </Card>
+        </Col>
+      </Row>
+      <Row gutter={8} justify="center" type="flex">
+        <Col lg={8} span={24} style={{ marginTop: 8 }}>
+          <Card
+            title={
+              <h2>
+                <Icon type="warning" theme="filled" /> Web Wallets
+              </h2>
+            }
+            style={{ height: "100%" }}
+            bordered={false}
+          >
+            <div style={{}}>
+              <p>
+                Bitcoin.com Mint is an{" "}
+                <a
+                  href="https://github.com/Bitcoin-com/mint/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  open source
+                </a>{" "}
+                web wallet supporting SLP and BCH.{" "}
+              </p>
+              <p>
+                {" "}
+                Web wallets offer user convenience, but storing large amounts of money on a web
+                wallet is not recommended.
+              </p>
+              <p>Creating your own SLP tokens only costs a few cents worth of BCH.</p>
+            </div>
+          </Card>
+        </Col>
+      </Row>
+    </React.Fragment>
   );
 };
