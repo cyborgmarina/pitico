@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { WalletContext } from "../../utils/context";
 import { Input, Button, Icon, Row, Col, Card, Form } from "antd";
+import StyledOnboarding from "../Common/StyledPage";
 
 export const OnBoarding = ({ history }) => {
   const ContextValue = React.useContext(WalletContext);
@@ -30,7 +31,7 @@ export const OnBoarding = ({ history }) => {
   };
 
   return (
-    <React.Fragment>
+    <StyledOnboarding>
       <Row gutter={8} justify="center" type="flex">
         <Col lg={8} span={24} style={{ marginTop: 8 }}>
           <Card
@@ -116,6 +117,6 @@ export const OnBoarding = ({ history }) => {
           </Card>
         </Col>
       </Row>
-    </React.Fragment>
+    </StyledOnboarding>
   );
 };
