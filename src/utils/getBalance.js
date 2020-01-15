@@ -9,23 +9,15 @@ const getBalance = async (SLP, wallet, logs = true) => {
   try {
     const walletDetails = getWalletDetails(wallet);
 
-    const bitcoinCashBalance = await SLP.Address.details([
-      walletDetails.Bip44.cashAddress,
-      walletDetails.Path145.cashAddress,
-      walletDetails.PathZero.cashAddress
-    ]);
+    const bitcoinCashBalance = await SLP.Address.details([walletDetails.Bip44.cashAddress]);
 
-    const slpAddresses = [
-      walletDetails.Bip44.slpAddress,
-      walletDetails.Path145.slpAddress,
-      walletDetails.PathZero.slpAddress
-    ];
+    const slpAddresses = [walletDetails.Bip44.slpAddress];
 
     const slpTokensBalance = await getTokensBalance(slpAddresses);
 
     bitcoinCashBalance.forEach((element, index) => {
       element.tokens = slpTokensBalance
-        .filter(el => el.adresses.includes(slpAddresses[index]))
+        .filter(el => el.addresses.includes(slpAddresses[index]))
         .map(token => ({
           ...token,
           balance: (

@@ -60,7 +60,7 @@ const getTokensBalance = async (SLP, slpAddresses) => {
               tokenId: { $first: "$tokenId" },
               balance: { $sum: "$isTokenBalance" },
               satoshisBalance: { $sum: "$isSatoshiBalance" },
-              adresses: { $addToSet: "$address" },
+              addresses: { $addToSet: "$address" },
               outputs: { $addToSet: "$out" }
             }
           }
@@ -73,9 +73,9 @@ const getTokensBalance = async (SLP, slpAddresses) => {
     const result = queryResult.g;
 
     const totalTokensBalance = result.map(el => {
-      const adresses = el.adresses.filter(e => slpAddresses.includes(e));
-      el.tokenBalanceByAddress = Array.from({ length: adresses.length });
-      adresses.forEach((slpAddress, index) => {
+      const addresses = el.addresses.filter(e => slpAddresses.includes(e));
+      el.tokenBalanceByAddress = Array.from({ length: addresses.length });
+      addresses.forEach((slpAddress, index) => {
         const balanceByAddress = el.outputs.reduce((prev, cur) => {
           if (cur.address === slpAddress) return prev + cur.slpAmount;
           return prev;
@@ -91,13 +91,14 @@ const getTokensBalance = async (SLP, slpAddresses) => {
           satoshisBalanceByAddress
         };
       });
-      el.adresses = adresses;
+      el.addresses = addresses;
       return el;
     });
 
     return totalTokensBalance;
   } catch (e) {
-    throw e;
+    console.log("error :", e);
+    return [];
   }
 };
 

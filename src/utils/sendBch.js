@@ -11,7 +11,7 @@ export const sendBch = withSLP(async (SLP, wallet, utxos, { addresses, values })
     }
 
     const value = values.reduce((previous, current) => new Big(current).plus(previous), new Big(0));
-    const SEND_ADDR = wallet.cashAddress;
+    const REMAINDER_ADDR = wallet.cashAddress;
 
     const inputUtxos = [];
     let transactionBuilder;
@@ -63,7 +63,7 @@ export const sendBch = withSLP(async (SLP, wallet, utxos, { addresses, values })
     }
 
     if (remainder) {
-      transactionBuilder.addOutput(SEND_ADDR, remainder);
+      transactionBuilder.addOutput(REMAINDER_ADDR, remainder);
     }
 
     // Sign the transactions with the HD node.
