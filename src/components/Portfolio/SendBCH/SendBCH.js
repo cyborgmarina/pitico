@@ -147,7 +147,7 @@ const SendBCH = ({ onClose, outerAction }) => {
                 defaultValue="send"
                 onChange={() => handleChangeAction()}
                 value={action}
-                style={{ width: "100%", textAlign: "center", marginTop: 0 }}
+                style={{ width: "100%", textAlign: "center", marginTop: 0, marginBottom: 0 }}
                 size="small"
                 buttonStyle="solid"
               >
