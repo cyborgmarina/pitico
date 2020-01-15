@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { WalletContext } from "../../../utils/context";
 import { Card, Icon, Radio, Form, Button, Spin, notification, message } from "antd";
@@ -19,7 +19,7 @@ const StyledButtonWrapper = styled.div`
   justify-content: center;
 `;
 
-const SendBCH = ({ onClose }) => {
+const SendBCH = ({ onClose, outerAction }) => {
   const { wallet, balances } = React.useContext(WalletContext);
   const [formData, setFormData] = useState({
     dirty: true,
@@ -30,6 +30,8 @@ const SendBCH = ({ onClose }) => {
   const [action, setAction] = useState("send");
   const [history, setHistory] = useState(null);
   const [bchToDollar, setBchToDollar] = useState(null);
+
+  useEffect(() => setAction("send"), [outerAction]);
 
   async function submit() {
     setFormData({
