@@ -92,9 +92,7 @@ const update = withSLP(
 
       setBalances(normalizeBalance(SLP, slpBalancesAndUtxo));
       setTokens(await normalizeTokens(SLP, slpBalancesAndUtxo, wallet));
-    } catch (error) {
-      debugger;
-    }
+    } catch (error) {}
   }
 );
 

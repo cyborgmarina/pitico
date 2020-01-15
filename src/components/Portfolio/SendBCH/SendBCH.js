@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { WalletContext } from "../../../utils/context";
 import { Card, Icon, Radio, Form, Button, Spin, notification, message } from "antd";
@@ -18,7 +18,7 @@ const StyledButtonWrapper = styled.div`
   justify-content: center;
 `;
 
-const SendBCH = ({ onClose }) => {
+const SendBCH = ({ onClose, outerAction }) => {
   const { wallet, balances, utxos } = React.useContext(WalletContext);
   const [formData, setFormData] = useState({
     dirty: true,
@@ -29,6 +29,8 @@ const SendBCH = ({ onClose }) => {
   const [action, setAction] = useState("send");
   const [history, setHistory] = useState(null);
   const [bchToDollar, setBchToDollar] = useState(null);
+
+  useEffect(() => setAction("send"), [outerAction]);
 
   async function submit() {
     setFormData({
@@ -239,6 +241,7 @@ const SendBCH = ({ onClose }) => {
               )) ||
               (!loading && action === "history" && (history || {}).bchTransactions && (
                 <>
+                  <p>Transaction History (max 30)</p>
                   {history.bchTransactions.map(el => (
                     <div
                       style={{
@@ -251,21 +254,20 @@ const SendBCH = ({ onClose }) => {
                         width: "97%"
                       }}
                     >
-                      <p>{el.transactionBalance > 0 ? "Received" : "Sent"}</p>
-                      <p>{el.date.toLocaleString()}</p>
+                      <a href={`https://explorer.bitcoin.com/bch/tx/${el.txid}`} target="_blank">
+                        <p>{el.transactionBalance > 0 ? "Received" : "Sent"}</p>
+                        <p>{el.date.toLocaleString()}</p>
 
-                      <p>{`${el.transactionBalance > 0 ? "+" : ""}${el.transactionBalance} BCH`}</p>
-                      <p>{`${el.transactionBalance > 0 ? "+$" : "-$"}${
-                        (Math.abs(el.transactionBalance) / bchToDollar).toFixed(2).toString() ===
-                        "0.00"
-                          ? 0.01
-                          : (Math.abs(el.transactionBalance) / bchToDollar).toFixed(2)
-                      } USD`}</p>
-                      <a
-                        href={`https://explorer.bitcoin.com/bch/tx/${el.txid}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
+                        <p>{`${el.transactionBalance > 0 ? "+" : ""}${
+                          el.transactionBalance
+                        } BCH`}</p>
+                        <p>{`${el.transactionBalance > 0 ? "+$" : "-$"}${
+                          (Math.abs(el.transactionBalance) / bchToDollar).toFixed(2).toString() ===
+                          "0.00"
+                            ? 0.01
+                            : (Math.abs(el.transactionBalance) / bchToDollar).toFixed(2)
+                        } USD`}</p>
+
                         <Paragraph
                           small
                           ellipsis
@@ -273,10 +275,16 @@ const SendBCH = ({ onClose }) => {
                         >
                           {el.txid}
                         </Paragraph>
+                        <p>{`Confirmations: ${el.confirmations}`}</p>
                       </a>
-                      <p>{`Confirmations: ${el.confirmations}`}</p>
                     </div>
                   ))}
+                  <a
+                    href={`https://explorer.bitcoin.com/bch/address/${wallet.cashAddress}`}
+                    target="_blank"
+                  >
+                    <p>Full History</p>
+                  </a>
                 </>
               ))
             )}

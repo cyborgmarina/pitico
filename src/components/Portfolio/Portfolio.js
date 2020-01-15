@@ -25,11 +25,11 @@ export default () => {
   const [loadingTokenHistory, setLoadingTokenHistory] = useState(false);
   const [tokenCardAction, setTokenCardAction] = useState("details");
   const [history, setHistory] = useState(null);
-
+  const [outerAction, setOuterAction] = useState(false);
   const getTokenHistory = async tokenId => {
     setLoadingTokenHistory(true);
     try {
-      const resp = await getTokenTransactionHistory(wallet.slpAddresses.slice(0, 1), tokenId);
+      const resp = await getTokenTransactionHistory(wallet.slpAddresses, tokenId);
 
       setHistory(resp);
     } catch (err) {
@@ -46,12 +46,20 @@ export default () => {
     setLoadingTokenHistory(false);
   };
 
-  const handleChangeAction = tokenId => {
+  const handleChangeAction = (e, tokenId) => {
+    setAction(null);
     if (tokenCardAction === "details") {
       setTokenCardAction("history");
       getTokenHistory(tokenId);
-    } else {
+    } else if (tokenCardAction === "history") {
       setTokenCardAction("details");
+    } else if (tokenCardAction === null) {
+      if (e.target.value === "details") {
+        setTokenCardAction("details");
+      } else if (e.target.value === "history") {
+        setTokenCardAction("history");
+        getTokenHistory(tokenId);
+      }
     }
   };
   const onClose = () => {
@@ -65,11 +73,21 @@ export default () => {
   const renderActions = (action, setAction, token) => {
     const hasBaton = token.info && token.info.hasBaton;
     let actions = [
-      <span onClick={() => setAction(action !== "transfer" ? "transfer" : null)}>
+      <span
+        onClick={() => {
+          setAction("transfer");
+          setTokenCardAction(tokenCardAction !== null ? null : tokenCardAction);
+        }}
+      >
         <PlaneIcon />
         Send
       </span>,
-      <span onClick={() => setAction(action !== "dividends" ? "dividends" : null)}>
+      <span
+        onClick={() => {
+          setAction("dividends");
+          setTokenCardAction(tokenCardAction !== null ? null : tokenCardAction);
+        }}
+      >
         <Icon style={{ fontSize: "18px" }} type="dollar-circle" theme="filled" />
         {hasBaton ? "Dividends" : "Pay Dividends"}
       </span>
@@ -77,11 +95,17 @@ export default () => {
     if (hasBaton) {
       actions.push(actions[1]);
       actions[1] = (
-        <span onClick={() => setAction(action !== "mint" ? "mint" : null)}>
+        <span
+          onClick={() => {
+            setAction("mint");
+            setTokenCardAction(tokenCardAction !== null ? null : tokenCardAction);
+          }}
+        >
           <HammerIcon /> Mint
         </span>
       );
     }
+
     return actions;
   };
 
@@ -93,16 +117,24 @@ export default () => {
             style={{ marginTop: "8px", textAlign: "left" }}
             expand={!selectedToken && action === "sendBCH"}
             actions={[
-              <span onClick={() => setAction(action !== "sendBCH" ? "sendBCH" : null)}>
+              <span
+                onClick={() => {
+                  setAction("sendBCH");
+                  setOuterAction(!outerAction);
+                }}
+              >
                 <PlaneIcon />
                 Send
               </span>
             ]}
             onClick={evt => {
-              setAction(action !== "sendBCH" ? "sendBCH" : null);
+              setAction("sendBCH");
               setSelectedToken(null);
+              setOuterAction(!outerAction);
             }}
-            renderExpanded={() => action === "sendBCH" && <SendBCH onClose={onClose} />}
+            renderExpanded={() =>
+              action === "sendBCH" && <SendBCH onClose={onClose} outerAction={outerAction} />
+            }
             onClose={onClose}
           >
             <Meta
@@ -187,7 +219,7 @@ export default () => {
                   <Spin spinning={loadingTokenHistory}>
                     <Radio.Group
                       defaultValue="details"
-                      onChange={() => handleChangeAction(selectedToken.tokenId)}
+                      onChange={e => handleChangeAction(e, selectedToken.tokenId)}
                       value={tokenCardAction}
                       style={{
                         width: "100%",
@@ -206,7 +238,7 @@ export default () => {
                           fontSize: "16px"
                         }}
                         value="details"
-                        onClick={() => handleChangeAction(selectedToken.tokenId)}
+                        onClick={e => handleChangeAction(e, selectedToken.tokenId)}
                       >
                         <Icon style={{ color: "#fff" }} type="info-circle" /> Details
                       </Radio.Button>
@@ -218,14 +250,13 @@ export default () => {
                           fontSize: "16px"
                         }}
                         value="history"
-                        onClick={() => handleChangeAction(selectedToken.tokenId)}
+                        onClick={e => handleChangeAction(e, selectedToken.tokenId)}
                       >
                         <Icon style={{ color: "#fff" }} type="history" /> History
                       </Radio.Button>
                     </Radio.Group>
                     {!loadingTokenHistory &&
                     selectedToken &&
-                    action === null &&
                     token.tokenId === selectedToken.tokenId &&
                     tokenCardAction === "details" ? (
                       <Alert
@@ -234,28 +265,17 @@ export default () => {
                             <Paragraph>
                               <Icon type="info-circle" /> &nbsp; Token properties
                             </Paragraph>
-                            {action ? (
+                            {Object.entries(token.info || {}).map(entry => (
                               <Paragraph
+                                key={`paragraph-${token.tokenId}-${entry[0]}`}
                                 small
-                                copyable
+                                copyable={{ text: entry[1] }}
                                 ellipsis
                                 style={{ whiteSpace: "nowrap", maxWidth: "100%" }}
                               >
-                                Token Id: {token.tokenId}
+                                {entry[0]}: {entry[1]}
                               </Paragraph>
-                            ) : (
-                              Object.entries(token.info || {}).map(entry => (
-                                <Paragraph
-                                  key={`paragraph-${token.tokenId}-${entry[0]}`}
-                                  small
-                                  copyable={{ text: String(entry[1]) }}
-                                  ellipsis
-                                  style={{ whiteSpace: "nowrap", maxWidth: "100%" }}
-                                >
-                                  {entry[0]}: {String(entry[1])}
-                                </Paragraph>
-                              ))
-                            )}
+                            ))}
                           </div>
                         }
                         type="warning"
@@ -265,12 +285,13 @@ export default () => {
 
                     {!loadingTokenHistory &&
                     selectedToken &&
-                    action === null &&
                     token.tokenId === selectedToken.tokenId &&
                     tokenCardAction === "history" ? (
                       <>
+                        <p>Transaction History (max 30)</p>
                         {history.map(el => (
                           <div
+                            key={`history-${el.txid}`}
                             style={{
                               background: el.balance > 0 ? "#D4EFFC" : " #ffd59a",
                               color: "black",
@@ -281,22 +302,24 @@ export default () => {
                               width: "97%"
                             }}
                           >
-                            <p>
-                              {el.balance > 0
-                                ? el.detail.transactionType === "GENESIS"
-                                  ? "Genesis"
-                                  : "Received"
-                                : "Sent"}
-                            </p>
-                            <p>{el.date.toLocaleString()}</p>
-
-                            <p>{`${el.balance > 0 ? "+" : ""}${el.balance} ${el.detail.symbol}`}</p>
-
                             <a
                               href={`https://explorer.bitcoin.com/bch/tx/${el.txid}`}
                               target="_blank"
                               rel="noopener noreferrer"
                             >
+                              <p>
+                                {el.balance > 0
+                                  ? el.detail.transactionType === "GENESIS"
+                                    ? "Genesis"
+                                    : "Received"
+                                  : "Sent"}
+                              </p>
+                              <p>{el.date.toLocaleString()}</p>
+
+                              <p>{`${el.balance > 0 ? "+" : ""}${el.balance} ${
+                                el.detail.symbol
+                              }`}</p>
+
                               <Paragraph
                                 small
                                 ellipsis
@@ -304,20 +327,26 @@ export default () => {
                               >
                                 {el.txid}
                               </Paragraph>
+                              <p>{`Confirmed: ${el.confirmed ? "Yes" : "No"}`}</p>
                             </a>
-                            <p>{`Confirmed: ${el.confirmed ? "Yes" : "No"}`}</p>
                           </div>
                         ))}
+                        <a
+                          href={`https://explorer.bitcoin.com/bch/address/${wallet.slpAddress}`}
+                          target="_blank"
+                        >
+                          <p>Full History</p>
+                        </a>
                       </>
                     ) : null}
 
-                    {selectedToken && action === "mint" ? (
+                    {selectedToken && action === "mint" && tokenCardAction === null ? (
                       <Mint token={selectedToken} onClose={onClose} />
                     ) : null}
-                    {selectedToken && action === "transfer" ? (
+                    {selectedToken && action === "transfer" && tokenCardAction === null ? (
                       <Transfer token={selectedToken} onClose={onClose} />
                     ) : null}
-                    {selectedToken && action === "dividends" ? (
+                    {selectedToken && action === "dividends" && tokenCardAction === null ? (
                       <PayDividends token={selectedToken} onClose={onClose} />
                     ) : null}
                   </Spin>

@@ -129,7 +129,8 @@
   border: 1px solid rgb(0, 0, 0) !important;
   box-shadow: inset 0px 1px 3px 0px rgba(0, 0, 0, 0.81) !important;
   background: #10131b !important;
-  margin-top: 30px;
+  margin-top: 14px;
+  margin-bottom: 10px;
   cursor: pointer;
 }
 
