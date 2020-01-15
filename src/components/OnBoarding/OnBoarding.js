@@ -103,9 +103,9 @@ export const OnBoarding = ({ history }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  open source
+                  open source,
                 </a>{" "}
-                web wallet supporting SLP and BCH.{" "}
+                non-custodial web wallet supporting SLP and BCH.{" "}
               </p>
               <p>
                 {" "}
