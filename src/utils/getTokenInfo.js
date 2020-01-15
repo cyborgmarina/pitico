@@ -1,6 +1,6 @@
 import withSLP from "./withSLP";
 
-const getTokenInfo = async (SLP, slpAddress, tokenIds) => {
+const getTokenInfo = async (SLP, slpAddresses, tokenIds) => {
   try {
     const query = {
       q: {
@@ -31,7 +31,9 @@ const getTokenInfo = async (SLP, slpAddress, tokenIds) => {
         hasBaton:
           genesisTransactionDetails &&
           genesisTransactionDetails.vin &&
-          SLP.Address.toSLPAddress(genesisTransactionDetails.vin[0].cashAddress) === slpAddress
+          slpAddresses.includes(
+            SLP.Address.toSLPAddress(genesisTransactionDetails.vin[0].cashAddress)
+          )
       };
     });
   } catch (e) {

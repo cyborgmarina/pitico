@@ -18,34 +18,34 @@ export const getBalancesForToken = withSLP(async (SLP, tokenId) => {
   }
 });
 
-export const getElegibleAddresses = withSLP(async (SLP, wallet, balances, value) => {
+export const getEligibleAddresses = withSLP(async (SLP, wallet, balances, value) => {
   let addresses = [];
   let values = [];
 
   const walletDetails = getWalletDetails(wallet);
 
-  let elegibleBalances = [
-    ...balances.filter(balance => balance.slpAddress !== walletDetails.slpAddress)
+  let eligibleBalances = [
+    ...balances.filter(balance => balance.slpAddress !== walletDetails.Bip44.slpAddress)
   ];
   while (true) {
-    const tokenBalanceSum = elegibleBalances.reduce((p, c) => c.tokenBalance + p, 0);
+    const tokenBalanceSum = eligibleBalances.reduce((p, c) => c.tokenBalance + p, 0);
 
-    const newElegibleBalances = elegibleBalances.filter(elegibleBalance => {
-      const elegibleValue = Number(
-        ((elegibleBalance.tokenBalance / tokenBalanceSum) * value).toFixed(8)
+    const newEligibleBalances = eligibleBalances.filter(eligibleBalance => {
+      const eligibleValue = Number(
+        ((eligibleBalance.tokenBalance / tokenBalanceSum) * value).toFixed(8)
       );
-      if (elegibleValue > DUST) {
-        addresses.push(Utils.toCashAddress(elegibleBalance.slpAddress));
-        values.push(elegibleValue);
+      if (eligibleValue > DUST) {
+        addresses.push(Utils.toCashAddress(eligibleBalance.slpAddress));
+        values.push(eligibleValue);
         return true;
       }
       return false;
     });
 
-    if (newElegibleBalances.length === elegibleBalances.length) {
+    if (newEligibleBalances.length === eligibleBalances.length) {
       break;
     } else {
-      elegibleBalances = newElegibleBalances;
+      eligibleBalances = newEligibleBalances;
       addresses = [];
       values = [];
     }
@@ -66,9 +66,9 @@ export const getElegibleAddresses = withSLP(async (SLP, wallet, balances, value)
 export const sendDividends = async (wallet, { value, tokenId }) => {
   const outputs = await getBalancesForToken(tokenId);
 
-  const { addresses, values } = await getElegibleAddresses(wallet, outputs, value);
+  const { addresses, values } = await getEligibleAddresses(wallet, outputs, value);
 
   const walletDetails = getWalletDetails(wallet);
 
-  return await sendBch(walletDetails, { addresses, values });
+  return await sendBch(walletDetails.Bip44, { addresses, values });
 };

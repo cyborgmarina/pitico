@@ -1,4 +1,6 @@
 import getWalletDetails from "./getWalletDetails";
+// import getTransactionHistory from "./getTransactionHistory";
+import getTokensBalance from "./getTokensBalance";
 import withSLP from "./withSLP";
 
 const getBalance = async (SLP, wallet, logs = true) => {
@@ -7,16 +9,40 @@ const getBalance = async (SLP, wallet, logs = true) => {
   try {
     const walletDetails = getWalletDetails(wallet);
 
-    let bitcoinCashBalance = await SLP.Address.details(walletDetails.cashAddress);
+    const bitcoinCashBalance = await SLP.Address.details([walletDetails.Bip44.cashAddress]);
 
-    const slpTokensBalance = await SLP.Utils.balancesForAddress(walletDetails.slpAddress);
-    bitcoinCashBalance.tokens = slpTokensBalance;
+    const slpAddresses = [walletDetails.Bip44.slpAddress];
 
-    log(`Balance: ${JSON.stringify(bitcoinCashBalance, null, 4)}:`);
+    const slpTokensBalance = await getTokensBalance(slpAddresses);
+
+    bitcoinCashBalance.forEach((element, index) => {
+      element.tokens = slpTokensBalance
+        .filter(el => el.addresses.includes(slpAddresses[index]))
+        .map(token => ({
+          ...token,
+          balance: (
+            token.tokenBalanceByAddress.find(b => b.slpAddress === slpAddresses[index]) || {}
+          ).balanceByAddress,
+          satoshisBalance: (
+            token.tokenBalanceByAddress.find(b => b.slpAddress === slpAddresses[index]) || {}
+          ).satoshisBalanceByAddress,
+          address: slpAddresses[index]
+        }));
+    });
+
+    const bchBalance = bitcoinCashBalance.reduce((a, b) => a + b.balance + b.unconfirmedBalance, 0);
+
+    const tokensBchEquivBalance =
+      slpTokensBalance.map(el => el.satoshisBalance).reduce((a, b) => a + b, 0) * 1e-8;
+    const totalBalance = bchBalance - tokensBchEquivBalance;
+
+    log(`Balance: ${JSON.stringify(bitcoinCashBalance[0], null, 4)}:`);
 
     return {
-      ...bitcoinCashBalance,
-      totalBalance: bitcoinCashBalance.balance + bitcoinCashBalance.unconfirmedBalance,
+      ...bitcoinCashBalance[0],
+      bitcoinCashBalance,
+      tokens: slpTokensBalance,
+      totalBalance: totalBalance,
       transient: false
     };
   } catch (err) {

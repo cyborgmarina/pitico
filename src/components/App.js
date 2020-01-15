@@ -24,7 +24,7 @@ const App = () => {
   const { wallet } = ContextValue;
   const radio = React.useRef(null);
   const handleChange = e => {
-    setKey(e.key);
+    if (e.key < 4) setKey(e.key);
     setTimeout(() => mobile && setCollapesed(true), 100);
   };
 
@@ -102,6 +102,25 @@ const App = () => {
                 <Menu.Item key="3">
                   <span>Audit</span>
                 </Menu.Item>
+                <Menu.SubMenu key="4" title={<span>Links</span>}>
+                  <Menu.Item key="5">
+                    <a href="https://exchange.bitcoin.com/" target="_blank">
+                      Exchange
+                    </a>
+                  </Menu.Item>
+                  <Menu.Item key="6">
+                    {" "}
+                    <a href="https://cashgames.bitcoin.com/home" target="_blank">
+                      Games
+                    </a>
+                  </Menu.Item>
+                  <Menu.Item key="7">
+                    {" "}
+                    <a href="https://local.bitcoin.com" target="_blank">
+                      Trade Locally
+                    </a>
+                  </Menu.Item>
+                </Menu.SubMenu>
               </Menu.ItemGroup>
 
               {wallet ? (
@@ -189,8 +208,6 @@ const App = () => {
                   paddingTop: "32px"
                 }}
               ></div>
-
-              <span style={{ display: "inline" }}>pitico.cash</span>
             </Header>
             <Content style={{ margin: "0 16px", backgroundColor: "#FBFBFD" }}>
               <div

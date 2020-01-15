@@ -6,7 +6,7 @@ import { WalletContext } from "../../../utils/context";
 import {
   sendDividends,
   getBalancesForToken,
-  getElegibleAddresses,
+  getEligibleAddresses,
   DUST
 } from "../../../utils/sendDividends";
 import { Card, Icon, Form, Button, Alert, Spin, notification, Badge, Tooltip, message } from "antd";
@@ -67,11 +67,11 @@ const PayDividends = ({ SLP, token, onClose }) => {
       .finally(() => setLoading(false));
   }, []);
 
-  const calcElegibles = useCallback(
+  const calcEligibles = useCallback(
     debounce(value => {
       if (stats.balances && value && !Number.isNaN(value)) {
         setLoading(true);
-        getElegibleAddresses(wallet, stats.balances, value)
+        getEligibleAddresses(wallet, stats.balances, value)
           .then(({ addresses, txFee }) => {
             setStats({ ...stats, eligibles: addresses.length, txFee });
           })
@@ -157,7 +157,7 @@ const PayDividends = ({ SLP, token, onClose }) => {
     setFormData(p => ({ ...p, [name]: value }));
 
     if (name === "value") {
-      calcElegibles(value);
+      calcEligibles(value);
     }
   };
 
@@ -167,13 +167,13 @@ const PayDividends = ({ SLP, token, onClose }) => {
     try {
       const utxos = await retry(() => getBCHUtxos(wallet.cashAddress));
       const totalBalance = getBalanceFromUtxos(utxos);
-      const { txFee } = await getElegibleAddresses(wallet, stats.balances, totalBalance);
+      const { txFee } = await getEligibleAddresses(wallet, stats.balances, totalBalance);
       let value = totalBalance - txFee >= 0 ? (totalBalance - txFee).toFixed(8) : 0;
       setFormData({
         ...formData,
         value
       });
-      await calcElegibles(value);
+      await calcEligibles(value);
     } catch (err) {
       message.error("Unable to calculate the max value due to network errors");
     }
@@ -251,7 +251,7 @@ const PayDividends = ({ SLP, token, onClose }) => {
                     </Col>
                     &nbsp; &nbsp; &nbsp;
                     <Col>
-                      <Tooltip title="Addresses elegible to receive dividends for the specified value">
+                      <Tooltip title="Addresses eligible to receive dividends for the specified value">
                         <StyledStat>
                           <Icon type="usergroup-add" />
                           &nbsp;

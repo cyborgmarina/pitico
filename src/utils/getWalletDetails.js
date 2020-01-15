@@ -8,18 +8,37 @@ const getWalletDetails = (SLPInstance, wallet) => {
   if (NETWORK === `mainnet`) masterHDNode = SLPInstance.HDNode.fromSeed(rootSeedBuffer);
   else masterHDNode = SLPInstance.HDNode.fromSeed(rootSeedBuffer, "testnet");
 
-  const hdNodeBip44Account = SLPInstance.HDNode.derivePath(masterHDNode, "m/44'/245'/0'");
-  const change = SLPInstance.HDNode.derivePath(hdNodeBip44Account, "0/0");
-  const cashAddress = SLPInstance.HDNode.toCashAddress(change);
-  const slpAddress = SLPInstance.Address.toSLPAddress(SLPInstance.HDNode.toCashAddress(change));
+  const path = n => `m/44'/${n}'/0'`;
+  const pathToAccount = (node, path) => SLPInstance.HDNode.derivePath(node, path);
+  const arrayArg = (func, arr) => arr.map(el => func(el));
 
-  return {
+  const hdNodeAccounts = arrayArg(path => pathToAccount(masterHDNode, path), [
+    path(245),
+    path(145),
+    path(0)
+  ]);
+
+  const changes = arrayArg(hdNodeAccount => pathToAccount(hdNodeAccount, "0/0"), hdNodeAccounts);
+  const cashAddresses = arrayArg(change => SLPInstance.HDNode.toCashAddress(change), changes);
+
+  const slpAddresses = arrayArg(
+    cashAddress => SLPInstance.Address.toSLPAddress(cashAddress),
+    cashAddresses
+  );
+
+  const walletDataByAddress = (cashAddress, slpAddress, change) => ({
     cashAddress,
     slpAddress,
     fundingWif: SLPInstance.HDNode.toWIF(change),
     fundingAddress: SLPInstance.Address.toSLPAddress(cashAddress),
     legacyAddress: SLPInstance.Address.toLegacyAddress(cashAddress),
-    change
+    change: change
+  });
+
+  return {
+    Bip44: walletDataByAddress(cashAddresses[0], slpAddresses[0], changes[0]),
+    Path145: walletDataByAddress(cashAddresses[1], slpAddresses[1], changes[1]),
+    PathZero: walletDataByAddress(cashAddresses[2], slpAddresses[2], changes[2])
   };
 };
 
