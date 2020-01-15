@@ -245,6 +245,7 @@ const SendBCH = ({ onClose, outerAction }) => {
               )) ||
               (!loading && action === "history" && (history || {}).bchTransactions && (
                 <>
+                  <p>Transaction History (max 30)</p>
                   {history.bchTransactions.map(el => (
                     <div
                       style={{
@@ -257,17 +258,20 @@ const SendBCH = ({ onClose, outerAction }) => {
                         width: "97%"
                       }}
                     >
-                      <p>{el.transactionBalance > 0 ? "Received" : "Sent"}</p>
-                      <p>{el.date.toLocaleString()}</p>
-
-                      <p>{`${el.transactionBalance > 0 ? "+" : ""}${el.transactionBalance} BCH`}</p>
-                      <p>{`${el.transactionBalance > 0 ? "+$" : "-$"}${
-                        (Math.abs(el.transactionBalance) / bchToDollar).toFixed(2).toString() ===
-                        "0.00"
-                          ? 0.01
-                          : (Math.abs(el.transactionBalance) / bchToDollar).toFixed(2)
-                      } USD`}</p>
                       <a href={`https://explorer.bitcoin.com/bch/tx/${el.txid}`} target="_blank">
+                        <p>{el.transactionBalance > 0 ? "Received" : "Sent"}</p>
+                        <p>{el.date.toLocaleString()}</p>
+
+                        <p>{`${el.transactionBalance > 0 ? "+" : ""}${
+                          el.transactionBalance
+                        } BCH`}</p>
+                        <p>{`${el.transactionBalance > 0 ? "+$" : "-$"}${
+                          (Math.abs(el.transactionBalance) / bchToDollar).toFixed(2).toString() ===
+                          "0.00"
+                            ? 0.01
+                            : (Math.abs(el.transactionBalance) / bchToDollar).toFixed(2)
+                        } USD`}</p>
+
                         <Paragraph
                           small
                           ellipsis
@@ -275,10 +279,16 @@ const SendBCH = ({ onClose, outerAction }) => {
                         >
                           {el.txid}
                         </Paragraph>
+                        <p>{`Confirmations: ${el.confirmations}`}</p>
                       </a>
-                      <p>{`Confirmations: ${el.confirmations}`}</p>
                     </div>
                   ))}
+                  <a
+                    href={`https://explorer.bitcoin.com/bch/address/${wallet.cashAddress}`}
+                    target="_blank"
+                  >
+                    <p>Full History</p>
+                  </a>
                 </>
               ))
             )}

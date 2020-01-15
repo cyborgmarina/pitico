@@ -290,6 +290,7 @@ export default () => {
                     token.tokenId === selectedToken.tokenId &&
                     tokenCardAction === "history" ? (
                       <>
+                        <p>Transaction History (max 30)</p>
                         {history.map(el => (
                           <div
                             key={`history-${el.txid}`}
@@ -303,21 +304,23 @@ export default () => {
                               width: "97%"
                             }}
                           >
-                            <p>
-                              {el.balance > 0
-                                ? el.detail.transactionType === "GENESIS"
-                                  ? "Genesis"
-                                  : "Received"
-                                : "Sent"}
-                            </p>
-                            <p>{el.date.toLocaleString()}</p>
-
-                            <p>{`${el.balance > 0 ? "+" : ""}${el.balance} ${el.detail.symbol}`}</p>
-
                             <a
                               href={`https://explorer.bitcoin.com/bch/tx/${el.txid}`}
                               target="_blank"
                             >
+                              <p>
+                                {el.balance > 0
+                                  ? el.detail.transactionType === "GENESIS"
+                                    ? "Genesis"
+                                    : "Received"
+                                  : "Sent"}
+                              </p>
+                              <p>{el.date.toLocaleString()}</p>
+
+                              <p>{`${el.balance > 0 ? "+" : ""}${el.balance} ${
+                                el.detail.symbol
+                              }`}</p>
+
                               <Paragraph
                                 small
                                 ellipsis
@@ -325,10 +328,16 @@ export default () => {
                               >
                                 {el.txid}
                               </Paragraph>
+                              <p>{`Confirmed: ${el.confirmed ? "Yes" : "No"}`}</p>
                             </a>
-                            <p>{`Confirmed: ${el.confirmed ? "Yes" : "No"}`}</p>
                           </div>
                         ))}
+                        <a
+                          href={`https://explorer.bitcoin.com/bch/address/${wallet.slpAddress}`}
+                          target="_blank"
+                        >
+                          <p>Full History</p>
+                        </a>
                       </>
                     ) : null}
 
