@@ -143,7 +143,7 @@ const SendBCH = ({ onClose, outerAction }) => {
                 defaultValue="send"
                 onChange={() => handleChangeAction()}
                 value={action}
-                style={{ width: "100%", textAlign: "center", marginTop: 0 }}
+                style={{ width: "100%", textAlign: "center", marginTop: 0, marginBottom: 0 }}
                 size="small"
                 buttonStyle="solid"
               >
@@ -254,7 +254,11 @@ const SendBCH = ({ onClose, outerAction }) => {
                         width: "97%"
                       }}
                     >
-                      <a href={`https://explorer.bitcoin.com/bch/tx/${el.txid}`} target="_blank">
+                      <a
+                        href={`https://explorer.bitcoin.com/bch/tx/${el.txid}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <p>{el.transactionBalance > 0 ? "Received" : "Sent"}</p>
                         <p>{el.date.toLocaleString()}</p>
 
@@ -282,6 +286,7 @@ const SendBCH = ({ onClose, outerAction }) => {
                   <a
                     href={`https://explorer.bitcoin.com/bch/address/${wallet.cashAddress}`}
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <p>Full History</p>
                   </a>

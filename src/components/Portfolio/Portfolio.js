@@ -334,6 +334,7 @@ export default () => {
                         <a
                           href={`https://explorer.bitcoin.com/bch/address/${wallet.slpAddress}`}
                           target="_blank"
+                          rel="noopener noreferrer"
                         >
                           <p>Full History</p>
                         </a>

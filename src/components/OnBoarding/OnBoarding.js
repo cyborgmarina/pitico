@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { WalletContext } from "../../utils/context";
 import { Input, Button, Icon, Row, Col, Card, Form } from "antd";
+import StyledOnboarding from "../Common/StyledPage";
 
 export const OnBoarding = ({ history }) => {
   const ContextValue = React.useContext(WalletContext);
@@ -30,7 +31,7 @@ export const OnBoarding = ({ history }) => {
   };
 
   return (
-    <React.Fragment>
+    <StyledOnboarding>
       <Row gutter={8} justify="center" type="flex">
         <Col lg={8} span={24} style={{ marginTop: 8 }}>
           <Card
@@ -43,7 +44,9 @@ export const OnBoarding = ({ history }) => {
             bordered={false}
           >
             <div style={{}}>
-              <Button onClick={() => createWallet()}>Create</Button>
+              <Button className="bitcoincom-mint-create-wallet" onClick={() => createWallet()}>
+                Create
+              </Button>
             </div>
           </Card>
         </Col>
@@ -73,7 +76,9 @@ export const OnBoarding = ({ history }) => {
                 <em>Only 245' path is currently supported for wallet imports.</em>
               </p>
               <div style={{ paddingTop: "12px" }}>
-                <Button onClick={() => submit()}>Import</Button>
+                <Button className="bitcoincom-mint-import-wallet" onClick={() => submit()}>
+                  Import
+                </Button>
               </div>
             </Form>
           </Card>
@@ -98,9 +103,9 @@ export const OnBoarding = ({ history }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  open source
+                  open source,
                 </a>{" "}
-                web wallet supporting SLP and BCH.{" "}
+                non-custodial web wallet supporting SLP and BCH.{" "}
               </p>
               <p>
                 {" "}
@@ -112,6 +117,6 @@ export const OnBoarding = ({ history }) => {
           </Card>
         </Col>
       </Row>
-    </React.Fragment>
+    </StyledOnboarding>
   );
 };
