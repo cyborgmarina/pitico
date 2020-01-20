@@ -1,3 +1,6 @@
+# Pitico is now Bitcoin.com Mint! This repository is archived and will no longer be maintained. 
+Please refer to https://github.com/Bitcoin-com/mint/ for the most recent code.
+
 # pitico.cash
 
 ## Manage your Bitcoin Cash SLP Tokens in your browser.
